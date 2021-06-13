@@ -2,7 +2,8 @@ Inspired by Brainfuck but not a carbon copy
 
 How the programming language works;
 
-Check for all relevant items (Maybe include some? Must include HitObjects)
+All file things used to check for all relevant items (Maybe include some not all? Currently done with HitObjects)
+
     -   General
         -   AF      Prints  -   Time to get groovy
         -   AL      Console -   Time before program starts
