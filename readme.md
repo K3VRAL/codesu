@@ -4,6 +4,22 @@ Inspired by Brainfuck but not a carbon copy
 
 # How it works
 
+    HitObjects
+        Y       Command     Info
+        0-63    Input       | Circle: Digits        Slider: ASCII
+
+        64-127  Jumping     | Circle: [             Slider: ]
+
+        128-191 Pointer     | Circle: Left          Slider: Right
+
+        192-255 Memorycell  | Circle: Increment     Slider: Decrement   Spinner: Random
+
+        256-319 Memorycell  | Circle: Mulcrement    Slider: Divcrement
+
+        320-384 Output      | Circle: Digits        Slider: ASCII
+
+# TODO
+
 All file things used to check for all relevant items (Maybe include some not all? Currently done with HitObjects)
 
     General
@@ -32,20 +48,6 @@ All file things used to check for all relevant items (Maybe include some not all
 
     TimingPoints
         ?
-
-    HitObjects
-        Y       Command     Info
-        0-63    Input       | Circle: Digits        Slider: ASCII
-
-        64-127  Jumping     | Circle: [             Slider: ]
-
-        128-191 Pointer     | Circle: Left          Slider: Right
-
-        192-255 Memorycell  | Circle: Increment     Slider: Decrement   Spinner: Random
-
-        256-319 Memorycell  | Circle: Mulcrement    Slider: Divcrement
-
-        320-384 Output      | Circle: Digits        Slider: ASCII
 
 # Definitions
 
