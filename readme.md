@@ -1,11 +1,11 @@
 # Codesu
 
-Inspired by Brainfuck but not a carbon copy
+Inspired by Brainfuck but not a carbon copy. You use the osu!editor in order to code. It only uses the Y values of every object so the X values will not affect the outcome of the program. The time value, however, needs to be in order or the code break.
 
 # How it works
 
     HitObjects
-        Y       Command     Info
+        Y-va    Command     Info
         0-63    Input       | Circle: Digits        Slider: ASCII
 
         64-127  Jumping     | Circle: [             Slider: ]
@@ -20,7 +20,7 @@ Inspired by Brainfuck but not a carbon copy
 
 # TODO
 
-All file things used to check for all relevant items (Maybe include some not all? Currently done with HitObjects)
+All file things used to check for all relevant items (Maybe include some not all? A lot of these ideas may not be included but might?)
 
     General
         AF      Prints  -   Time to get groovy
