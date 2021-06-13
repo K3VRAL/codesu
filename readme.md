@@ -8,10 +8,13 @@ Inspired by Brainfuck but not a carbon copy. You use the osu!editor in order to 
 
 You can also use arguments to get more or less information:
 
-`-d     -       Debugging`
-`-i     -       Ignores warnings`
-`-s     -       Steps`
-`-a     -       Displays all and sorted items`
+Debugging:                      `-d`
+
+Ignores warnings:               `-i`
+
+Steps:                          `-s`
+
+Displays all and sorted items:  `-a`
 
 # How it works
 
