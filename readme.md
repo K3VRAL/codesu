@@ -2,6 +2,17 @@
 
 Inspired by Brainfuck but not a carbon copy. You use the osu!editor in order to code. It only uses the Y values of every object so the X values will not affect the outcome of the program. The time value, however, needs to be in order or the code break.
 
+# How to use
+
+`dotnet run --project cproject.csproj [file]`
+
+You can also use arguments to get more or less information:
+
+`-d     -       Debugging`
+`-i     -       Ignores warnings`
+`-s     -       Steps`
+`-a     -       Displays all and sorted items`
+
 # How it works
 
     HitObjects
