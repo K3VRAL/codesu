@@ -21,7 +21,7 @@ Displays all and sorted items: `-a`
 # How it works
 
     HitObjects
-        Y-va    Command     Info
+        Y-val   Command     Info
         0-63    Input       | Circle: Digits        Slider: ASCII
 
         64-127  Jumping     | Circle: [             Slider: ]
