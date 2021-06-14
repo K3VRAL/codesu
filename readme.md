@@ -12,7 +12,7 @@ Inspired by various programming languages. You use the osu!editor in order to co
 
 `osu!mania` TODO
 
-# How to use
+# How to open file
 
 `dotnet run --project cproject.csproj [file]`
 
@@ -28,7 +28,9 @@ Steps: `-s`
 
 Displays all and sorted items: `-a`
 
-# How it works
+# Commands and placements
+
+## osu!ctbrainfuck
 
 There are all the commands used in the osu
 
@@ -46,7 +48,21 @@ There are all the commands used in the osu
 
         320-384 Output      | Circle: Digits        Slider: ASCII
 
+## osu!taiko
+
+TODO
+
+## osu!std
+
+TODO
+
+## osu!mania
+
+TODO
+
 # Definitions
+
+## osu!ctbrainfuck
 
 `Digits`      Input will use raw digits               |   Output will use raw digits
 
@@ -65,6 +81,18 @@ There are all the commands used in the osu
 `Mulcrement`  Multiplies current cell by 2
 
 `Divcrement`  Divides current cell by 2
+
+## osu!taiko
+
+TODO
+
+## osu!std
+
+TODO
+
+## osu!mania
+
+TODO
 
 # TODO
 
