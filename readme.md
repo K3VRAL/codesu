@@ -1,20 +1,22 @@
 # Codesu
 
-Inspired by Brainfuck but not a carbon copy. You use the osu!editor in order to code. It only uses the Y values of every object so the X values will not affect the outcome of the program. The time value, however, needs to be in order or the code break.
+Inspired by Brainfuck but not a carbon copy. You use the osu!editor in order to code. It only uses the Y values of every object so the X values will not affect the outcome of the program. This was done so to prevent movement in osu!ctb. I haven't tested this for osu!std, osu!taiko and (I guess this will not work for) osu!mania. The time value, however, needs to be in order or the code will operate differently than how you expected it to.
 
 # How to use
 
 `dotnet run --project cproject.csproj [file]`
 
+Where `[file]` is exchanged for the `.osu` file that you programmed.
+
 You can also use arguments to get more or less information:
 
-Debugging:                      `-d`
+Debugging: `-d`
 
-Ignores warnings:               `-i`
+Ignores warnings: `-i`
 
-Steps:                          `-s`
+Steps: `-s`
 
-Displays all and sorted items:  `-a`
+Displays all and sorted items: `-a`
 
 # How it works
 
