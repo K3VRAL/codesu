@@ -36,51 +36,51 @@ Displays all and sorted items: `-a`
 
 # TODO
 
-All file things used to check for all relevant items (Maybe include some not all? A lot of these ideas may not be included but might?)
+All file items will be used to check for all/most relevant and mandatory requirements to function is osu!; mainly osu!ctb (Maybe include some not all? A lot of these ideas may not be included but might?)
 
-    General
-        AF      Prints  -   Time to get groovy
-        AL      Console -   Time before program starts
-        CD      Prints  -   3, 2, 1
-        SS      Prints  -   We hitting {Normal, Soft, Drums}
-        MD      Prints  -   {2} programming!ctb
-        LB/WS   Prints  -   {1} We're in a movie
+`General`
+    AF      Prints  -   Time to get groovy
+    AL      Console -   Time before program starts
+    CD      Prints  -   3, 2, 1
+    SS      Prints  -   We hitting {Normal, Soft, Drums}
+    MD      Prints  -   {2} programming!ctb
+    LB/WS   Prints  -   {1} We're in a movie
 
-    Editor
-        BM      Prints  -   Found some noticable bookmarks at {Bookmarks}
-        GS      Console -   Console Size
+`Editor`
+    BM      Prints  -   Found some noticable bookmarks at {Bookmarks}
+    GS      Console -   Console Size
 
-    Metadata
-        TT/TU   Prints  -   Title: {Title}/{TitleUnicode}
-        AS/AU   Prints  -   Artist: {Artist}/{Artist/Unicode}
-        CT      Prints  -   Creator: {Creator}
-        VR      Prints  -   Version: {Version}
+`Metadata`
+    TT/TU   Prints  -   Title: {Title}/{TitleUnicode}
+    AS/AU   Prints  -   Artist: {Artist}/{Artist/Unicode}
+    CT      Prints  -   Creator: {Creator}
+    VR      Prints  -   Version: {Version}
 
-    Difficulty
-        HP      Console -   End Program
-        CS      Console -   Text Size
-        OD      Console -   Text Spacing
-        AT      Console -   Char Time Printed
+`Difficulty`
+    HP      Console -   End Program
+    CS      Console -   Text Size
+    OD      Console -   Text Spacing
+    AT      Console -   Char Time Printed
 
-    TimingPoints
-        ?
+`TimingPoints`
+    ?
 
 # Definitions
 
-    Digits      Input will use raw digits               |   Output will use raw digits
-    
-    ASCII       Input will accept ASCII to raw digits   |   Output will convert raw digits to ASCII
-    
-    Left        Move pointer one to the left
-    
-    Right       Move pointer one to the right
-    
-    Increment   Add current cell by 1
-    
-    Decrement   Subtract current cell by 1
-    
-    Random      Will change current cell by a random number of 0 or 1
-    
-    Mulcrement  Multiplies current cell by 2
-    
-    Divcrement  Divides current cell by 2
+`Digits`      Input will use raw digits               |   Output will use raw digits
+
+`ASCII`       Input will accept ASCII to raw digits   |   Output will convert raw digits to ASCII
+
+`Left`        Move pointer one to the left
+
+`Right`       Move pointer one to the right
+
+`Increment`   Add current cell by 1
+
+`Decrement`   Subtract current cell by 1
+
+`Random`      Will replace current cell by a random number of 0 or 1
+
+`Mulcrement`  Multiplies current cell by 2
+
+`Divcrement`  Divides current cell by 2
