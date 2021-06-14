@@ -38,7 +38,7 @@ Displays all and sorted items: `-a`
 
 All file items will be used to check for all/most relevant and mandatory requirements to function is osu!; mainly osu!ctb (Maybe include some not all? A lot of these ideas may not be included but might?)
 
-`General`
+    General
         AF      Prints  -   Time to get groovy
         AL      Console -   Time before program starts
         CD      Prints  -   3, 2, 1
@@ -46,23 +46,23 @@ All file items will be used to check for all/most relevant and mandatory require
         MD      Prints  -   {2} programming!ctb
         LB/WS   Prints  -   {1} We're in a movie
 
-`Editor`
+    Editor
         BM      Prints  -   Found some noticable bookmarks at {Bookmarks}
         GS      Console -   Console Size
 
-`Metadata`
+    Metadata
         TT/TU   Prints  -   Title: {Title}/{TitleUnicode}
         AS/AU   Prints  -   Artist: {Artist}/{Artist/Unicode}
         CT      Prints  -   Creator: {Creator}
         VR      Prints  -   Version: {Version}
 
-`Difficulty`
+    Difficulty
         HP      Console -   End Program
         CS      Console -   Text Size
         OD      Console -   Text Spacing
         AT      Console -   Char Time Printed
 
-`TimingPoints`
+    TimingPoints
         ?
 
 # Definitions
