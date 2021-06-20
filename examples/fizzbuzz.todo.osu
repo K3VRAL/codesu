@@ -132,8 +132,8 @@
 
 // Thank you stackexchange: https://codereview.stackexchange.com/questions/57382/fizzbuzz-in-brainfuck
 // This was helpful to have a starting ground despite spending hours of research and theory crafting to calculate modulo in binary zzz
-// Thak you stackexchange: https://stackoverflow.com/questions/37354899/how-can-i-check-if-two-cells-are-equal-in-brainfck
-// This is a better explaination of checking
+// Thank you reddit: https://www.reddit.com/r/brainfuck/comments/5d05b7/i_made_an_if_statement/
+// Good if statement, changed it for personal use
 //>+        [7]     1   Loop
 //>         [8]     0   If F/B is printed
 //>+++      [9]     3   For Fizz

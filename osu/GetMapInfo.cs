@@ -1,15 +1,15 @@
 using System;
-using System.Collections.Generic;
+
+using osuProgram.codesu;
 
 namespace osuProgram.osu
 {
-    public class GetMapInfo
+    public static class GetMapInfo
     {
-        public List<string> Path { get; set; }
-        public int GetItemLine(String item)
+        public static int GetItemLine(String item)
         {
             int lineindex = 0;
-            foreach (var line in Path)
+            foreach (var line in programsu.lines)
             {
                 if (line.Contains(item))
                     return lineindex + 1;
