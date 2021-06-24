@@ -103,7 +103,7 @@ namespace osuProgram.codesu
                 if (AllHitObjects[line].YVal >= yloc[0] && AllHitObjects[line].YVal < yloc[1])
                 {
                     string inp = null;
-                    // inpDig/ASC
+                    //      inp,        V       inp;
                     switch (AllHitObjects[line].OType)
                     {
                         case GetObjectInfo.Type.Normal:
@@ -112,7 +112,7 @@ namespace osuProgram.codesu
                             try
                             {
                                 memory[memorypos] = Convert.ToUInt16(inp);
-                                command = "inpDig";
+                                command = "inp,";
                             }
                             catch (System.FormatException)
                             {
@@ -127,7 +127,7 @@ namespace osuProgram.codesu
                             try
                             {
                                 memory[memorypos] = Convert.ToUInt16(Convert.ToChar(inp));
-                                command = "inpASC";
+                                command = "inp;";
                             }
                             catch (System.FormatException)
                             {
@@ -136,9 +136,10 @@ namespace osuProgram.codesu
                             }
                             break;
                     }
-                } else if (AllHitObjects[line].YVal >= yloc[1] && AllHitObjects[line].YVal < yloc[2])
+                }
+                else if (AllHitObjects[line].YVal >= yloc[1] && AllHitObjects[line].YVal < yloc[2])
                 {
-                    // jmp[/]
+                    //      jmp[        V       jmp]
                     // TODO: Make sure everything has been correctly implemented - looking great so far
                     // TODO: Make it count the brackets precompiling and give an error if the brackets do not have the value of 0
                     int bracketcount = 1;
@@ -212,9 +213,10 @@ namespace osuProgram.codesu
                             command = "jmp]";
                             break;
                     }
-                } else if (AllHitObjects[line].YVal >= yloc[2] && AllHitObjects[line].YVal < yloc[3])
+                }
+                else if (AllHitObjects[line].YVal >= yloc[2] && AllHitObjects[line].YVal < yloc[3])
                 {
-                    // pnt</>
+                    //  pnt<        V       pnt>
                     switch (AllHitObjects[line].OType)
                     {
                         case GetObjectInfo.Type.Normal:
@@ -235,9 +237,10 @@ namespace osuProgram.codesu
                             command = "pnt>";
                             break;
                     }
-                } else if (AllHitObjects[line].YVal >= yloc[3] && AllHitObjects[line].YVal < yloc[4])
+                }
+                else if (AllHitObjects[line].YVal >= yloc[3] && AllHitObjects[line].YVal < yloc[4])
                 {
-                    // inc+/dec-/rnd~
+                    //  inc+        V       dec-        V       rnd~
                     switch (AllHitObjects[line].OType)
                     {
                         case GetObjectInfo.Type.Normal:
@@ -269,9 +272,10 @@ namespace osuProgram.codesu
                             command = "rnd~";
                             break;
                     }
-                } else if (AllHitObjects[line].YVal >= yloc[4] && AllHitObjects[line].YVal < yloc[5])
+                }
+                else if (AllHitObjects[line].YVal >= yloc[4] && AllHitObjects[line].YVal < yloc[5])
                 {
-                    // mul*/div/
+                    //  mul*        V       div/
                     switch (AllHitObjects[line].OType)
                     {
                         case GetObjectInfo.Type.Normal:
@@ -284,9 +288,10 @@ namespace osuProgram.codesu
                             command = "div/";
                             break;
                     }
-                } else if (AllHitObjects[line].YVal >= yloc[5] && AllHitObjects[line].YVal <= yloc[6])
+                }
+                else if (AllHitObjects[line].YVal >= yloc[5] && AllHitObjects[line].YVal <= yloc[6])
                 {
-                    // outDig/ASC
+                    //  out.        V       out:
                     if (GetArgsInfo.debug)
                     {
                         Console.Write("Output: ");
@@ -295,30 +300,37 @@ namespace osuProgram.codesu
                     {
                         case GetObjectInfo.Type.Normal:
                             Console.Write(memory[memorypos]);
-                            command = "outDig";
+                            command = "out.";
                             break;
 
                         case GetObjectInfo.Type.Slider:
                             Console.Write((char)memory[memorypos]);
-                            command = "outASC";
+                            command = "out:";
                             break;
                     }
                     if (GetArgsInfo.debug)
                     {
                         Console.WriteLine();
                     }
-                } else {
+                    if (GetArgsInfo.step)
+                    {
+                        Console.ReadKey(true);
+                    }
+                }
+                else
+                {
                     Console.WriteLine("Error: Line {0} has Y value of {1}. Change this to be in range from {2} to {3}.", line + 1, AllHitObjects[line].YVal, yloc[0], yloc[yloc.Length-1]);
                     return;
                 }
 
-                if (GetArgsInfo.debug)
+                if (GetArgsInfo.debug && GetArgsInfo.step)
                 {
                     Console.WriteLine("FileLine: {0}\tMemPos: {1}\tMemVal: {2}\tCommand: {3}", line, memorypos, memory[memorypos], command);
-                }
-                if (GetArgsInfo.step)
-                {
                     Console.ReadKey(true);
+                }
+                else if (GetArgsInfo.debug)
+                {
+                    Console.WriteLine("FileLine: {0}\tMemPos: {1}\tMemVal: {2}\tCommand: {3}", line, memorypos, memory[memorypos], command);
                 }
                 line++;
             }

@@ -44,7 +44,7 @@ namespace osuProgram
                 
                 if (file == "" || file == null || string.IsNullOrEmpty(file) || string.IsNullOrWhiteSpace(file) || file.Length == 0)
                 {
-                    Console.WriteLine("Error: No relevant file or nothing was inputted: {0}", file);
+                    Console.WriteLine("Error: No relevant file was inputted: {0}", string.Join(" ", args));
                     return;
                 }
 
