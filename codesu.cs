@@ -119,6 +119,11 @@ namespace osuProgram.codesu
                                 Console.WriteLine("Error: Invalid input: {0} to digit", inp);
                                 return;
                             }
+                            catch (System.OverflowException)
+                            {
+                                Console.WriteLine("Error: Too big of an input. Maxiumum input allowed is {0}: {1} to digit", UInt16.MaxValue, inp);
+                                return;
+                            }
                             break;
 
                         case GetObjectInfo.Type.Slider:
@@ -132,6 +137,11 @@ namespace osuProgram.codesu
                             catch (System.FormatException)
                             {
                                 Console.WriteLine("Error: Invalid input: {0} to ASCII", inp);
+                                return;
+                            }
+                            catch (System.OverflowException)
+                            {
+                                Console.WriteLine("Error: Too big of an input. Maxiumum input allowed is {0}: {1} to digit", UInt16.MaxValue, inp);
                                 return;
                             }
                             break;
