@@ -35,6 +35,7 @@ namespace osuProgram.codesu
                         AllHitObjects.Add(new GetObjectInfo
                         {
                             Object = lines.Skip(i).First(),
+                            FileLine = i + 1,
                             OType = GetObjectInfo.Type.Spinner,
                             XVal = Int32.Parse(amount[0]),
                             YVal = Int32.Parse(amount[1]),
@@ -54,6 +55,7 @@ namespace osuProgram.codesu
                     AllHitObjects.Add(new GetObjectInfo
                     {
                         Object = lines.Skip(i).First(),
+                        FileLine = i + 1,
                         OType = GetObjectInfo.Type.Slider,
                         XVal = Int32.Parse(amount[0]),
                         YVal = Int32.Parse(amount[1]),
@@ -67,6 +69,7 @@ namespace osuProgram.codesu
                     AllHitObjects.Add(new GetObjectInfo
                     {
                         Object = lines.Skip(i).First(),
+                        FileLine = i + 1,
                         OType = GetObjectInfo.Type.Normal,
                         XVal = Int32.Parse(amount[0]),
                         YVal = Int32.Parse(amount[1]),
@@ -81,7 +84,7 @@ namespace osuProgram.codesu
             }
             
             AllHitObjects = AllHitObjects.OrderBy(a => a.TVal).ToList();
-            int line = 0;
+            int objct = 0;
             List<UInt16> memory = new List<UInt16>();
             for (int i = 0; i < 30000; i++)
                 memory.Add(0);
@@ -93,18 +96,18 @@ namespace osuProgram.codesu
             {
                 foreach (var x in AllHitObjects)
                 {
-                    Console.WriteLine("Object: {0}\tX: {1}\tY: {2}\tTime: {3}\tFullLine: {4}", x.OType, x.XVal, x.YVal, x.TVal, x.Object);
+                    Console.WriteLine("Object: {0}\tFileLine: {1}\tX: {2}\tY: {3}\tTime: {4}\tFullLine: {5}", x.OType, x.FileLine, x.XVal, x.YVal, x.TVal, x.Object);
                 }
                 return;
             }
 
-            while (line < AllHitObjects.Count)
+            while (objct < AllHitObjects.Count)
             {
-                if (AllHitObjects[line].YVal >= yloc[0] && AllHitObjects[line].YVal < yloc[1])
+                if (AllHitObjects[objct].YVal >= yloc[0] && AllHitObjects[objct].YVal < yloc[1])
                 {
                     string inp = null;
                     //      inp,        V       inp;
-                    switch (AllHitObjects[line].OType)
+                    switch (AllHitObjects[objct].OType)
                     {
                         case GetObjectInfo.Type.Normal:
                             Console.Write("Input (Digit): ");
@@ -147,16 +150,16 @@ namespace osuProgram.codesu
                             break;
                     }
                 }
-                else if (AllHitObjects[line].YVal >= yloc[1] && AllHitObjects[line].YVal < yloc[2])
+                else if (AllHitObjects[objct].YVal >= yloc[1] && AllHitObjects[objct].YVal < yloc[2])
                 {
                     //      jmp[        V       jmp]
                     // TODO: Make sure everything has been correctly implemented - looking great so far
                     // TODO: Make it count the brackets precompiling and give an error if the brackets do not have the value of 0
                     int bracketcount = 1;
-                    switch (AllHitObjects[line].OType)
+                    switch (AllHitObjects[objct].OType)
                     {
                         case GetObjectInfo.Type.Normal:
-                            for (int i = line + 1; i < AllHitObjects.Count; i++)
+                            for (int i = objct + 1; i < AllHitObjects.Count; i++)
                             {
                                 if ((AllHitObjects[i].YVal >= 85 && AllHitObjects[i].YVal < 170) && AllHitObjects[i].OType == GetObjectInfo.Type.Normal)
                                 {
@@ -174,7 +177,7 @@ namespace osuProgram.codesu
                                         {
                                             Console.WriteLine("jmp[\t-\tIs 0\tMemVal: {0}\tJumping past jmp]", memory[memorypos]);
                                         }
-                                        line = i;
+                                        objct = i;
                                     }
                                     else
                                     {
@@ -190,7 +193,7 @@ namespace osuProgram.codesu
                             break;
 
                         case GetObjectInfo.Type.Slider:
-                            for (int i = line - 1; i >= 0; i--)
+                            for (int i = objct - 1; i >= 0; i--)
                             {
                                 if ((AllHitObjects[i].YVal >= 85 && AllHitObjects[i].YVal < 170) && AllHitObjects[i].OType == GetObjectInfo.Type.Normal)
                                 {
@@ -208,7 +211,7 @@ namespace osuProgram.codesu
                                         {
                                             Console.WriteLine("jmp]\t-\tNot 0\tMemVal: {0}\tJumping to jmp[", memory[memorypos]);
                                         }
-                                        line = i;
+                                        objct = i;
                                     }
                                     else
                                     {
@@ -224,10 +227,10 @@ namespace osuProgram.codesu
                             break;
                     }
                 }
-                else if (AllHitObjects[line].YVal >= yloc[2] && AllHitObjects[line].YVal < yloc[3])
+                else if (AllHitObjects[objct].YVal >= yloc[2] && AllHitObjects[objct].YVal < yloc[3])
                 {
                     //  pnt<        V       pnt>
-                    switch (AllHitObjects[line].OType)
+                    switch (AllHitObjects[objct].OType)
                     {
                         case GetObjectInfo.Type.Normal:
                             memorypos--;
@@ -248,10 +251,10 @@ namespace osuProgram.codesu
                             break;
                     }
                 }
-                else if (AllHitObjects[line].YVal >= yloc[3] && AllHitObjects[line].YVal < yloc[4])
+                else if (AllHitObjects[objct].YVal >= yloc[3] && AllHitObjects[objct].YVal < yloc[4])
                 {
                     //  inc+        V       dec-        V       rnd~
-                    switch (AllHitObjects[line].OType)
+                    switch (AllHitObjects[objct].OType)
                     {
                         case GetObjectInfo.Type.Normal:
                             if (memory[memorypos] == UInt16.MaxValue)
@@ -283,10 +286,10 @@ namespace osuProgram.codesu
                             break;
                     }
                 }
-                else if (AllHitObjects[line].YVal >= yloc[4] && AllHitObjects[line].YVal < yloc[5])
+                else if (AllHitObjects[objct].YVal >= yloc[4] && AllHitObjects[objct].YVal < yloc[5])
                 {
                     //  mul*        V       div/
-                    switch (AllHitObjects[line].OType)
+                    switch (AllHitObjects[objct].OType)
                     {
                         case GetObjectInfo.Type.Normal:
                             memory[memorypos] *= 2;
@@ -299,14 +302,14 @@ namespace osuProgram.codesu
                             break;
                     }
                 }
-                else if (AllHitObjects[line].YVal >= yloc[5] && AllHitObjects[line].YVal <= yloc[6])
+                else if (AllHitObjects[objct].YVal >= yloc[5] && AllHitObjects[objct].YVal <= yloc[6])
                 {
                     //  out.        V       out:
                     if (GetArgsInfo.debug)
                     {
                         Console.Write("Output: ");
                     }
-                    switch (AllHitObjects[line].OType)
+                    switch (AllHitObjects[objct].OType)
                     {
                         case GetObjectInfo.Type.Normal:
                             Console.Write(memory[memorypos]);
@@ -329,20 +332,20 @@ namespace osuProgram.codesu
                 }
                 else
                 {
-                    Console.WriteLine("Error: Line {0} has Y value of {1}. Change this to be in range from {2} to {3}.", line + 1, AllHitObjects[line].YVal, yloc[0], yloc[yloc.Length-1]);
+                    Console.WriteLine("Error: Object {0} at FileLine: {1} has Y value of {2}. Change this to be in range from {3} to {4}.", objct + 1, AllHitObjects[objct].FileLine, AllHitObjects[objct].YVal, yloc[0], yloc[yloc.Length-1]);
                     return;
                 }
 
                 if (GetArgsInfo.debug && GetArgsInfo.step)
                 {
-                    Console.WriteLine("FileLine: {0}\tMemPos: {1}\tMemVal: {2}\tCommand: {3}", line, memorypos, memory[memorypos], command);
+                    Console.WriteLine("Object: {0}\tFileLine: {1}\tMemPos: {2}\tMemVal: {3}\tCommand: {4}", objct, AllHitObjects[objct].FileLine, memorypos, memory[memorypos], command);
                     Console.ReadKey(true);
                 }
                 else if (GetArgsInfo.debug)
                 {
-                    Console.WriteLine("FileLine: {0}\tMemPos: {1}\tMemVal: {2}\tCommand: {3}", line, memorypos, memory[memorypos], command);
+                    Console.WriteLine("Object: {0}\tFileLine: {1}\tMemPos: {2}\tMemVal: {3}\tCommand: {4}", objct, AllHitObjects[objct].FileLine, memorypos, memory[memorypos], command);
                 }
-                line++;
+                objct++;
             }
             Console.WriteLine();
         }

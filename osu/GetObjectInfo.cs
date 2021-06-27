@@ -12,6 +12,7 @@ namespace osuProgram.osu
         }
 
         public string Object { get; set; }
+        public int FileLine { get; set; }
         public Type OType { get; set; }
         public int XVal { get; set; }
         public int YVal { get; set; }
