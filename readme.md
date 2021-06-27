@@ -14,7 +14,7 @@ Inspired by various programming languages. You use the osu!editor in order to co
 
 # How to run a file
 
-[.NET Core SDK 5](https://dotnet.microsoft.com/download/dotnet/5.0) was used
+[.NET Core SDK 5](https://dotnet.microsoft.com/download/dotnet/5.0) is required before using the program
 
 If you downloaded the release file, you would need to use the terminal, `cd` into the release folder and write:
 
