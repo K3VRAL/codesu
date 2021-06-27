@@ -67,8 +67,40 @@ namespace osuProgram
                 }
 
                 programsu.lines = lines;
-                // TODO: if (args is ctb or anything else)
-                programsu.ctb();
+                string[] getLine = null;
+                try
+                {
+                    getLine = lines[GetMapInfo.GetItemLine("Mode:")-1].Split(' ');
+                }
+                catch (System.ArgumentOutOfRangeException)
+                {
+                    Console.WriteLine("Error: \"Mode\" from .osu file does not exist. Please include it so the items can be processed in a specific programming language.");
+                    return;
+                }
+                
+                switch (getLine[getLine.Length-1])
+                {
+                    case "2":
+                        programsu.ctb();
+                        return;
+
+                    case "0":
+                        Console.Write("osu!std");
+                        break;
+
+                    case "1":
+                        Console.Write("osu!taiko");
+                        break;
+
+                    case "3":
+                        Console.Write("osu!mania");
+                        break;
+
+                    default:
+                        Console.WriteLine("Error: \"Mode\" does not have a correct or valid integer to target a specified gamemode: {0}", string.Join(" ", getLine));
+                        return;
+                }
+                Console.WriteLine(" does not currently have a supported programming language attached to it yet. Sorry.");
             }
             else if (args.Length == 0)
             {
