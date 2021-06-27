@@ -40,8 +40,6 @@ Displays all and sorted items: `-a`
 
 ## osu!ctbrainfuck
 
-There are all the commands used in the osu
-
     HitObjects
         Y-val   Command     Info
         0-63    Input       | Circle: Digits        Slider: ASCII
