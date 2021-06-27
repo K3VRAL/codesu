@@ -12,9 +12,17 @@ Inspired by various programming languages. You use the osu!editor in order to co
 
 `osu!mania` TODO
 
-# How to open file
+# How to run a file
 
-`dotnet run --project cproject.csproj [file]`
+[.NET Core SDK 5](https://dotnet.microsoft.com/download/dotnet/5.0) was used
+
+If you downloaded the release file, you would need to use the terminal, `cd` into the release folder and write:
+
+`./cproject [file]`
+
+or if you would like to compile from the source code
+
+`dotnet run -p cproject.csproj [file]`
 
 Where `[file]` is exchanged for the `.osu` file that you programmed.
 
@@ -76,7 +84,7 @@ TODO
 
 `Decrement`   Subtract current cell by 1
 
-`Random`      Will replace current cell by a random number of 0 or 1
+`Random`      Will replace current cell by a random number from 0 to 65535
 
 `Mulcrement`  Multiplies current cell by 2
 
