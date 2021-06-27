@@ -18,7 +18,9 @@ Inspired by various programming languages. You use the osu!editor in order to co
 
 If you downloaded the release file, you would need to use the terminal, `cd` into the release folder and write:
 
-`./cproject [file]`
+Windows: `dotnet cproject.dll [file]`
+
+Linux: `./cproject [file]`
 
 or if you would like to compile from the source code
 
