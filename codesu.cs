@@ -14,29 +14,71 @@ namespace osuProgram.codesu
         {
             List<GetObjectInfo> AllHitObjects = new();
 
+            if (GetMapInfo.GetItemLine("[HitObjects]") == -1)
+            {
+                Console.WriteLine("Error: There is no [HitObjects]. Please include this for the program to work.");
+                return;
+            }
+
             // i needs to equal to the beginning of [HitObjects]
             for (int i = GetMapInfo.GetItemLine("[HitObjects]"); i < lines.Count; i++)
             {
-                if (lines.Skip(i).First() == "" || lines.Skip(i).First().Contains("//"))
+                try
                 {
-                    if (!GetArgsInfo.ignore)
+                    if (lines.Skip(i).First() == "" || lines.Skip(i).First().Contains("//"))
                     {
-                        Console.WriteLine("Warning: Remove illegal line found at line {0} before submitting: {1}", i, lines.Skip(i).First());
+                        if (!GetArgsInfo.ignore)
+                        {
+                            Console.WriteLine("Warning: Remove illegal line found at line {0} before submitting: {1}", i, lines.Skip(i).First());
+                        }
+                        continue;
                     }
-                    continue;
-                }
 
-                String[] amount = lines.Skip(i).First().Split(",");
-                if (amount.Length == 7)
-                {
-                    if (Int32.Parse(amount[3]) == 12 && (Int32.Parse(amount[0]) == 256 && Int32.Parse(amount[1]) == 192))
+                    String[] amount = lines.Skip(i).First().Split(",");
+                    if (amount.Length == 7)
                     {
-                        // Spinner added
+                        if (Int32.Parse(amount[3]) == 12 && (Int32.Parse(amount[0]) == 256 && Int32.Parse(amount[1]) == 192))
+                        {
+                            // Spinner added
+                            AllHitObjects.Add(new GetObjectInfo
+                            {
+                                Object = lines.Skip(i).First(),
+                                FileLine = i + 1,
+                                OType = GetObjectInfo.Type.Spinner,
+                                XVal = Int32.Parse(amount[0]),
+                                YVal = Int32.Parse(amount[1]),
+                                TVal = Int32.Parse(amount[2])
+                            });
+                        }
+                        else
+                        {
+                            Console.WriteLine("An error with the spinner: {0} at line {1}", lines.Skip(i).First(), i);
+                            return;
+                        }
+                    }
+                    else if (Int32.Parse(amount[3]) == 6 || Int32.Parse(amount[3]) == 2)
+                    {
+                        // TODO: Make checks if above and below limits with both x and y
+                        // Slider added
                         AllHitObjects.Add(new GetObjectInfo
                         {
                             Object = lines.Skip(i).First(),
                             FileLine = i + 1,
-                            OType = GetObjectInfo.Type.Spinner,
+                            OType = GetObjectInfo.Type.Slider,
+                            XVal = Int32.Parse(amount[0]),
+                            YVal = Int32.Parse(amount[1]),
+                            TVal = Int32.Parse(amount[2])
+                        });
+                    }
+                    else if (Int32.Parse(amount[3]) == 5 || Int32.Parse(amount[3]) == 1)
+                    {
+                        // TODO: Make checks if above and below limits with both x and y
+                        // Circle added
+                        AllHitObjects.Add(new GetObjectInfo
+                        {
+                            Object = lines.Skip(i).First(),
+                            FileLine = i + 1,
+                            OType = GetObjectInfo.Type.Normal,
                             XVal = Int32.Parse(amount[0]),
                             YVal = Int32.Parse(amount[1]),
                             TVal = Int32.Parse(amount[2])
@@ -44,41 +86,13 @@ namespace osuProgram.codesu
                     }
                     else
                     {
-                        Console.WriteLine("An error with the spinner: {0} at line {1}", lines.Skip(i).First(), i);
+                        Console.WriteLine("Error: {0} on line {1}", lines.Skip(i).First(), i);
                         return;
                     }
                 }
-                else if (Int32.Parse(amount[3]) == 6 || Int32.Parse(amount[3]) == 2)
+                catch (System.IndexOutOfRangeException)
                 {
-                    // TODO: Make checks if above and below limits with both x and y
-                    // Slider added
-                    AllHitObjects.Add(new GetObjectInfo
-                    {
-                        Object = lines.Skip(i).First(),
-                        FileLine = i + 1,
-                        OType = GetObjectInfo.Type.Slider,
-                        XVal = Int32.Parse(amount[0]),
-                        YVal = Int32.Parse(amount[1]),
-                        TVal = Int32.Parse(amount[2])
-                    });
-                }
-                else if (Int32.Parse(amount[3]) == 5 || Int32.Parse(amount[3]) == 1)
-                {
-                    // TODO: Make checks if above and below limits with both x and y
-                    // Circle added
-                    AllHitObjects.Add(new GetObjectInfo
-                    {
-                        Object = lines.Skip(i).First(),
-                        FileLine = i + 1,
-                        OType = GetObjectInfo.Type.Normal,
-                        XVal = Int32.Parse(amount[0]),
-                        YVal = Int32.Parse(amount[1]),
-                        TVal = Int32.Parse(amount[2])
-                    });
-                }
-                else
-                {
-                    Console.WriteLine("Error: {0} on line {1}", lines.Skip(i).First(), i);
+                    Console.WriteLine("Error: Something went wrong at line {0}", i + 1);
                     return;
                 }
             }
