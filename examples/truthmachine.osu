@@ -15,3 +15,5 @@ Mode: 2
 
 //]
 127,127,5,2,0,L|352:192,1,50
+
+// I know that a truth machine is supposed to output 0 once and 1 infinitly but since the rules are pretty vague when it comes to other numbers, I'll let this slide for now
