@@ -16,6 +16,8 @@ Inspired by various programming languages. You use the osu!editor in order to co
 
 [.NET 5](https://dotnet.microsoft.com/download/dotnet/5.0) is required before using the program
 
+[Download here](https://github.com/K3VRAL/codesu/releases)
+
 If you downloaded the release file, you would need to use the terminal, `cd` into the release folder and write:
 
 All OSes: `dotnet cproject.dll [file]`
