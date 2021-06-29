@@ -31,7 +31,10 @@ namespace osuProgram.codesu
                     {
                         if (GetArgsInfo.export)
                         {
-                            Console.WriteLine("Export: Ignoring illegal lines found at line {0}", i + 1);
+                            if (!GetArgsInfo.ignore)
+                            {
+                                Console.WriteLine("Export: Ignoring illegal lines found at line {0}", i + 1);
+                            }
                         }
                         else if (!GetArgsInfo.ignore)
                         {
