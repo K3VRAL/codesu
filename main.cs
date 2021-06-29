@@ -39,6 +39,10 @@ namespace osuProgram
                         case "-a":
                             GetArgsInfo.all = true;
                             break;
+
+                        case "-e":
+                            GetArgsInfo.export = true;
+                            break;
                     }
                 }
                 
@@ -67,6 +71,7 @@ namespace osuProgram
                 }
 
                 programsu.lines = lines;
+                programsu.file = file + ".exported";
                 string[] getLine = null;
                 try
                 {
@@ -77,13 +82,29 @@ namespace osuProgram
                     Console.WriteLine("Error: \"Mode\" from .osu file does not exist. Please include it so the items can be processed in a specific programming language.");
                     return;
                 }
-                
+
+                if (GetArgsInfo.export)
+                {
+                    string temp = null;
+                    Console.WriteLine("Export Options:");
+                    while (true)
+                    {
+                        Console.Write("Do you want all objects to have a New Combo attribute? (Y/N) ");
+                        temp = Console.ReadLine().ToUpper();
+                        if (temp == "" || temp == null || string.IsNullOrEmpty(temp) || string.IsNullOrWhiteSpace(temp) || temp.Length == 0 || (temp != "Y" && temp != "N"))
+                        {
+                            Console.WriteLine("The input must either be a Y(es) or N(o). Please correctly input the right letters.");
+                        }
+                        else
+                        {
+                            GetArgsInfo.expANC = temp == "Y";
+                            break;
+                        }
+                    }
+                }
+
                 switch (getLine[getLine.Length-1])
                 {
-                    case "2":
-                        programsu.ctb();
-                        return;
-
                     case "0":
                         Console.Write("osu!std");
                         break;
@@ -91,6 +112,10 @@ namespace osuProgram
                     case "1":
                         Console.Write("osu!taiko");
                         break;
+
+                    case "2":
+                        programsu.ctb();
+                        return;
 
                     case "3":
                         Console.Write("osu!mania");

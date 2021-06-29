@@ -17,5 +17,7 @@ namespace osuProgram.osu
         public int XVal { get; set; }
         public int YVal { get; set; }
         public int TVal { get; set; }
+        public int STVal { get; set; }
+        public int NCombo { get; set; }
     }
 }

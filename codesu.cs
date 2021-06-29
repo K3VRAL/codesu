@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,6 +10,7 @@ namespace osuProgram.codesu
     public static class programsu
     {
         public static List<string> lines { get; set; }
+        public static string file { get; set; }
 
         public static void ctb()
         {
@@ -20,16 +22,20 @@ namespace osuProgram.codesu
                 return;
             }
 
-            // i needs to equal to the beginning of [HitObjects]
+            // i needs to equal to the beginning of [HitObjects] plus 1
             for (int i = GetMapInfo.GetItemLine("[HitObjects]"); i < lines.Count; i++)
             {
                 try
                 {
                     if (lines.Skip(i).First() == "" || lines.Skip(i).First().Contains("//"))
                     {
-                        if (!GetArgsInfo.ignore)
+                        if (GetArgsInfo.export)
                         {
-                            Console.WriteLine("Warning: Remove illegal line found at line {0} before submitting: {1}", i, lines.Skip(i).First());
+                            Console.WriteLine("Export: Ignoring illegal lines found at line {0}", i + 1);
+                        }
+                        else if (!GetArgsInfo.ignore)
+                        {
+                            Console.WriteLine("Warning: Remove illegal line found at line {0} before submitting: {1}", i + 1, lines.Skip(i).First());
                         }
                         continue;
                     }
@@ -37,7 +43,7 @@ namespace osuProgram.codesu
                     String[] amount = lines.Skip(i).First().Split(",");
                     if (amount.Length == 7)
                     {
-                        if (Int32.Parse(amount[3]) == 12 && (Int32.Parse(amount[0]) == 256 && Int32.Parse(amount[1]) == 192))
+                        if ((Int32.Parse(amount[3]) == 8 || Int32.Parse(amount[3]) == 12) && (Int32.Parse(amount[0]) == 256 && Int32.Parse(amount[1]) == 192))
                         {
                             // Spinner added
                             AllHitObjects.Add(new GetObjectInfo
@@ -47,12 +53,14 @@ namespace osuProgram.codesu
                                 OType = GetObjectInfo.Type.Spinner,
                                 XVal = Int32.Parse(amount[0]),
                                 YVal = Int32.Parse(amount[1]),
-                                TVal = Int32.Parse(amount[2])
+                                TVal = Int32.Parse(amount[2]),
+                                NCombo = Int32.Parse(amount[3]),        // 12 is NCombo, 8 isn't
+                                STVal = Int32.Parse(amount[5]),
                             });
                         }
                         else
                         {
-                            Console.WriteLine("An error with the spinner: {0} at line {1}", lines.Skip(i).First(), i);
+                            Console.WriteLine("An error with the spinner: {0} at line {1}", lines.Skip(i).First(), i + 1);
                             return;
                         }
                     }
@@ -67,7 +75,8 @@ namespace osuProgram.codesu
                             OType = GetObjectInfo.Type.Slider,
                             XVal = Int32.Parse(amount[0]),
                             YVal = Int32.Parse(amount[1]),
-                            TVal = Int32.Parse(amount[2])
+                            TVal = Int32.Parse(amount[2]),
+                            NCombo = Int32.Parse(amount[3]),            //  6 is NCombo, 2 isn't
                         });
                     }
                     else if (Int32.Parse(amount[3]) == 5 || Int32.Parse(amount[3]) == 1)
@@ -81,12 +90,13 @@ namespace osuProgram.codesu
                             OType = GetObjectInfo.Type.Normal,
                             XVal = Int32.Parse(amount[0]),
                             YVal = Int32.Parse(amount[1]),
-                            TVal = Int32.Parse(amount[2])
+                            TVal = Int32.Parse(amount[2]),
+                            NCombo = Int32.Parse(amount[3]),            //  5 is NCombo, 1 isn't
                         });
                     }
                     else
                     {
-                        Console.WriteLine("Error: {0} on line {1}", lines.Skip(i).First(), i);
+                        Console.WriteLine("Error: {0} on line {1}", lines.Skip(i).First(), i + 1);
                         return;
                     }
                 }
@@ -106,6 +116,61 @@ namespace osuProgram.codesu
             int[] yloc = {0, 64, 128, 192, 256, 320, 384};
             string command = null;
 
+            if (GetArgsInfo.export)
+            {
+                if (GetArgsInfo.expANC)
+                {
+                    foreach (var x in AllHitObjects)
+                    {
+                        if (x.OType == GetObjectInfo.Type.Spinner)
+                        {
+                            x.NCombo = 12;
+                        }
+                        else if (x.OType == GetObjectInfo.Type.Slider)
+                        {
+                            x.NCombo = 6;
+                        }
+                        else if (x.OType == GetObjectInfo.Type.Normal)
+                        {
+                            x.NCombo = 5;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Error: New Combo {0} from Object {1}", x.NCombo, x.Object);
+                            return;
+                        }
+                    }
+                }
+                File.Create(file).Close();
+                using (StreamWriter sw = new(file))
+                {
+                    sw.WriteLine("Mode: 2\n[HitObjects]");
+                    foreach (var x in AllHitObjects)
+                    {
+                        string[] temp = x.Object.Split(",");
+                        if (x.OType == GetObjectInfo.Type.Normal)
+                        {
+                            sw.WriteLine(x.XVal + "," + x.YVal + "," + x.TVal + "," + x.NCombo + "," + temp[4] + "," + temp[5]);
+                        }
+                        else if (x.OType == GetObjectInfo.Type.Slider)
+                        {
+                            sw.WriteLine(x.XVal + "," + x.YVal + "," + x.TVal + "," + x.NCombo + "," + temp[4] + "," + temp[5] + "," + temp[6] + "," + temp[7]);
+                        }
+                        else if (x.OType == GetObjectInfo.Type.Spinner)
+                        {
+                            sw.WriteLine(x.XVal + "," + x.YVal + "," + x.TVal + "," + x.NCombo + "," + temp[4] + "," + x.STVal + "," + temp[6]);
+                        }
+                        else
+                        {
+                            sw.WriteLine("Error: Fix this issue regarding the New Combo {0} from Object {1}", x.NCombo, x.Object);
+                            Console.WriteLine("Error: New Combo {0} from Object {1}", x.NCombo, x.Object);
+                            return;
+                        }
+                    }
+                }
+                Console.WriteLine("Export: Done!");
+                return;
+            }
             if (GetArgsInfo.all)
             {
                 foreach (var x in AllHitObjects)

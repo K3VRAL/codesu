@@ -38,6 +38,8 @@ Steps: `-s`
 
 Displays all and sorted items: `-a`
 
+Exports (removes all unnecessary comments and newlines): `-e`
+
 # Commands and placements
 
 ## osu!ctbrainfuck
