@@ -9,7 +9,7 @@ namespace osuProgram.osu
         public static int GetItemLine(String item)
         {
             int lineindex = 0;
-            foreach (var line in programsu.lines)
+            foreach (var line in GetCodesuInfo.lines)
             {
                 if (line.Contains(item))
                     return lineindex + 1;

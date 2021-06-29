@@ -70,8 +70,8 @@ namespace osuProgram
                     return;
                 }
 
-                programsu.lines = lines;
-                programsu.file = file + ".exported";
+                GetCodesuInfo.lines = lines;
+                GetCodesuInfo.file = file + ".exported";
                 string[] getLine = null;
                 try
                 {
