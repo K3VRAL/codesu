@@ -7,11 +7,8 @@ using osuProgram.osu;
 
 namespace osuProgram.codesu
 {
-    public static class programsu
+    public static partial class programsu
     {
-        public static List<string> lines { get; set; }
-        public static string file { get; set; }
-
         public static void ctb()
         {
             List<GetObjectInfo> AllHitObjects = new();
@@ -23,27 +20,27 @@ namespace osuProgram.codesu
             }
 
             // i needs to equal to the beginning of [HitObjects] plus 1
-            for (int i = GetMapInfo.GetItemLine("[HitObjects]"); i < lines.Count; i++)
+            for (int i = GetMapInfo.GetItemLine("[HitObjects]"); i < GetCodesuInfo.lines.Count; i++)
             {
                 try
                 {
-                    if (lines.Skip(i).First() == "" || lines.Skip(i).First().Contains("//"))
+                    if (GetCodesuInfo.lines.Skip(i).First() == "" || GetCodesuInfo.lines.Skip(i).First().Contains("//"))
                     {
                         if (GetArgsInfo.export)
                         {
                             if (!GetArgsInfo.ignore)
                             {
-                                Console.WriteLine("Export: Ignoring illegal lines found at line {0}", i + 1);
+                                Console.WriteLine("Export: Ignoring illegal GetCodesuInfo.lines found at line {0}", i + 1);
                             }
                         }
                         else if (!GetArgsInfo.ignore)
                         {
-                            Console.WriteLine("Warning: Remove illegal line found at line {0} before submitting: {1}", i + 1, lines.Skip(i).First());
+                            Console.WriteLine("Warning: Remove illegal line found at line {0} before submitting: {1}", i + 1, GetCodesuInfo.lines.Skip(i).First());
                         }
                         continue;
                     }
 
-                    String[] amount = lines.Skip(i).First().Split(",");
+                    String[] amount = GetCodesuInfo.lines.Skip(i).First().Split(",");
                     if (amount.Length == 7)
                     {
                         if ((Int32.Parse(amount[3]) == 8 || Int32.Parse(amount[3]) == 12) && (Int32.Parse(amount[0]) == 256 && Int32.Parse(amount[1]) == 192))
@@ -51,7 +48,7 @@ namespace osuProgram.codesu
                             // Spinner added
                             AllHitObjects.Add(new GetObjectInfo
                             {
-                                Object = lines.Skip(i).First(),
+                                Object = GetCodesuInfo.lines.Skip(i).First(),
                                 FileLine = i + 1,
                                 OType = GetObjectInfo.Type.Spinner,
                                 XVal = Int32.Parse(amount[0]),
@@ -63,7 +60,7 @@ namespace osuProgram.codesu
                         }
                         else
                         {
-                            Console.WriteLine("An error with the spinner: {0} at line {1}", lines.Skip(i).First(), i + 1);
+                            Console.WriteLine("An error with the spinner: {0} at line {1}", GetCodesuInfo.lines.Skip(i).First(), i + 1);
                             return;
                         }
                     }
@@ -73,7 +70,7 @@ namespace osuProgram.codesu
                         // Slider added
                         AllHitObjects.Add(new GetObjectInfo
                         {
-                            Object = lines.Skip(i).First(),
+                            Object = GetCodesuInfo.lines.Skip(i).First(),
                             FileLine = i + 1,
                             OType = GetObjectInfo.Type.Slider,
                             XVal = Int32.Parse(amount[0]),
@@ -88,7 +85,7 @@ namespace osuProgram.codesu
                         // Circle added
                         AllHitObjects.Add(new GetObjectInfo
                         {
-                            Object = lines.Skip(i).First(),
+                            Object = GetCodesuInfo.lines.Skip(i).First(),
                             FileLine = i + 1,
                             OType = GetObjectInfo.Type.Normal,
                             XVal = Int32.Parse(amount[0]),
@@ -99,7 +96,7 @@ namespace osuProgram.codesu
                     }
                     else
                     {
-                        Console.WriteLine("Error: {0} on line {1}", lines.Skip(i).First(), i + 1);
+                        Console.WriteLine("Error: {0} on line {1}", GetCodesuInfo.lines.Skip(i).First(), i + 1);
                         return;
                     }
                 }
@@ -144,8 +141,8 @@ namespace osuProgram.codesu
                         }
                     }
                 }
-                File.Create(file).Close();
-                using (StreamWriter sw = new(file))
+                File.Create(GetCodesuInfo.file).Close();
+                using (StreamWriter sw = new(GetCodesuInfo.file))
                 {
                     sw.WriteLine("Mode: 2\n[HitObjects]");
                     foreach (var x in AllHitObjects)
@@ -431,14 +428,5 @@ namespace osuProgram.codesu
             }
             Console.WriteLine();
         }
-        
-        public static void std()
-        {}
-        
-        public static void taiko()
-        {}
-        
-        public static void mania()
-        {}
     }
 }
