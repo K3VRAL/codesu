@@ -6,6 +6,6 @@ namespace osuProgram.osu
     {
         public static List<string> lines { get; set; }
         public static string file { get; set; }
-
+        public static List<GetObjectInfo> AllHitObjects = new();
     }
 }

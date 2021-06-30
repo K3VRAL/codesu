@@ -11,103 +11,12 @@ namespace osuProgram.codesu
     {
         public static void ctb()
         {
-            List<GetObjectInfo> AllHitObjects = new();
-
-            if (GetMapInfo.GetItemLine("[HitObjects]") == -1)
+            ctbObjects();
+            if (GetArgsInfo.export || GetArgsInfo.all)
             {
-                Console.WriteLine("Error: There is no [HitObjects]. Please include this for the program to work.");
+                ctbExport();
                 return;
             }
-
-            // i needs to equal to the beginning of [HitObjects] plus 1
-            for (int i = GetMapInfo.GetItemLine("[HitObjects]"); i < GetCodesuInfo.lines.Count; i++)
-            {
-                try
-                {
-                    if (GetCodesuInfo.lines.Skip(i).First() == "" || GetCodesuInfo.lines.Skip(i).First().Contains("//"))
-                    {
-                        if (GetArgsInfo.export)
-                        {
-                            if (!GetArgsInfo.ignore)
-                            {
-                                Console.WriteLine("Export: Ignoring illegal GetCodesuInfo.lines found at line {0}", i + 1);
-                            }
-                        }
-                        else if (!GetArgsInfo.ignore)
-                        {
-                            Console.WriteLine("Warning: Remove illegal line found at line {0} before submitting: {1}", i + 1, GetCodesuInfo.lines.Skip(i).First());
-                        }
-                        continue;
-                    }
-
-                    String[] amount = GetCodesuInfo.lines.Skip(i).First().Split(",");
-                    if (amount.Length == 7)
-                    {
-                        if ((Int32.Parse(amount[3]) == 8 || Int32.Parse(amount[3]) == 12) && (Int32.Parse(amount[0]) == 256 && Int32.Parse(amount[1]) == 192))
-                        {
-                            // Spinner added
-                            AllHitObjects.Add(new GetObjectInfo
-                            {
-                                Object = GetCodesuInfo.lines.Skip(i).First(),
-                                FileLine = i + 1,
-                                OType = GetObjectInfo.Type.Spinner,
-                                XVal = Int32.Parse(amount[0]),
-                                YVal = Int32.Parse(amount[1]),
-                                TVal = Int32.Parse(amount[2]),
-                                NCombo = Int32.Parse(amount[3]),        // 12 is NCombo, 8 isn't
-                                STVal = Int32.Parse(amount[5]),
-                            });
-                        }
-                        else
-                        {
-                            Console.WriteLine("An error with the spinner: {0} at line {1}", GetCodesuInfo.lines.Skip(i).First(), i + 1);
-                            return;
-                        }
-                    }
-                    else if (Int32.Parse(amount[3]) == 6 || Int32.Parse(amount[3]) == 2)
-                    {
-                        // TODO: Make checks if above and below limits with both x and y
-                        // Slider added
-                        AllHitObjects.Add(new GetObjectInfo
-                        {
-                            Object = GetCodesuInfo.lines.Skip(i).First(),
-                            FileLine = i + 1,
-                            OType = GetObjectInfo.Type.Slider,
-                            XVal = Int32.Parse(amount[0]),
-                            YVal = Int32.Parse(amount[1]),
-                            TVal = Int32.Parse(amount[2]),
-                            NCombo = Int32.Parse(amount[3]),            //  6 is NCombo, 2 isn't
-                        });
-                    }
-                    else if (Int32.Parse(amount[3]) == 5 || Int32.Parse(amount[3]) == 1)
-                    {
-                        // TODO: Make checks if above and below limits with both x and y
-                        // Circle added
-                        AllHitObjects.Add(new GetObjectInfo
-                        {
-                            Object = GetCodesuInfo.lines.Skip(i).First(),
-                            FileLine = i + 1,
-                            OType = GetObjectInfo.Type.Normal,
-                            XVal = Int32.Parse(amount[0]),
-                            YVal = Int32.Parse(amount[1]),
-                            TVal = Int32.Parse(amount[2]),
-                            NCombo = Int32.Parse(amount[3]),            //  5 is NCombo, 1 isn't
-                        });
-                    }
-                    else
-                    {
-                        Console.WriteLine("Error: {0} on line {1}", GetCodesuInfo.lines.Skip(i).First(), i + 1);
-                        return;
-                    }
-                }
-                catch (System.IndexOutOfRangeException)
-                {
-                    Console.WriteLine("Error: Something went wrong at line {0}", i + 1);
-                    return;
-                }
-            }
-            
-            AllHitObjects = AllHitObjects.OrderBy(a => a.TVal).ToList();
             int objct = 0;
             List<UInt16> memory = new List<UInt16>();
             for (int i = 0; i < 30000; i++)
@@ -116,77 +25,13 @@ namespace osuProgram.codesu
             int[] yloc = {0, 64, 128, 192, 256, 320, 384};
             string command = null;
 
-            if (GetArgsInfo.export)
+            while (objct < GetCodesuInfo.AllHitObjects.Count)
             {
-                if (GetArgsInfo.expANC)
-                {
-                    foreach (var x in AllHitObjects)
-                    {
-                        if (x.OType == GetObjectInfo.Type.Spinner)
-                        {
-                            x.NCombo = 12;
-                        }
-                        else if (x.OType == GetObjectInfo.Type.Slider)
-                        {
-                            x.NCombo = 6;
-                        }
-                        else if (x.OType == GetObjectInfo.Type.Normal)
-                        {
-                            x.NCombo = 5;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Error: New Combo {0} from Object {1}", x.NCombo, x.Object);
-                            return;
-                        }
-                    }
-                }
-                File.Create(GetCodesuInfo.file).Close();
-                using (StreamWriter sw = new(GetCodesuInfo.file))
-                {
-                    sw.WriteLine("Mode: 2\n[HitObjects]");
-                    foreach (var x in AllHitObjects)
-                    {
-                        string[] temp = x.Object.Split(",");
-                        if (x.OType == GetObjectInfo.Type.Normal)
-                        {
-                            sw.WriteLine(x.XVal + "," + x.YVal + "," + x.TVal + "," + x.NCombo + "," + temp[4] + "," + temp[5]);
-                        }
-                        else if (x.OType == GetObjectInfo.Type.Slider)
-                        {
-                            sw.WriteLine(x.XVal + "," + x.YVal + "," + x.TVal + "," + x.NCombo + "," + temp[4] + "," + temp[5] + "," + temp[6] + "," + temp[7]);
-                        }
-                        else if (x.OType == GetObjectInfo.Type.Spinner)
-                        {
-                            sw.WriteLine(x.XVal + "," + x.YVal + "," + x.TVal + "," + x.NCombo + "," + temp[4] + "," + x.STVal + "," + temp[6]);
-                        }
-                        else
-                        {
-                            sw.WriteLine("Error: Fix this issue regarding the New Combo {0} from Object {1}", x.NCombo, x.Object);
-                            Console.WriteLine("Error: New Combo {0} from Object {1}", x.NCombo, x.Object);
-                            return;
-                        }
-                    }
-                }
-                Console.WriteLine("Export: Done!");
-                return;
-            }
-            if (GetArgsInfo.all)
-            {
-                foreach (var x in AllHitObjects)
-                {
-                    Console.WriteLine("Object: {0}\tFileLine: {1}\tX: {2}\tY: {3}\tTime: {4}\tFullLine: {5}", x.OType, x.FileLine, x.XVal, x.YVal, x.TVal, x.Object);
-                }
-                return;
-            }
-
-            while (objct < AllHitObjects.Count)
-            {
-                if (AllHitObjects[objct].YVal >= yloc[0] && AllHitObjects[objct].YVal < yloc[1])
+                if (GetCodesuInfo.AllHitObjects[objct].YVal >= yloc[0] && GetCodesuInfo.AllHitObjects[objct].YVal < yloc[1])
                 {
                     string inp = null;
                     //      inp,        V       inp;
-                    switch (AllHitObjects[objct].OType)
+                    switch (GetCodesuInfo.AllHitObjects[objct].OType)
                     {
                         case GetObjectInfo.Type.Normal:
                             Console.Write("Input (Digit): ");
@@ -229,22 +74,22 @@ namespace osuProgram.codesu
                             break;
                     }
                 }
-                else if (AllHitObjects[objct].YVal >= yloc[1] && AllHitObjects[objct].YVal < yloc[2])
+                else if (GetCodesuInfo.AllHitObjects[objct].YVal >= yloc[1] && GetCodesuInfo.AllHitObjects[objct].YVal < yloc[2])
                 {
                     //      jmp[        V       jmp]
                     // TODO: Make sure everything has been correctly implemented - looking great so far
                     // TODO: Make it count the brackets precompiling and give an error if the brackets do not have the value of 0
                     int bracketcount = 1;
-                    switch (AllHitObjects[objct].OType)
+                    switch (GetCodesuInfo.AllHitObjects[objct].OType)
                     {
                         case GetObjectInfo.Type.Normal:
-                            for (int i = objct + 1; i < AllHitObjects.Count; i++)
+                            for (int i = objct + 1; i < GetCodesuInfo.AllHitObjects.Count; i++)
                             {
-                                if ((AllHitObjects[i].YVal >= 85 && AllHitObjects[i].YVal < 170) && AllHitObjects[i].OType == GetObjectInfo.Type.Normal)
+                                if ((GetCodesuInfo.AllHitObjects[i].YVal >= 85 && GetCodesuInfo.AllHitObjects[i].YVal < 170) && GetCodesuInfo.AllHitObjects[i].OType == GetObjectInfo.Type.Normal)
                                 {
                                     bracketcount++;
                                 }
-                                else if ((AllHitObjects[i].YVal >= 85 && AllHitObjects[i].YVal < 170) && AllHitObjects[i].OType == GetObjectInfo.Type.Slider)
+                                else if ((GetCodesuInfo.AllHitObjects[i].YVal >= 85 && GetCodesuInfo.AllHitObjects[i].YVal < 170) && GetCodesuInfo.AllHitObjects[i].OType == GetObjectInfo.Type.Slider)
                                 {
                                     bracketcount--;
                                 }
@@ -274,11 +119,11 @@ namespace osuProgram.codesu
                         case GetObjectInfo.Type.Slider:
                             for (int i = objct - 1; i >= 0; i--)
                             {
-                                if ((AllHitObjects[i].YVal >= 85 && AllHitObjects[i].YVal < 170) && AllHitObjects[i].OType == GetObjectInfo.Type.Normal)
+                                if ((GetCodesuInfo.AllHitObjects[i].YVal >= 85 && GetCodesuInfo.AllHitObjects[i].YVal < 170) && GetCodesuInfo.AllHitObjects[i].OType == GetObjectInfo.Type.Normal)
                                 {
                                     bracketcount--;
                                 }
-                                else if ((AllHitObjects[i].YVal >= 85 && AllHitObjects[i].YVal < 170) && AllHitObjects[i].OType == GetObjectInfo.Type.Slider)
+                                else if ((GetCodesuInfo.AllHitObjects[i].YVal >= 85 && GetCodesuInfo.AllHitObjects[i].YVal < 170) && GetCodesuInfo.AllHitObjects[i].OType == GetObjectInfo.Type.Slider)
                                 {
                                     bracketcount++;
                                 }
@@ -306,10 +151,10 @@ namespace osuProgram.codesu
                             break;
                     }
                 }
-                else if (AllHitObjects[objct].YVal >= yloc[2] && AllHitObjects[objct].YVal < yloc[3])
+                else if (GetCodesuInfo.AllHitObjects[objct].YVal >= yloc[2] && GetCodesuInfo.AllHitObjects[objct].YVal < yloc[3])
                 {
                     //  pnt<        V       pnt>
-                    switch (AllHitObjects[objct].OType)
+                    switch (GetCodesuInfo.AllHitObjects[objct].OType)
                     {
                         case GetObjectInfo.Type.Normal:
                             memorypos--;
@@ -330,10 +175,10 @@ namespace osuProgram.codesu
                             break;
                     }
                 }
-                else if (AllHitObjects[objct].YVal >= yloc[3] && AllHitObjects[objct].YVal < yloc[4])
+                else if (GetCodesuInfo.AllHitObjects[objct].YVal >= yloc[3] && GetCodesuInfo.AllHitObjects[objct].YVal < yloc[4])
                 {
                     //  inc+        V       dec-        V       rnd~
-                    switch (AllHitObjects[objct].OType)
+                    switch (GetCodesuInfo.AllHitObjects[objct].OType)
                     {
                         case GetObjectInfo.Type.Normal:
                             if (memory[memorypos] == UInt16.MaxValue)
@@ -365,10 +210,10 @@ namespace osuProgram.codesu
                             break;
                     }
                 }
-                else if (AllHitObjects[objct].YVal >= yloc[4] && AllHitObjects[objct].YVal < yloc[5])
+                else if (GetCodesuInfo.AllHitObjects[objct].YVal >= yloc[4] && GetCodesuInfo.AllHitObjects[objct].YVal < yloc[5])
                 {
                     //  mul*        V       div/
-                    switch (AllHitObjects[objct].OType)
+                    switch (GetCodesuInfo.AllHitObjects[objct].OType)
                     {
                         case GetObjectInfo.Type.Normal:
                             memory[memorypos] *= 2;
@@ -381,14 +226,14 @@ namespace osuProgram.codesu
                             break;
                     }
                 }
-                else if (AllHitObjects[objct].YVal >= yloc[5] && AllHitObjects[objct].YVal <= yloc[6])
+                else if (GetCodesuInfo.AllHitObjects[objct].YVal >= yloc[5] && GetCodesuInfo.AllHitObjects[objct].YVal <= yloc[6])
                 {
                     //  out.        V       out:
                     if (GetArgsInfo.debug)
                     {
                         Console.Write("Output: ");
                     }
-                    switch (AllHitObjects[objct].OType)
+                    switch (GetCodesuInfo.AllHitObjects[objct].OType)
                     {
                         case GetObjectInfo.Type.Normal:
                             Console.Write(memory[memorypos]);
@@ -411,22 +256,177 @@ namespace osuProgram.codesu
                 }
                 else
                 {
-                    Console.WriteLine("Error: Object {0} at FileLine: {1} has Y value of {2}. Change this to be in range from {3} to {4}.", objct + 1, AllHitObjects[objct].FileLine, AllHitObjects[objct].YVal, yloc[0], yloc[yloc.Length-1]);
+                    Console.WriteLine("Error: Object {0} at FileLine: {1} has Y value of {2}. Change this to be in range from {3} to {4}.", objct + 1, GetCodesuInfo.AllHitObjects[objct].FileLine, GetCodesuInfo.AllHitObjects[objct].YVal, yloc[0], yloc[yloc.Length-1]);
                     return;
                 }
 
                 if (GetArgsInfo.debug && GetArgsInfo.step)
                 {
-                    Console.WriteLine("Object: {0}\tFileLine: {1}\tMemPos: {2}\tMemVal: {3}\tCommand: {4}", objct, AllHitObjects[objct].FileLine, memorypos, memory[memorypos], command);
+                    Console.WriteLine("Object: {0}\tFileLine: {1}\tMemPos: {2}\tMemVal: {3}\tCommand: {4}", objct, GetCodesuInfo.AllHitObjects[objct].FileLine, memorypos, memory[memorypos], command);
                     Console.ReadKey(true);
                 }
                 else if (GetArgsInfo.debug)
                 {
-                    Console.WriteLine("Object: {0}\tFileLine: {1}\tMemPos: {2}\tMemVal: {3}\tCommand: {4}", objct, AllHitObjects[objct].FileLine, memorypos, memory[memorypos], command);
+                    Console.WriteLine("Object: {0}\tFileLine: {1}\tMemPos: {2}\tMemVal: {3}\tCommand: {4}", objct, GetCodesuInfo.AllHitObjects[objct].FileLine, memorypos, memory[memorypos], command);
                 }
                 objct++;
             }
             Console.WriteLine();
+        }
+
+        private static void ctbObjects()
+        {
+            // i needs to equal to the beginning of [HitObjects] plus 1
+            for (int i = GetMapInfo.GetItemLine("[HitObjects]"); i < GetCodesuInfo.lines.Count; i++)
+            {
+                try
+                {
+
+                    if (GetCodesuInfo.lines.Skip(i).First() == "" || GetCodesuInfo.lines.Skip(i).First().Contains("//"))
+                    {
+                        continue;
+                    }
+                    String[] amount = GetCodesuInfo.lines.Skip(i).First().Split(",");
+                    if (amount.Length == 7)
+                    {
+                        if ((Int32.Parse(amount[3]) == 8 || Int32.Parse(amount[3]) == 12) && (Int32.Parse(amount[0]) == 256 && Int32.Parse(amount[1]) == 192))
+                        {
+                            // Spinner added
+                            GetCodesuInfo.AllHitObjects.Add(new GetObjectInfo
+                            {
+                                Object = GetCodesuInfo.lines.Skip(i).First(),
+                                FileLine = i + 1,
+                                OType = GetObjectInfo.Type.Spinner,
+                                XVal = Int32.Parse(amount[0]),
+                                YVal = Int32.Parse(amount[1]),
+                                TVal = Int32.Parse(amount[2]),
+                                NCombo = Int32.Parse(amount[3]),        // 12 is NCombo, 8 isn't
+                                STVal = Int32.Parse(amount[5]),
+                            });
+                        }
+                        else
+                        {
+                            Console.WriteLine("An error with the spinner: {0} at line {1}", GetCodesuInfo.lines.Skip(i).First(), i + 1);
+                            return;
+                        }
+                    }
+                    else if (Int32.Parse(amount[3]) == 6 || Int32.Parse(amount[3]) == 2)
+                    {
+                        // TODO: Make checks if above and below limits with both x and y
+                        // Slider added
+                        GetCodesuInfo.AllHitObjects.Add(new GetObjectInfo
+                        {
+                            Object = GetCodesuInfo.lines.Skip(i).First(),
+                            FileLine = i + 1,
+                            OType = GetObjectInfo.Type.Slider,
+                            XVal = Int32.Parse(amount[0]),
+                            YVal = Int32.Parse(amount[1]),
+                            TVal = Int32.Parse(amount[2]),
+                            NCombo = Int32.Parse(amount[3]),            //  6 is NCombo, 2 isn't
+                        });
+                    }
+                    else if (Int32.Parse(amount[3]) == 5 || Int32.Parse(amount[3]) == 1)
+                    {
+                        // TODO: Make checks if above and below limits with both x and y
+                        // Circle added
+                        GetCodesuInfo.AllHitObjects.Add(new GetObjectInfo
+                        {
+                            Object = GetCodesuInfo.lines.Skip(i).First(),
+                            FileLine = i + 1,
+                            OType = GetObjectInfo.Type.Normal,
+                            XVal = Int32.Parse(amount[0]),
+                            YVal = Int32.Parse(amount[1]),
+                            TVal = Int32.Parse(amount[2]),
+                            NCombo = Int32.Parse(amount[3]),            //  5 is NCombo, 1 isn't
+                        });
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error: {0} on line {1}", GetCodesuInfo.lines.Skip(i).First(), i + 1);
+                        return;
+                    }
+                }
+                catch (System.IndexOutOfRangeException)
+                {
+                    Console.WriteLine("Error: Something went wrong at line {0}", i + 1);
+                    return;
+                }
+            }
+            GetCodesuInfo.AllHitObjects = GetCodesuInfo.AllHitObjects.OrderBy(a => a.TVal).ToList();
+        }
+
+        private static void ctbExport()
+        {
+            if (GetArgsInfo.all)
+            {
+                foreach (var x in GetCodesuInfo.AllHitObjects)
+                {
+                    Console.WriteLine("Object: {0}\tFileLine: {1}\tX: {2}\tY: {3}\tTime: {4}\tFullLine: {5}", x.OType, x.FileLine, x.XVal, x.YVal, x.TVal, x.Object);
+                }
+                if (!GetArgsInfo.export)
+                {
+                    return;
+                }
+            }
+            if (GetArgsInfo.export)
+            {
+                if (GetArgsInfo.expANC)
+                {
+                    foreach (var x in GetCodesuInfo.AllHitObjects)
+                    {
+                        switch (x.OType)
+                        {
+                            case GetObjectInfo.Type.Normal:
+                                x.NCombo = 5;
+                                break;
+
+                            case GetObjectInfo.Type.Slider:
+                                x.NCombo = 6;
+                                break;
+
+                            case GetObjectInfo.Type.Spinner:
+                                x.NCombo = 12;
+                                break;
+
+                            default:
+                                Console.WriteLine("Error: New Combo {0} from Object {1} at line {2}", x.NCombo, x.Object, x.FileLine);
+                                return;
+                        }
+                    }
+                }
+                File.Create(GetCodesuInfo.file).Close();
+                using (StreamWriter sw = new(GetCodesuInfo.file))
+                {   
+                    if (GetArgsInfo.expMAH)
+                    {
+                        sw.WriteLine("Mode: 2\n[HitObjects]");
+                    }
+                    foreach (var x in GetCodesuInfo.AllHitObjects)
+                    {
+                        string[] temp = x.Object.Split(",");
+                        if (x.OType == GetObjectInfo.Type.Normal)
+                        {
+                            sw.WriteLine(x.XVal + "," + x.YVal + "," + x.TVal + "," + x.NCombo + "," + temp[4] + "," + temp[5]);
+                        }
+                        else if (x.OType == GetObjectInfo.Type.Slider)
+                        {
+                            sw.WriteLine(x.XVal + "," + x.YVal + "," + x.TVal + "," + x.NCombo + "," + temp[4] + "," + temp[5] + "," + temp[6] + "," + temp[7]);
+                        }
+                        else if (x.OType == GetObjectInfo.Type.Spinner)
+                        {
+                            sw.WriteLine(x.XVal + "," + x.YVal + "," + x.TVal + "," + x.NCombo + "," + temp[4] + "," + x.STVal + "," + temp[6]);
+                        }
+                        else
+                        {
+                            sw.WriteLine("Error: Exporting had an error so fix issue regarding the New Combo {0} from Object {1} at line {2}", x.NCombo, x.Object, x.FileLine);
+                            Console.WriteLine("Error: Exporting had an error in New Combo {0} from Object {1} at line {2}", x.NCombo, x.Object, x.FileLine);
+                            return;
+                        }
+                    }
+                }
+                Console.WriteLine("Export: Done!");
+                return;
+            }
         }
     }
 }

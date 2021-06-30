@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 using osuProgram.codesu;
 using osuProgram.osu;
@@ -91,41 +92,87 @@ namespace osuProgram
                     {
                         Console.Write("Do you want all objects to have a New Combo attribute? (Y/N) ");
                         temp = Console.ReadLine().ToUpper();
-                        if (temp == "" || temp == null || string.IsNullOrEmpty(temp) || string.IsNullOrWhiteSpace(temp) || temp.Length == 0 || (temp != "Y" && temp != "N"))
+                        if (temp != "Y" && temp != "N" && !(temp == "" || temp == null || string.IsNullOrEmpty(temp) || string.IsNullOrWhiteSpace(temp) || temp.Length == 0))
                         {
                             Console.WriteLine("The input must either be a Y(es) or N(o). Please correctly input the right letters.");
                         }
                         else
                         {
-                            GetArgsInfo.expANC = temp == "Y";
+                            GetArgsInfo.expANC = temp == "Y" || temp == "" || temp == null || string.IsNullOrEmpty(temp) || string.IsNullOrWhiteSpace(temp) || temp.Length == 0;
                             break;
                         }
+                    }
+                    while (true)
+                    {
+                        Console.Write("Do you want to include \"Mode: 2\" and \"[HitObjects]\"? (Y/N) ");
+                        temp = Console.ReadLine().ToUpper();
+                        if (temp != "Y" && temp != "N" && !(temp == "" || temp == null || string.IsNullOrEmpty(temp) || string.IsNullOrWhiteSpace(temp) || temp.Length == 0))
+                        {
+                            Console.WriteLine("The input must either be a Y(es) or N(o). Please correctly input the right letters.\n");
+                        }
+                        else
+                        {
+                            GetArgsInfo.expMAH = temp == "Y" || temp == "" || temp == null || string.IsNullOrEmpty(temp) || string.IsNullOrWhiteSpace(temp) || temp.Length == 0;
+                            break;
+                        }
+                    }
+                }
+
+                if (GetMapInfo.GetItemLine("[HitObjects]") == -1)
+                {
+                    Console.WriteLine("Error: There are no [HitObjects]. Please include this for the program to work.");
+                    return;
+                }
+
+                for (int i = GetMapInfo.GetItemLine("[HitObjects]"); i < GetCodesuInfo.lines.Count; i++)
+                {
+                    try
+                    {
+                        if (GetCodesuInfo.lines.Skip(i).First() == "" || GetCodesuInfo.lines.Skip(i).First().Contains("//"))
+                        {
+                            if (GetArgsInfo.export)
+                            {
+                                if (!GetArgsInfo.ignore)
+                                {
+                                    Console.WriteLine("Export: Ignoring illegal GetCodesuInfo.lines found at line {0}", i + 1);
+                                }
+                            }
+                            else if (!GetArgsInfo.ignore)
+                            {
+                                Console.WriteLine("Warning: Remove illegal line found at line {0} before submitting: {1}", i + 1, GetCodesuInfo.lines.Skip(i).First());
+                            }
+                            continue;
+                        }
+                    }
+                    catch (System.IndexOutOfRangeException)
+                    {
+                        Console.WriteLine("Error: Something went wrong at line {0}", i + 1);
+                        return;
                     }
                 }
 
                 switch (getLine[getLine.Length-1])
                 {
                     case "0":
-                        Console.Write("osu!std");
+                        programsu.std();
                         break;
 
                     case "1":
-                        Console.Write("osu!taiko");
+                        programsu.taiko();
                         break;
 
                     case "2":
                         programsu.ctb();
-                        return;
+                        break;
 
                     case "3":
-                        Console.Write("osu!mania");
+                        programsu.mania();
                         break;
 
                     default:
                         Console.WriteLine("Error: \"Mode\" does not have a correct or valid integer to target a specified gamemode: {0}", string.Join(" ", getLine));
                         return;
                 }
-                Console.WriteLine(" does not currently have a supported programming language attached to it yet. Sorry.");
             }
             else if (args.Length == 0)
             {

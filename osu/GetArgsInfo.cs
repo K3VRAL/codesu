@@ -8,5 +8,6 @@ namespace osuProgram.osu
         public static bool all { get; set; }
         public static bool export { get; set; }
         public static bool expANC { get; set; }
+        public static bool expMAH { get; set; }
     }
 }
