@@ -8,7 +8,19 @@ namespace osuProgram.codesu
     {
         public static void std()
         {
+            stdObjects();
+            if (GetArgsInfo.export || GetArgsInfo.all)
+            {
+                stdExport();
+                return;
+            }
             Console.WriteLine("osu!std does not currently have a supported programming language attached to it yet. Sorry.");
         }
+
+        private static void stdObjects()
+        {}
+
+        private static void stdExport()
+        {}
     }
 }
