@@ -28,7 +28,7 @@ or if you would like to compile from the source code
 
 Where `[file]` is exchanged for the `.osu` file that you programmed.
 
-You can also use arguments to get more or less information:
+You can also use arguments `-` to get more or less information:
 
 Debugging: `-d`
 
@@ -39,6 +39,20 @@ Steps: `-s`
 Displays all and sorted items: `-a`
 
 Exports (removes all unnecessary comments and newlines): `-e`
+
+Logging: `-l`
+
+Force Run program despite if Displaying All Objects, Exports and/or Logging is enabled: `-r`
+
+## Examples
+
+Runs helloworld.osu and ignores all warnings `dotnet run -p cproject.csproj examples/helloworld.osu -i`
+
+Runs 99bottles.osu while ignoring, debugging, and stepping `dotnet run -p cproject.csproj examples/99bottles.osu -dis`
+
+Runs fizzbuzz.osu while ignoring, debugging, stepping, displays all, and force running because of displaying all `dotnet run -p cproject.csproj examples/fizzbuzz.osu -d -si -ar`
+
+TLDR: It doesn't matter if you combine the arguments (but it is recommended)
 
 # Commands and placements
 

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace osuProgram.osu
+﻿namespace osuProgram.osu
 {
     public class GetObjectInfo
     {

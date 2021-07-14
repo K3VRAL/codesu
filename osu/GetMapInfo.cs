@@ -1,7 +1,5 @@
 using System;
 
-using osuProgram.codesu;
-
 namespace osuProgram.osu
 {
     public static class GetMapInfo

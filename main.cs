@@ -16,43 +16,65 @@ namespace osuProgram
             {
                 string file = null;
 
+                // Going through each argument inputted; storing an osu file path and arguments
                 foreach (string x in args)
                 {
-                    if (x.Contains(".osu"))
+                    if (x.Contains("osu"))
                     {
                         file = x;
                     }
 
-                    switch (x)
+                    if (x.Contains("-"))
                     {
-                        case "-d":
-                            GetArgsInfo.debug = true;
-                            break;
+                        char[] split = x.ToCharArray();
+                        foreach (char y in split.Skip(1))
+                        {
+                            switch (y)
+                            {
+                                case 'd':
+                                    GetArgsInfo.debug = true;
+                                    break;
 
-                        case "-i":
-                            GetArgsInfo.ignore = true;
-                            break;
+                                case 'i':
+                                    GetArgsInfo.ignore = true;
+                                    break;
 
-                        case "-s":
-                            GetArgsInfo.step = true;
-                            break;
+                                case 's':
+                                    GetArgsInfo.step = true;
+                                    break;
 
-                        case "-a":
-                            GetArgsInfo.all = true;
-                            break;
+                                case 'a':
+                                    GetArgsInfo.all = true;
+                                    break;
 
-                        case "-e":
-                            GetArgsInfo.export = true;
-                            break;
+                                case 'e':
+                                    GetArgsInfo.export = true;
+                                    break;
+
+                                case 'l':
+                                    GetArgsInfo.log = true;
+                                    break;
+                                
+                                case 'r':
+                                    GetArgsInfo.run = true;
+                                    break;
+
+                                default:
+                                    Console.WriteLine("Error: argument inputted does not exist: {0}", y);
+                                    return;
+                            }
+                        }
                     }
                 }
                 
+                // If no file was inputted
                 if (file == "" || file == null || string.IsNullOrEmpty(file) || string.IsNullOrWhiteSpace(file) || file.Length == 0)
                 {
                     Console.WriteLine("Error: No relevant file was inputted: {0}", string.Join(" ", args));
                     return;
                 }
 
+                // Another check making sure that an osu file was inputted
                 string[] osufile = file.Split(".");
                 if (osufile[osufile.Length - 1] != "osu")
                 {
@@ -60,6 +82,7 @@ namespace osuProgram
                     return;
                 }
                 
+                // Reading all lines of osu files
                 List<string> lines = null;
                 try
                 {
@@ -70,9 +93,19 @@ namespace osuProgram
                     Console.WriteLine("Error: File not found: {0}", file);
                     return;
                 }
-
+                
+                // Sets osu file
                 GetCodesuInfo.lines = lines;
-                GetCodesuInfo.file = file + ".exported";
+                GetCodesuInfo.file = file;
+
+                // If "[HitObjects]" exists
+                if (GetMapInfo.GetItemLine("[HitObjects]") == -1)
+                {
+                    Console.WriteLine("Error: There are no [HitObjects]. Please include this for the program to work.");
+                    return;
+                }
+
+                // Using "Mode" to choose a programming language
                 string[] getLine = null;
                 try
                 {
@@ -84,46 +117,66 @@ namespace osuProgram
                     return;
                 }
 
+                // Exporting and Logging options
+                boolRelated expANC = new();
+                boolRelated expMAH = new();
+                boolRelated logEVY = new();
+                boolRelated logDBG = new();
+                boolRelated logALL = new();
+                List<boolRelated> boOptions = new();
+                List<string> doOptions = new();
+                string temp = null;
+                bool YoN;
                 if (GetArgsInfo.export)
                 {
-                    string temp = null;
-                    Console.WriteLine("Export Options:");
+                    doOptions.Add("Do you want all objects to have a New Combo attribute?");
+                    boOptions.Add(expANC);
+                    doOptions.Add("Do you want to include \"Mode: 2\" and \"[HitObjects]\"?");
+                    boOptions.Add(expMAH);
+                }
+                if (GetArgsInfo.log)
+                {
+                    doOptions.Add("Do you want to log everything printed?");
+                    boOptions.Add(logEVY);
+                    doOptions.Add("Do you want to log everything debugged?");
+                    boOptions.Add(logDBG);
+                    doOptions.Add("Do you want to log all objects listed?");
+                    boOptions.Add(logALL);
+                }
+                for (int i = 0; i < doOptions.Count(); i++)
+                {
+                    if (GetArgsInfo.export && i == 0)
+                    {
+                        Console.WriteLine("Export Options:");
+                    }
+                    else if ((GetArgsInfo.export && GetArgsInfo.log && i == 2)
+                    || (!GetArgsInfo.export && GetArgsInfo.log && i == 0))
+                    {
+                        Console.WriteLine("Log Options:");
+                    }
                     while (true)
                     {
-                        Console.Write("Do you want all objects to have a New Combo attribute? (Y/N) ");
+                        Console.Write("{0} (seperate file) (Y/N) ", doOptions[i]);
                         temp = Console.ReadLine().ToUpper();
-                        if (temp != "Y" && temp != "N" && !(temp == "" || temp == null || string.IsNullOrEmpty(temp) || string.IsNullOrWhiteSpace(temp) || temp.Length == 0))
+                        YoN = temp != "Y" && temp != "N" && !(string.IsNullOrEmpty(temp) || string.IsNullOrWhiteSpace(temp));
+                        if (YoN)
                         {
                             Console.WriteLine("The input must either be a Y(es) or N(o). Please correctly input the right letters.");
                         }
                         else
                         {
-                            GetArgsInfo.expANC = temp == "Y" || temp == "" || temp == null || string.IsNullOrEmpty(temp) || string.IsNullOrWhiteSpace(temp) || temp.Length == 0;
-                            break;
-                        }
-                    }
-                    while (true)
-                    {
-                        Console.Write("Do you want to include \"Mode: 2\" and \"[HitObjects]\"? (Y/N) ");
-                        temp = Console.ReadLine().ToUpper();
-                        if (temp != "Y" && temp != "N" && !(temp == "" || temp == null || string.IsNullOrEmpty(temp) || string.IsNullOrWhiteSpace(temp) || temp.Length == 0))
-                        {
-                            Console.WriteLine("The input must either be a Y(es) or N(o). Please correctly input the right letters.\n");
-                        }
-                        else
-                        {
-                            GetArgsInfo.expMAH = temp == "Y" || temp == "" || temp == null || string.IsNullOrEmpty(temp) || string.IsNullOrWhiteSpace(temp) || temp.Length == 0;
+                            boOptions[i].enabled = temp != "N";;
                             break;
                         }
                     }
                 }
+                GetArgsInfo.expANC = expANC.enabled;
+                GetArgsInfo.expMAH = expMAH.enabled;
+                GetArgsInfo.logEVY = logEVY.enabled;
+                GetArgsInfo.logDBG = logDBG.enabled;
+                GetArgsInfo.logALL = logALL.enabled;
 
-                if (GetMapInfo.GetItemLine("[HitObjects]") == -1)
-                {
-                    Console.WriteLine("Error: There are no [HitObjects]. Please include this for the program to work.");
-                    return;
-                }
-
+                // Getting rid of comments (in newlines) or empty newlines
                 for (int i = GetMapInfo.GetItemLine("[HitObjects]"); i < GetCodesuInfo.lines.Count; i++)
                 {
                     try
@@ -151,6 +204,7 @@ namespace osuProgram
                     }
                 }
 
+                // Running programming language
                 switch (getLine[getLine.Length-1])
                 {
                     case "0":
@@ -182,6 +236,11 @@ namespace osuProgram
             {
                 Console.WriteLine("Error in general: args: {0}", args);
             }
+        }
+
+        public class boolRelated
+        {
+            public bool enabled { get; set; }
         }
     }
 }
