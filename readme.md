@@ -46,15 +46,25 @@ Force Run program despite if Displaying All Objects, Exports and/or Logging is e
 
 ## Examples
 
-Runs helloworld.osu and ignores all warnings `dotnet run -p cproject.csproj examples/helloworld.osu -i`
+TODO Replace examples/ctb with examples/std,taiko,mania when developed with those languages
 
-Runs 99bottles.osu while ignoring, debugging, and stepping `dotnet run -p cproject.csproj examples/99bottles.osu -dis`
+Runs helloworld.osu and ignores all warnings `dotnet run -p cproject.csproj examples/ctb/helloworld.osu -i`
 
-Runs fizzbuzz.osu while ignoring, debugging, stepping, displays all, and force running because of displaying all `dotnet run -p cproject.csproj examples/fizzbuzz.osu -d -si -ar`
+Runs 99bottles.osu while ignoring, debugging, and stepping `dotnet run -p cproject.csproj examples/ctb/99bottles.osu -dis`
+
+Runs fizzbuzz.osu while ignoring, debugging, stepping, displays all, and force running because of displaying all `dotnet run -p cproject.csproj examples/ctb/fizzbuzz.osu -d -si -ar`
 
 TLDR: It doesn't matter if you combine the arguments (but it is recommended)
 
 # Commands and placements
+
+## osu!std
+
+TODO
+
+## osu!taiko
+
+TODO
 
 ## osu!ctbrainfuck
 
@@ -72,19 +82,19 @@ TLDR: It doesn't matter if you combine the arguments (but it is recommended)
 
         320-384 Output      | Circle: Digits        Slider: ASCII
 
-## osu!taiko
-
-TODO
-
-## osu!std
-
-TODO
-
 ## osu!mania
 
 TODO
 
 # Definitions
+
+## osu!std
+
+TODO
+
+## osu!taiko
+
+TODO
 
 ## osu!ctbrainfuck
 
@@ -106,45 +116,6 @@ TODO
 
 `Divcrement`  Divides current cell by 2
 
-## osu!taiko
-
-TODO
-
-## osu!std
-
-TODO
-
 ## osu!mania
 
 TODO
-
-# TODO
-
-All file items will be used to check for all/most relevant and mandatory requirements to function is osu!; mainly osu!ctb (Maybe include some not all? A lot of these ideas may not be included but might?)
-
-    General
-        AF      Prints  -   Time to get groovy
-        AL      Console -   Time before program starts
-        CD      Prints  -   3, 2, 1
-        SS      Prints  -   We hitting {Normal, Soft, Drums}
-        MD      Prints  -   code!su
-        LB/WS   Prints  -   We're in a movie
-
-    Editor
-        BM      Prints  -   Found some noticable bookmarks at {Bookmarks}
-        GS      Console -   Console Size
-
-    Metadata
-        TT/TU   Prints  -   Title: {Title}/{TitleUnicode}
-        AS/AU   Prints  -   Artist: {Artist}/{Artist/Unicode}
-        CT      Prints  -   Creator: {Creator}
-        VR      Prints  -   Version: {Version}
-
-    Difficulty
-        HP      Console -   End Program
-        CS      Console -   Text Size
-        OD      Console -   Text Spacing
-        AT      Console -   Char Time Printed
-
-    TimingPoints
-        ?
