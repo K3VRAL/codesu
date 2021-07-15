@@ -8,10 +8,10 @@ namespace osuProgram.osu
 {
     public static partial class datasu
     {
-        public static List<string> everyStore = new();
+        public static List<string> printStore = new();
         public static List<string> debugStore = new();
         private static List<string> allStore = new();
-        public static StringWriter esw = new();
+        public static StringWriter psw = new();
         public static StringWriter dsw = new();
         private static StringWriter asw = new();
 
@@ -27,7 +27,7 @@ namespace osuProgram.osu
                 }
                 foreach (var x in GetCodesuInfo.AllHitObjects)
                 {
-                    Console.WriteLine("Object: {0}\tFileLine: {1}\tX: {2}\tY: {3}\tTime: {4}\tFullLine: {5}", x.OType, x.FileLine, x.XVal, x.YVal, x.TVal, x.Object);
+                    Console.WriteLine("Object: {0}\tFileLine: {1}\tX: {2}\tY: {3}\tTime: {4}\tFullLine: {5}\tCommand: {6}", x.OType, x.FileLine, x.XVal, x.YVal, x.TVal, x.Object, x.Command);
                     datasu.Step(true);
                 }
                 if (GetArgsInfo.logALL)
@@ -104,12 +104,12 @@ namespace osuProgram.osu
             {
                 if (GetArgsInfo.logEVY)
                 {
-                    Console.WriteLine("Logging every");
+                    Console.WriteLine("Logging print");
                     programsu.ctbProcess();
-                    File.Create(GetCodesuInfo.file + ".every.log").Close();
-                    using (StreamWriter sw = new(GetCodesuInfo.file + ".every.log"))
+                    File.Create(GetCodesuInfo.file + ".print.log").Close();
+                    using (StreamWriter sw = new(GetCodesuInfo.file + ".print.log"))
                     {
-                        foreach (var x in everyStore)
+                        foreach (var x in printStore)
                         {
                             sw.WriteLine(x);
                         }

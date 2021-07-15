@@ -17,5 +17,6 @@
         public int TVal { get; set; }
         public int STVal { get; set; }
         public int NCombo { get; set; }
+        public string Command { get; set; }
     }
 }

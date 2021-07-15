@@ -9,6 +9,8 @@ namespace osuProgram.codesu
 {
     public static partial class programsu
     {
+        private static int[] yloc = {0, 64, 128, 192, 256, 320, 384};
+
         public static void ctb()
         {
             ctbObjects();
@@ -51,6 +53,9 @@ namespace osuProgram.codesu
                                 TVal = Int32.Parse(amount[2]),
                                 NCombo = Int32.Parse(amount[3]),        // 12 is NCombo, 8 isn't
                                 STVal = Int32.Parse(amount[5]),
+                                Command =
+                                Int32.Parse(amount[1]) >= yloc[3] && Int32.Parse(amount[1]) < yloc[4] ? "rnd~" :
+                                null,
                             });
                         }
                         else
@@ -73,6 +78,14 @@ namespace osuProgram.codesu
                             YVal = Int32.Parse(amount[1]),
                             TVal = Int32.Parse(amount[2]),
                             NCombo = Int32.Parse(amount[3]),            //  6 is NCombo, 2 isn't
+                            Command =
+                            Int32.Parse(amount[1]) >= yloc[0] && Int32.Parse(amount[1]) < yloc[1] ? "inp;" :
+                            Int32.Parse(amount[1]) >= yloc[1] && Int32.Parse(amount[1]) < yloc[2] ? "jmp]" :
+                            Int32.Parse(amount[1]) >= yloc[2] && Int32.Parse(amount[1]) < yloc[3] ? "pnt>" :
+                            Int32.Parse(amount[1]) >= yloc[3] && Int32.Parse(amount[1]) < yloc[4] ? "dec-" :
+                            Int32.Parse(amount[1]) >= yloc[4] && Int32.Parse(amount[1]) < yloc[5] ? "div/" :
+                            Int32.Parse(amount[1]) >= yloc[5] && Int32.Parse(amount[1]) <= yloc[6] ? "out:" :
+                            null,
                         });
                     }
                     else if ((Int32.Parse(amount[3]) == 5 || Int32.Parse(amount[3]) == 1)
@@ -89,6 +102,14 @@ namespace osuProgram.codesu
                             YVal = Int32.Parse(amount[1]),
                             TVal = Int32.Parse(amount[2]),
                             NCombo = Int32.Parse(amount[3]),            //  5 is NCombo, 1 isn't
+                            Command =
+                            Int32.Parse(amount[1]) >= yloc[0] && Int32.Parse(amount[1]) < yloc[1] ? "inp," :
+                            Int32.Parse(amount[1]) >= yloc[1] && Int32.Parse(amount[1]) < yloc[2] ? "jmp[" :
+                            Int32.Parse(amount[1]) >= yloc[2] && Int32.Parse(amount[1]) < yloc[3] ? "pnt<" :
+                            Int32.Parse(amount[1]) >= yloc[3] && Int32.Parse(amount[1]) < yloc[4] ? "inc+" :
+                            Int32.Parse(amount[1]) >= yloc[4] && Int32.Parse(amount[1]) < yloc[5] ? "mul*" :
+                            Int32.Parse(amount[1]) >= yloc[5] && Int32.Parse(amount[1]) <= yloc[6] ? "out." :
+                            null,
                         });
                     }
                     else
@@ -143,13 +164,11 @@ namespace osuProgram.codesu
                 memory.Add(0);
             }
             int memorypos = 0;
-            int[] yloc = {0, 64, 128, 192, 256, 320, 384};
-            string command = null;
 
             if (GetArgsInfo.logEVY)
             {
-                Console.SetOut(datasu.esw);
-                Console.SetError(datasu.esw);
+                Console.SetOut(datasu.psw);
+                Console.SetError(datasu.psw);
             }
             else if (GetArgsInfo.logDBG)
             {
@@ -158,6 +177,11 @@ namespace osuProgram.codesu
             }
             while (objct < GetCodesuInfo.AllHitObjects.Count)
             {
+                if (GetCodesuInfo.AllHitObjects[objct].Command == null)
+                {
+                    Console.WriteLine("Error: Object {0} in line {1} has command {2}", GetCodesuInfo.AllHitObjects[objct].Object, GetCodesuInfo.AllHitObjects[objct].FileLine + 1, GetCodesuInfo.AllHitObjects[objct].Command);
+                    return;
+                }
                 if (GetCodesuInfo.AllHitObjects[objct].YVal >= yloc[0] && GetCodesuInfo.AllHitObjects[objct].YVal < yloc[1])
                 {
                     string inp = null;
@@ -176,7 +200,6 @@ namespace osuProgram.codesu
                             try
                             {
                                 memory[memorypos] = Convert.ToUInt16(inp);
-                                command = "inp,";
                             }
                             catch (System.FormatException)
                             {
@@ -196,7 +219,6 @@ namespace osuProgram.codesu
                             try
                             {
                                 memory[memorypos] = Convert.ToUInt16(Convert.ToChar(inp));
-                                command = "inp;";
                             }
                             catch (System.FormatException)
                             {
@@ -212,8 +234,8 @@ namespace osuProgram.codesu
                     }
                     if (GetArgsInfo.logEVY)
                     {
-                        Console.SetOut(datasu.esw);
-                        Console.SetError(datasu.esw);
+                        Console.SetOut(datasu.psw);
+                        Console.SetError(datasu.psw);
                     }
                     else if (GetArgsInfo.logDBG)
                     {
@@ -252,7 +274,6 @@ namespace osuProgram.codesu
                                     break;
                                 }
                             }
-                            command = "jmp[";
                             break;
 
                         case GetObjectInfo.Type.Slider:
@@ -280,7 +301,6 @@ namespace osuProgram.codesu
                                     break;
                                 }
                             }
-                            command = "jmp]";
                             break;
                     }
                 }
@@ -295,7 +315,6 @@ namespace osuProgram.codesu
                                 {
                                     memorypos = memory.Count - 1;
                                 }
-                            command = "pnt<";
                             break;
 
                         case GetObjectInfo.Type.Slider:
@@ -304,7 +323,6 @@ namespace osuProgram.codesu
                                 {
                                     memorypos = 0;
                                 }
-                            command = "pnt>";
                             break;
                     }
                 }
@@ -322,7 +340,6 @@ namespace osuProgram.codesu
                             {
                                 memory[memorypos]++;
                             }
-                            command = "inc+";
                             break;
 
                         case GetObjectInfo.Type.Slider:
@@ -334,12 +351,10 @@ namespace osuProgram.codesu
                             {
                                 memory[memorypos]--;
                             }
-                            command = "dec-";
                             break;
 
                         case GetObjectInfo.Type.Spinner:
                             memory[memorypos] = (UInt16)new Random().Next(UInt16.MinValue, UInt16.MaxValue);
-                            command = "rnd~";
                             break;
                     }
                 }
@@ -350,12 +365,10 @@ namespace osuProgram.codesu
                     {
                         case GetObjectInfo.Type.Normal:
                             memory[memorypos] *= 2;
-                            command = "mul*";
                             break;
 
                         case GetObjectInfo.Type.Slider:
                             memory[memorypos] /= 2;
-                            command = "div/";
                             break;
                     }
                 }
@@ -367,12 +380,10 @@ namespace osuProgram.codesu
                     {
                         case GetObjectInfo.Type.Normal:
                             Console.Write(memory[memorypos]);
-                            command = "out.";
                             break;
 
                         case GetObjectInfo.Type.Slider:
                             Console.Write((char)memory[memorypos]);
-                            command = "out:";
                             break;
                     }
                     datasu.WriteLine();
@@ -383,7 +394,7 @@ namespace osuProgram.codesu
                     Console.WriteLine("Error: Tick: {0} and Object: {1} at FileLine: {2} has Y value of {3}. Change this to be in range from {4} to {5}.", tick + 1, objct + 1, GetCodesuInfo.AllHitObjects[objct].FileLine, GetCodesuInfo.AllHitObjects[objct].YVal, yloc[0], yloc[yloc.Length-1]);
                     return;
                 }
-                datasu.WriteLine("Tick: {0}\tObject: {1}\tFileLine: {2}\tMemPos: {3}\tMemVal: {4}\tCommand: {5}", tick + 1, objct + 1, GetCodesuInfo.AllHitObjects[objct].FileLine, memorypos, memory[memorypos], command);
+                datasu.WriteLine("Tick: {0}\tObject: {1}\tFileLine: {2}\tMemPos: {3}\tMemVal: {4}\tCommand: {5}", tick + 1, objct + 1, GetCodesuInfo.AllHitObjects[objct].FileLine, memorypos, memory[memorypos], GetCodesuInfo.AllHitObjects[objct].Command);
                 datasu.Step(GetArgsInfo.debug);
                 objct++;
                 tick++;
@@ -394,7 +405,7 @@ namespace osuProgram.codesu
             }
             if (GetArgsInfo.logEVY)
             {
-                datasu.everyStore.Add(datasu.esw.ToString());
+                datasu.printStore.Add(datasu.psw.ToString());
                 StreamWriter standardOutput = new(Console.OpenStandardOutput());
                 standardOutput.AutoFlush = true;
                 Console.SetOut(standardOutput);
