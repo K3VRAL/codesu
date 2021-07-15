@@ -14,6 +14,7 @@ namespace osuProgram.codesu
             if (!log)
             {
                 ctbObjects();
+                GetCodesuInfo.AllHitObjects = GetCodesuInfo.AllHitObjects.OrderBy(a => a.TVal).ToList();
                 if (GetArgsInfo.export || GetArgsInfo.all || GetArgsInfo.log)
                 {
                     datasu.External();
@@ -125,12 +126,11 @@ namespace osuProgram.codesu
                     return;
                 }
             }
-            GetCodesuInfo.AllHitObjects = GetCodesuInfo.AllHitObjects.OrderBy(a => a.TVal).ToList();
 
             int bracketcount = 0;
             foreach (var x in GetCodesuInfo.AllHitObjects)
             {
-                if (x.YVal >= 64 && x.YVal < 128)
+                if (x.YVal >= yloc[1] && x.YVal < yloc[2])
                 {
                     switch (x.OType)
                     {
