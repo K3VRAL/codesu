@@ -1,26 +1,30 @@
-using System;
-
 using osuProgram.osu;
 
 namespace osuProgram.codesu
 {
     public static partial class programsu
     {
-        public static void taiko()
+        public static void taiko(bool log)
         {
-            taikoObjects();
-            if (GetArgsInfo.export || GetArgsInfo.all)
+            if (!log)
             {
-                taikoExport();
-                return;
+                taikoObjects();
+                if (GetArgsInfo.export || GetArgsInfo.all || GetArgsInfo.log)
+                {
+                    datasu.External();
+                    if (!GetArgsInfo.run)
+                    {
+                        return;
+                    }
+                }
             }
-            Console.WriteLine("osu!taiko does not currently have a supported programming language attached to it yet. Sorry.");
+            taikoProcess();
         }
 
         private static void taikoObjects()
         {}
 
-        private static void taikoExport()
+        private static void taikoProcess()
         {}
     }
 }

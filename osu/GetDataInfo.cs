@@ -37,6 +37,7 @@ namespace osuProgram.osu
                     standardOutput.AutoFlush = true;
                     Console.SetOut(standardOutput);
                 }
+                GetArgsInfo.all = false;
             }
 
             if (GetArgsInfo.export)
@@ -98,6 +99,7 @@ namespace osuProgram.osu
                     }
                 }
                 Console.WriteLine("Done");
+                GetArgsInfo.export = false;
             }
 
             if (GetArgsInfo.log)
@@ -105,7 +107,7 @@ namespace osuProgram.osu
                 if (GetArgsInfo.logEVY)
                 {
                     Console.WriteLine("Logging print");
-                    programsu.ctbProcess();
+                    GetCodesuInfo.runMode(true);
                     File.Create(GetCodesuInfo.file + ".print.log").Close();
                     using (StreamWriter sw = new(GetCodesuInfo.file + ".print.log"))
                     {
@@ -122,7 +124,7 @@ namespace osuProgram.osu
                     Console.WriteLine("Logging debug");
                     bool temp = GetArgsInfo.debug;
                     GetArgsInfo.debug = true;
-                    programsu.ctbProcess();
+                    GetCodesuInfo.runMode(true);
                     File.Create(GetCodesuInfo.file + ".debug.log").Close();
                     using (StreamWriter sw = new(GetCodesuInfo.file + ".debug.log"))
                     {

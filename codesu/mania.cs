@@ -1,26 +1,30 @@
-using System;
-
 using osuProgram.osu;
 
 namespace osuProgram.codesu
 {
     public static partial class programsu
     {
-        public static void mania()
+        public static void mania(bool log)
         {
-            maniaObjects();
-            if (GetArgsInfo.export || GetArgsInfo.all)
+            if (!log)
             {
-                maniaExport();
-                return;
+                maniaObjects();
+                if (GetArgsInfo.export || GetArgsInfo.all || GetArgsInfo.log)
+                {
+                    datasu.External();
+                    if (!GetArgsInfo.run)
+                    {
+                        return;
+                    }
+                }
             }
-            Console.WriteLine("osu!mania does not currently have a supported programming language attached to it yet. Sorry.");
+            maniaProcess();
         }
 
         private static void maniaObjects()
         {}
 
-        private static void maniaExport()
+        private static void maniaProcess()
         {}
     }
 }

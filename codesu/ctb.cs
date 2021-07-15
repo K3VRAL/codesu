@@ -9,17 +9,18 @@ namespace osuProgram.codesu
 {
     public static partial class programsu
     {
-        private static int[] yloc = {0, 64, 128, 192, 256, 320, 384};
-
-        public static void ctb()
+        public static void ctb(bool log)
         {
-            ctbObjects();
-            if (GetArgsInfo.export || GetArgsInfo.all || GetArgsInfo.log)
+            if (!log)
             {
-                datasu.External();
-                if (!GetArgsInfo.run)
+                ctbObjects();
+                if (GetArgsInfo.export || GetArgsInfo.all || GetArgsInfo.log)
                 {
-                    return;
+                    datasu.External();
+                    if (!GetArgsInfo.run)
+                    {
+                        return;
+                    }
                 }
             }
             ctbProcess();
@@ -154,7 +155,7 @@ namespace osuProgram.codesu
             }
         }
 
-        public static void ctbProcess()
+        private static void ctbProcess()
         {
             int tick = 0;
             int objct = 0;
@@ -418,5 +419,6 @@ namespace osuProgram.codesu
                 Console.SetOut(standardOutput);
             }
         }
+        private static int[] yloc = {0, 64, 128, 192, 256, 320, 384};
     }
 }

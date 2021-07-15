@@ -3,7 +3,6 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 
-using osuProgram.codesu;
 using osuProgram.osu;
 
 namespace osuProgram
@@ -97,7 +96,7 @@ namespace osuProgram
                 // Sets osu file
                 GetCodesuInfo.lines = lines;
                 GetCodesuInfo.file = file;
-
+                
                 // If "[HitObjects]" exists
                 if (GetMapInfo.GetItemLine("[HitObjects]") == -1)
                 {
@@ -176,6 +175,8 @@ namespace osuProgram
                 GetArgsInfo.logDBG = logDBG.enabled;
                 GetArgsInfo.logALL = logALL.enabled;
 
+                GetCodesuInfo.mode = Int32.Parse(getLine[getLine.Length-1]);
+
                 // Getting rid of comments (in newlines) or empty newlines
                 for (int i = GetMapInfo.GetItemLine("[HitObjects]"); i < GetCodesuInfo.lines.Count; i++)
                 {
@@ -205,28 +206,7 @@ namespace osuProgram
                 }
 
                 // Running programming language
-                switch (getLine[getLine.Length-1])
-                {
-                    case "0":
-                        programsu.std();
-                        break;
-
-                    case "1":
-                        programsu.taiko();
-                        break;
-
-                    case "2":
-                        programsu.ctb();
-                        break;
-
-                    case "3":
-                        programsu.mania();
-                        break;
-
-                    default:
-                        Console.WriteLine("Error: \"Mode\" does not have a correct or valid integer to target a specified gamemode: {0}", string.Join(" ", getLine));
-                        return;
-                }
+                GetCodesuInfo.runMode(false);
             }
             else if (args.Length == 0)
             {
