@@ -26,7 +26,8 @@ namespace osuProgram.codesu
             }
             ctbProcess();
         }
-
+        
+        private static int[] yloc = {0, 64, 128, 192, 256, 320, 384};
         private static void ctbObjects()
         {
             // i needs to equal to the beginning of [HitObjects] plus 1
@@ -147,6 +148,11 @@ namespace osuProgram.codesu
                             return;
                     }
                 }
+                if (x.Command == null)
+                {
+                    Console.WriteLine("Error: There was an error with this Object Type: {0} having a null Command because of Y value: {1}", x.OType, x.YVal);
+                    return;
+                }
             }
             if (bracketcount != 0)
             {
@@ -160,7 +166,7 @@ namespace osuProgram.codesu
             int tick = 0;
             int objct = 0;
             List<UInt16> memory = new List<UInt16>();
-            for (int i = 0; i < 30000; i++)
+            for (int i = 0; i < UInt16.MaxValue; i++)
             {
                 memory.Add(0);
             }
@@ -178,231 +184,216 @@ namespace osuProgram.codesu
             }
             while (objct < GetCodesuInfo.AllHitObjects.Count)
             {
-                if (GetCodesuInfo.AllHitObjects[objct].Command == null)
+                switch(GetCodesuInfo.AllHitObjects[objct].Command)
                 {
-                    Console.WriteLine("Error: Object {0} in line {1} has command {2}", GetCodesuInfo.AllHitObjects[objct].Object, GetCodesuInfo.AllHitObjects[objct].FileLine + 1, GetCodesuInfo.AllHitObjects[objct].Command);
-                    return;
-                }
-                if (GetCodesuInfo.AllHitObjects[objct].YVal >= yloc[0] && GetCodesuInfo.AllHitObjects[objct].YVal < yloc[1])
-                {
-                    string inp = null;
-                    if (GetArgsInfo.logEVY || GetArgsInfo.logDBG)
-                    {
-                        StreamWriter standardOutput = new(Console.OpenStandardOutput());
-                        standardOutput.AutoFlush = true;
-                        Console.SetOut(standardOutput);
-                    }
-                    //      inp,        V       inp;
-                    switch (GetCodesuInfo.AllHitObjects[objct].OType)
-                    {
-                        case GetObjectInfo.Type.Normal:
-                            Console.Write("Input (Digit): ");
-                            inp = Console.ReadLine();
-                            try
-                            {
-                                memory[memorypos] = Convert.ToUInt16(inp);
-                            }
-                            catch (System.FormatException)
-                            {
-                                Console.WriteLine("Error: Invalid input: {0} to digit", inp);
-                                return;
-                            }
-                            catch (System.OverflowException)
-                            {
-                                Console.WriteLine("Error: Too big of an input. Maxiumum input allowed is {0}: {1} to digit", UInt16.MaxValue, inp);
-                                return;
-                            }
-                            break;
+                    case "inp,":
+                        string inpD = null;
+                        if (GetArgsInfo.logEVY || GetArgsInfo.logDBG)
+                        {
+                            StreamWriter standardOutput = new(Console.OpenStandardOutput());
+                            standardOutput.AutoFlush = true;
+                            Console.SetOut(standardOutput);
+                        }
 
-                        case GetObjectInfo.Type.Slider:
-                            Console.Write("Input (ASCII): ");
-                            inp = Console.ReadLine();
-                            try
-                            {
-                                memory[memorypos] = Convert.ToUInt16(Convert.ToChar(inp));
-                            }
-                            catch (System.FormatException)
-                            {
-                                Console.WriteLine("Error: Invalid input: {0} to ASCII", inp);
-                                return;
-                            }
-                            catch (System.OverflowException)
-                            {
-                                Console.WriteLine("Error: Too big of an input. Maxiumum input allowed is {0}: {1} to digit", UInt16.MaxValue, inp);
-                                return;
-                            }
-                            break;
-                    }
-                    if (GetArgsInfo.logEVY)
-                    {
-                        Console.SetOut(datasu.psw);
-                        Console.SetError(datasu.psw);
-                    }
-                    else if (GetArgsInfo.logDBG)
-                    {
-                        Console.SetOut(datasu.dsw);
-                        Console.SetError(datasu.dsw);
-                    }
-                }
-                else if (GetCodesuInfo.AllHitObjects[objct].YVal >= yloc[1] && GetCodesuInfo.AllHitObjects[objct].YVal < yloc[2])
-                {
-                    //      jmp[        V       jmp]
-                    int bracketcount = 1;
-                    switch (GetCodesuInfo.AllHitObjects[objct].OType)
-                    {
-                        case GetObjectInfo.Type.Normal:
-                            for (int i = objct + 1; i < GetCodesuInfo.AllHitObjects.Count; i++)
-                            {
-                                if ((GetCodesuInfo.AllHitObjects[i].YVal >= 85 && GetCodesuInfo.AllHitObjects[i].YVal < 170) && GetCodesuInfo.AllHitObjects[i].OType == GetObjectInfo.Type.Normal)
-                                {
-                                    bracketcount++;
-                                }
-                                else if ((GetCodesuInfo.AllHitObjects[i].YVal >= 85 && GetCodesuInfo.AllHitObjects[i].YVal < 170) && GetCodesuInfo.AllHitObjects[i].OType == GetObjectInfo.Type.Slider)
-                                {
-                                    bracketcount--;
-                                }
-                                if (bracketcount == 0)
-                                {
-                                    if (memory[memorypos] == 0)
-                                    {
-                                        datasu.WriteLine("jmp[\t-\tIs 0\tMemVal: {0}\tJumping past jmp]", memory[memorypos]);
-                                        objct = i;
-                                    }
-                                    else
-                                    {
-                                        datasu.WriteLine("jmp[\t-\tNot 0\tMemVal: {0}\tNot jumping past jmp]", memory[memorypos]);
-                                    }
-                                    break;
-                                }
-                            }
-                            break;
+                        Console.Write("Input (Digit): ");
+                        inpD = Console.ReadLine();
+                        try
+                        {
+                            memory[memorypos] = Convert.ToUInt16(inpD);
+                        }
+                        catch (System.FormatException)
+                        {
+                            Console.WriteLine("Error: Invalid input: {0} to digit", inpD);
+                            return;
+                        }
+                        catch (System.OverflowException)
+                        {
+                            Console.WriteLine("Error: Too big of an input. Maxiumum input allowed is {0}: {1} to digit", UInt16.MaxValue, inpD);
+                            return;
+                        }
 
-                        case GetObjectInfo.Type.Slider:
-                            for (int i = objct - 1; i >= 0; i--)
-                            {
-                                if ((GetCodesuInfo.AllHitObjects[i].YVal >= 85 && GetCodesuInfo.AllHitObjects[i].YVal < 170) && GetCodesuInfo.AllHitObjects[i].OType == GetObjectInfo.Type.Normal)
-                                {
-                                    bracketcount--;
-                                }
-                                else if ((GetCodesuInfo.AllHitObjects[i].YVal >= 85 && GetCodesuInfo.AllHitObjects[i].YVal < 170) && GetCodesuInfo.AllHitObjects[i].OType == GetObjectInfo.Type.Slider)
-                                {
-                                    bracketcount++;
-                                }
-                                if (bracketcount == 0)
-                                {
-                                    if (memory[memorypos] != 0)
-                                    {
-                                        datasu.WriteLine("jmp]\t-\tNot 0\tMemVal: {0}\tJumping to jmp[", memory[memorypos]);
-                                        objct = i;
-                                    }
-                                    else
-                                    {
-                                        datasu.WriteLine("jmp]\t-\tIs 0\tMemVal: {0}\tNot jumping to jmp[", memory[memorypos]);
-                                    }
-                                    break;
-                                }
-                            }
-                            break;
-                    }
-                }
-                else if (GetCodesuInfo.AllHitObjects[objct].YVal >= yloc[2] && GetCodesuInfo.AllHitObjects[objct].YVal < yloc[3])
-                {
-                    //  pnt<        V       pnt>
-                    switch (GetCodesuInfo.AllHitObjects[objct].OType)
-                    {
-                        case GetObjectInfo.Type.Normal:
-                            memorypos--;
-                                if (memorypos < 0)
-                                {
-                                    memorypos = memory.Count - 1;
-                                }
-                            break;
+                        if (GetArgsInfo.logEVY)
+                        {
+                            Console.SetOut(datasu.psw);
+                            Console.SetError(datasu.psw);
+                        }
+                        else if (GetArgsInfo.logDBG)
+                        {
+                            Console.SetOut(datasu.dsw);
+                            Console.SetError(datasu.dsw);
+                        }
+                        break;
 
-                        case GetObjectInfo.Type.Slider:
-                            memorypos++;
-                                if (memory.Count <= memorypos)
+                    case "inp;":
+                        string inpA = null;
+                        if (GetArgsInfo.logEVY || GetArgsInfo.logDBG)
+                        {
+                            StreamWriter standardOutput = new(Console.OpenStandardOutput());
+                            standardOutput.AutoFlush = true;
+                            Console.SetOut(standardOutput);
+                        }
+
+                        Console.Write("Input (ASCII): ");
+                        inpA = Console.ReadLine();
+                        try
+                        {
+                            memory[memorypos] = Convert.ToUInt16(Convert.ToChar(inpA));
+                        }
+                        catch (System.FormatException)
+                        {
+                            Console.WriteLine("Error: Invalid input: {0} to ASCII", inpA);
+                            return;
+                        }
+                        catch (System.OverflowException)
+                        {
+                            Console.WriteLine("Error: Too big of an input. Maxiumum input allowed is {0}: {1} to digit", UInt16.MaxValue, inpA);
+                            return;
+                        }
+
+                        if (GetArgsInfo.logEVY)
+                        {
+                            Console.SetOut(datasu.psw);
+                            Console.SetError(datasu.psw);
+                        }
+                        else if (GetArgsInfo.logDBG)
+                        {
+                            Console.SetOut(datasu.dsw);
+                            Console.SetError(datasu.dsw);
+                        }
+                        break;
+
+                    case "jmp[":
+                        int bracketcountR = 1;
+                        for (int i = objct + 1; i < GetCodesuInfo.AllHitObjects.Count; i++)
+                        {
+                            if (GetCodesuInfo.AllHitObjects[i].Command == "jmp[")
+                            {
+                                bracketcountR++;
+                            }
+                            else if (GetCodesuInfo.AllHitObjects[i].Command == "jmp]")
+                            {
+                                bracketcountR--;
+                            }
+                            if (bracketcountR == 0)
+                            {
+                                if (memory[memorypos] == 0)
                                 {
-                                    memorypos = 0;
+                                    datasu.WriteLine("jmp[\t-\tIs 0\tMemVal: {0}\tJumping past jmp]", memory[memorypos]);
+                                    objct = i;
                                 }
-                            break;
-                    }
-                }
-                else if (GetCodesuInfo.AllHitObjects[objct].YVal >= yloc[3] && GetCodesuInfo.AllHitObjects[objct].YVal < yloc[4])
-                {
-                    //  inc+        V       dec-        V       rnd~
-                    switch (GetCodesuInfo.AllHitObjects[objct].OType)
-                    {
-                        case GetObjectInfo.Type.Normal:
-                            if (memory[memorypos] == UInt16.MaxValue)
-                            {
-                                memory[memorypos] = UInt16.MinValue;
+                                else
+                                {
+                                    datasu.WriteLine("jmp[\t-\tNot 0\tMemVal: {0}\tNot jumping past jmp]", memory[memorypos]);
+                                }
+                                break;
                             }
-                            else
+                        }
+                        break;
+
+                    case "jmp]":
+                        int bracketcountL = 1;
+                        for (int i = objct - 1; i >= 0; i--)
+                        {
+                            if (GetCodesuInfo.AllHitObjects[i].Command == "jmp[")
                             {
-                                memory[memorypos]++;
+                                bracketcountL--;
                             }
-                            break;
-
-                        case GetObjectInfo.Type.Slider:
-                            if (memory[memorypos] == UInt16.MinValue)
+                            else if (GetCodesuInfo.AllHitObjects[i].Command == "jmp]")
                             {
-                                memory[memorypos] = UInt16.MaxValue;
+                                bracketcountL++;
                             }
-                            else
+                            if (bracketcountL == 0)
                             {
-                                memory[memorypos]--;
+                                if (memory[memorypos] != 0)
+                                {
+                                    datasu.WriteLine("jmp]\t-\tNot 0\tMemVal: {0}\tJumping to jmp[", memory[memorypos]);
+                                    objct = i;
+                                }
+                                else
+                                {
+                                    datasu.WriteLine("jmp]\t-\tIs 0\tMemVal: {0}\tNot jumping to jmp[", memory[memorypos]);
+                                }
+                                break;
                             }
-                            break;
+                        }
+                        break;
 
-                        case GetObjectInfo.Type.Spinner:
-                            memory[memorypos] = (UInt16)new Random().Next(UInt16.MinValue, UInt16.MaxValue);
-                            break;
-                    }
-                }
-                else if (GetCodesuInfo.AllHitObjects[objct].YVal >= yloc[4] && GetCodesuInfo.AllHitObjects[objct].YVal < yloc[5])
-                {
-                    //  mul*        V       div/
-                    switch (GetCodesuInfo.AllHitObjects[objct].OType)
-                    {
-                        case GetObjectInfo.Type.Normal:
-                            memory[memorypos] *= 2;
-                            break;
+                    case "pnt<":
+                        memorypos--;
+                        if (memorypos < 0)
+                        {
+                            memorypos = memory.Count - 1;
+                        }
+                        break;
 
-                        case GetObjectInfo.Type.Slider:
-                            memory[memorypos] /= 2;
-                            break;
-                    }
-                }
-                else if (GetCodesuInfo.AllHitObjects[objct].YVal >= yloc[5] && GetCodesuInfo.AllHitObjects[objct].YVal <= yloc[6])
-                {
-                    //  out.        V       out:
-                    datasu.Write("Output: ");
-                    switch (GetCodesuInfo.AllHitObjects[objct].OType)
-                    {
-                        case GetObjectInfo.Type.Normal:
-                            Console.Write(memory[memorypos]);
-                            break;
+                    case "pnt>":
+                        memorypos++;
+                        if (memory.Count <= memorypos)
+                        {
+                            memorypos = 0;
+                        }
+                        break;
 
-                        case GetObjectInfo.Type.Slider:
-                            Console.Write((char)memory[memorypos]);
-                            break;
-                    }
-                    datasu.WriteLine();
-                    datasu.Step(!GetArgsInfo.debug);
-                }
-                else
-                {
-                    Console.WriteLine("Error: Tick: {0} and Object: {1} at FileLine: {2} has Y value of {3}. Change this to be in range from {4} to {5}.", tick + 1, objct + 1, GetCodesuInfo.AllHitObjects[objct].FileLine, GetCodesuInfo.AllHitObjects[objct].YVal, yloc[0], yloc[yloc.Length-1]);
-                    return;
+                    case "inc+":
+                        if (memory[memorypos] == UInt16.MaxValue)
+                        {
+                            memory[memorypos] = UInt16.MinValue;
+                        }
+                        else
+                        {
+                            memory[memorypos]++;
+                        }
+                        break;
+
+                    case "dec-":
+                        if (memory[memorypos] == UInt16.MinValue)
+                        {
+                            memory[memorypos] = UInt16.MaxValue;
+                        }
+                        else
+                        {
+                            memory[memorypos]--;
+                        }
+                        break;
+
+                    case "rnd~":
+                        memory[memorypos] = (UInt16)new Random().Next(UInt16.MinValue, UInt16.MaxValue);
+                        break;
+
+                    case "mul*":
+                        memory[memorypos] *= 2;
+                        break;
+
+                    case "div/":
+                        memory[memorypos] /= 2;
+                        break;
+
+                    case "out.":
+                        datasu.Write("Output: ");
+                        Console.Write(memory[memorypos]);
+                        datasu.WriteLine();
+                        datasu.Step(!GetArgsInfo.debug);
+                        break;
+
+                    case "out:":
+                        datasu.Write("Output: ");
+                        Console.Write((char)memory[memorypos]);
+                        datasu.WriteLine();
+                        datasu.Step(!GetArgsInfo.debug);
+                        break;
+
+                    case null:
+                        Console.WriteLine("Error: Object {0} in line {1} has command {2}", GetCodesuInfo.AllHitObjects[objct].Object, GetCodesuInfo.AllHitObjects[objct].FileLine + 1, GetCodesuInfo.AllHitObjects[objct].Command);
+                        return;
+
+                    default:
+                        Console.WriteLine("Error: Tick: {0} and Object: {1} at FileLine: {2} has Y value of {3}. Change this to be in range from {4} to {5}.", tick + 1, objct + 1, GetCodesuInfo.AllHitObjects[objct].FileLine, GetCodesuInfo.AllHitObjects[objct].YVal, yloc[0], yloc[yloc.Length-1]);
+                        return;
                 }
                 datasu.WriteLine("Tick: {0}\tObject: {1}\tFileLine: {2}\tMemPos: {3}\tMemVal: {4}\tCommand: {5}", tick + 1, objct + 1, GetCodesuInfo.AllHitObjects[objct].FileLine, memorypos, memory[memorypos], GetCodesuInfo.AllHitObjects[objct].Command);
                 datasu.Step(GetArgsInfo.debug);
                 objct++;
                 tick++;
-                if (tick == 1000000)
-                {
-                    break;
-                }
             }
             if (GetArgsInfo.logEVY)
             {
@@ -419,6 +410,5 @@ namespace osuProgram.codesu
                 Console.SetOut(standardOutput);
             }
         }
-        private static int[] yloc = {0, 64, 128, 192, 256, 320, 384};
     }
 }
