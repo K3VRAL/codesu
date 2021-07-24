@@ -14,7 +14,6 @@ namespace osuProgram.codesu
             if (!log)
             {
                 ctbObjects();
-                GetCodesuInfo.AllHitObjects = GetCodesuInfo.AllHitObjects.OrderBy(a => a.TVal).ToList();
                 if (GetArgsInfo.export || GetArgsInfo.all || GetArgsInfo.log)
                 {
                     datasu.External();
@@ -127,6 +126,8 @@ namespace osuProgram.codesu
                     return;
                 }
             }
+            
+            GetCodesuInfo.AllHitObjects = GetCodesuInfo.AllHitObjects.OrderBy(a => a.TVal).ToList();
 
             int bracketcount = 0;
             foreach (var x in GetCodesuInfo.AllHitObjects)
@@ -165,7 +166,7 @@ namespace osuProgram.codesu
         {
             int tick = 0;
             int objct = 0;
-            List<UInt16> memory = new List<UInt16>();
+            List<UInt16> memory = new();
             for (int i = 0; i < UInt16.MaxValue; i++)
             {
                 memory.Add(0);
