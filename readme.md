@@ -1,12 +1,12 @@
 # Codesu
 
-Inspired by various programming languages. You use the osu!editor in order to code. It only uses the Y values of every object so the X values will not affect the outcome of the program. This was done so to prevent stiff movement in osu!ctb. I haven't tested this for osu!std, osu!taiko and (I guess this will not work for) osu!mania. The time value, however, needs to be in order or the code will operate differently than how you expected it to.
+Codesu is an interpreter inspired by various programming languages. It takes the map file and turns it into usable code depending on the mode type for programming. You use the osu!editor in order to code.
 
 # Types of programming
 
-`osu!ctbrainfuck` was inspired by brainfuck while also including more commands
+`osu!ctbrainfuck` was inspired by Brainfuck
 
-`osu!taiko` TODO
+`osu!taikodots` was inspired by ASCIIDots
 
 `osu!std` TODO
 
@@ -50,9 +50,9 @@ TODO Replace examples/ctb with examples/std,taiko,mania when developed with thos
 
 Runs helloworld.osu and ignores all warnings `dotnet run -p cproject.csproj examples/ctb/helloworld.osu -i`
 
-Runs 99bottles.osu while ignoring, debugging, and stepping `dotnet run -p cproject.csproj examples/ctb/99bottles.osu -dis`
+Runs 99bottles.osu while ignoring, debugging, and stepping `dotnet run -p cproject.csproj -dis examples/ctb/99bottles.osu`
 
-Runs fizzbuzz.osu while ignoring, debugging, stepping, displays all, and force running because of displaying all `dotnet run -p cproject.csproj examples/ctb/fizzbuzz.osu -d -si -ar`
+Runs fizzbuzz.osu while ignoring, debugging, stepping, displays all, and force running because of displaying all `dotnet run -p -si cproject.csproj examples/ctb/fizzbuzz.osu -d -ar`
 
 TLDR: It doesn't matter if you combine the arguments (but it is recommended)
 
@@ -64,23 +64,50 @@ TODO
 
 ## osu!taiko
 
-TODO
+HitSound Value will determine the command of the object.
+
+X-axis and Y-axis will determine the placement of the object in the 0-512 width of x and 0-384 height of y.
+If there are overlapping axis, the program will quit.
+
+Time Placement will determine the order of the object with the other objects time placement.
+
+    HitObjects
+        HSound              Info
+        0           |       Circle: Start.            Slider: End&            Spinner: Mirror\
+
+        2           |       Circle: Verticle|         Slider: Horizontal-     Spinner: Mirror/
+
+        4           |       Circle: Right>            Slider: Left<           Spinner: Crossing+
+
+        6           |       Circle: Upward^           Slider: Downwardsv      Spinner: Outputs""
+
+        8           |       Circle: Reflects(         Slider: Reflects)       Spinner: Duplicates*
+
+        10          |       Circle: SetAddress@       Slider: SetValue#       Spinner: Output$
+
+        12          |       Circle: Input?            Slider: Control Flow~   Spinner: Redirect!
+
+        14          |       Circle: Operations[]      Slider: Operations{}    Spinner: Teleport%
 
 ## osu!ctbrainfuck
 
+Y-axis will determine the command of the object.
+
+Time Placement will determine the order of the object with the other objects time placement.
+
     HitObjects
         Y-val   Command     Info
-        0-63    Input       | Circle: Digits        Slider: ASCII
+        0-63    Input       | Circle: Digits,         Slider: ASCII;
 
-        64-127  Jumping     | Circle: [             Slider: ]
+        64-127  Jumping     | Circle: Loop[           Slider: Loop]
 
-        128-191 Pointer     | Circle: Left          Slider: Right
+        128-191 Pointer     | Circle: Left<           Slider: Right>
 
-        192-255 Memorycell  | Circle: Increment     Slider: Decrement   Spinner: Random
+        192-255 Memorycell  | Circle: Increment+      Slider: Decrement-      Spinner: Random~
 
-        256-319 Memorycell  | Circle: Mulcrement    Slider: Divcrement
+        256-319 Memorycell  | Circle: Mulcrement*     Slider: Divcrement/
 
-        320-384 Output      | Circle: Digits        Slider: ASCII
+        320-384 Output      | Circle: Digits.         Slider: ASCII:
 
 ## osu!mania
 
