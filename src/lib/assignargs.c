@@ -1,4 +1,5 @@
 #include "assignargs.h"
+#include "codesuinfo.h"
 
 bool isOsuExtension(char *string) {
 	bool found = false;
@@ -30,60 +31,59 @@ void assignArgs(int argc, char **argv) {
 			for (int j = 1; j < strlen(*(argv + i)); j++) {
 				switch (*(*(argv + i) + j)) {
 					case 'i':
-						setIgnore(true);
+						arg.ignore = true;
 						break;
 
 					case 's':
-						setStep(true);
+						arg.step = true;
 						break;
 
 					case 'r':
-						setRun(true);
+						arg.run = true;
 						break;
 
 					case 'd':
-						setDebug(true);
+						arg.debug = true;
 						break;
 
 					case 'a':
-						setAll(true);
+						arg.all = true;
 						break;
 
 					case 'e':
-						setExporting(true);
+						arg.exporting = true;
 						break;
 
 					case 'l':
-						setLogging(true);
+						arg.logging = true;
 						break;
 				}
 			}
 		}
 
 		if (isOsuExtension(*(argv + i))) {
-			setFilesFile(*(argv + i));
-
 			FILE *fp;
 			fp = fopen(*(argv + i), "r");
 			if (fp == NULL) {
 				exit(1);
 			}
+			fr.file = *(argv + i);
 
 			char ch;
 			char *stringbuild = (char *)malloc(sizeof (char));
-			memset(stringbuild, 0, strlen(stringbuild));
 			while ((ch = fgetc(fp)) != EOF) {
 				if (ch != '\n') {
 					*(stringbuild + strlen(stringbuild)) = ch;
-					stringbuild = (char *)realloc(stringbuild, strlen(stringbuild) + 1);
+					stringbuild = (char *)realloc(stringbuild, strlen(stringbuild));
 				} else {
-					char temp[5];
+					char temp[4];
 					strncpy(temp, stringbuild, 4);
-					if (strcmp(temp, "Mode") == 0 && getCodesuMode() == -1) {
-						setCodesuMode(*(stringbuild + 6) - '0');
+					if (strcmp(temp, "Mode") == 0) {
+						cinfo = *(stringbuild + 6) - '0';
 						break;
 					}
 					memset(stringbuild, 0, strlen(stringbuild));
+					stringbuild = (char *)realloc(stringbuild, 0);
 				}
 			}
 			fclose(fp);

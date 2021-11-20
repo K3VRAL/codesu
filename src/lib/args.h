@@ -27,45 +27,24 @@ typedef struct {
 	bool loggingDebug;
 } argsLog;
 
+typedef struct {
+    void (*function)(void);
+    char input;
+    bool set;
+} FunCallback;
+
 void initArgs();
 
-void setIgnore(bool set);
-void setStep(bool set);
-void setRun(bool set);
-void setDebug(bool set);
-void setAll(bool set);
-void setExporting(bool set);
-void setLogging(bool set);
-bool getIgnore();
-bool getStep();
-bool getRun();
-bool getDebug();
-bool getAll();
-bool getExporting();
-bool getLogging();
-
-void setENewCombo(bool set);
-void setEModeHit(bool set);
-bool getENewCombo();
-bool getEModeHit();
 void dialougeENewCombo();
 void dialougeEModeHit();
-
-void setLEvery(bool set);
-void setLAllObjects(bool set);
-void setLDebug(bool set);
-bool getLEvery();
-bool getLAllObjects();
-bool getLDebug();
 void dialougeLEvery();
 void dialougeLAllObjects();
 void dialougeLDebug();
 
-typedef struct {
-    void (*function)(void);
-    char input;
-    void (*setfunction)(bool);
-} FunCallback;
 void assignExportAndLog();
+
+extern args arg;
+extern argsExport argExport;
+extern argsLog argLog;
 
 #endif

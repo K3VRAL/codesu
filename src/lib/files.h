@@ -7,20 +7,20 @@
 #include <string.h>
 
 typedef struct {
-	char *file;
-    char *fileInMemory;
+    char *charInMem;
+    int charCount;
 } FilesRelated;
 
-void initFiles();
-
-void setFilesFile(char *set);
-void setFilesFIM(char *set);
-
-char *getFilesFile();
-char *getFilesFIM();
+typedef struct {
+	char *file;
+    FilesRelated *linesInMem;
+    int lineCount;
+} FileRelated;
 
 int indexAtLine(char *string);
 int indexAtCharOfLine(int index);
 char *lineAtIndex(int index);
+
+extern FileRelated fr;
 
 #endif

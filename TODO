@@ -10,3 +10,5 @@ char stringbuilder[500] -> char *stringbuilder
 In src/lib/files.c , change lineAtIndex 's return value such that we don't need to free the return value after it returned.
 
 Do the documentation for Loop[ and Loop] in doc/en/ctbrainfuck.md
+
+In main.c, free all the relevant allocated resources.

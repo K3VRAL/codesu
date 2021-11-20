@@ -21,85 +21,11 @@ void initArgs() {
     argLog.loggingDebug = false;
 }
 
-void setIgnore(bool set) {
-    arg.ignore = set;
-}
-void setStep(bool set) {
-    arg.step = set;
-}
-void setRun(bool set) {
-    arg.run = set;
-}
-void setDebug(bool set) {
-    arg.debug = set;
-}
-void setAll(bool set) {
-    arg.all = set;
-}
-void setExporting(bool set) {
-    arg.exporting = set;
-}
-void setLogging(bool set) {
-    arg.logging = set;
-}
-bool getIgnore() {
-    return arg.ignore;
-}
-bool getStep() {
-    return arg.step;
-}
-bool getRun() {
-    return arg.run;
-}
-bool getDebug() {
-    return arg.debug;
-}
-bool getAll() {
-    return arg.all;
-}
-bool getExporting() {
-    return arg.exporting;
-}
-bool getLogging() {
-    return arg.logging;
-}
-
-void setENewCombo(bool set) {
-    argExport.exportingNewCombo = set;
-}
-void setEModeHit(bool set) {
-    argExport.exportingModeHit = set;
-}
-bool getENewCombo() {
-    return argExport.exportingNewCombo;
-}
-bool getEModeHit() {
-    return argExport.exportingModeHit;
-}
 void dialougeENewCombo() {
     printf("Do you want all objects to have a New Combo attribute? (y/n) ");
 }
 void dialougeEModeHit() {
     printf("Do you want to include \"Mode: 2\" and \"[HitObjects]\"? (y/n) ");
-}
-
-void setLEvery(bool set) {
-    argLog.loggingEvery = set;
-}
-void setLAllObjects(bool set) {
-    argLog.loggingAllObjects = set;
-}
-void setLDebug(bool set) {
-    argLog.loggingDebug = set;
-}
-bool getLEvery() {
-    return argLog.loggingEvery;
-}
-bool getLAllObjects() {
-    return argLog.loggingAllObjects;
-}
-bool getLDebug() {
-    return argLog.loggingDebug;
 }
 void dialougeLEvery() {
     printf("Do you want to log everything printed? (y/n) ");
@@ -112,47 +38,47 @@ void dialougeLDebug() {
 }
 
 void assignExportAndLog() {
-    if (getExporting() || getLogging()) {
+    if (arg.exporting || arg.logging) {
 		int siz = 0;
 
-		if (getExporting()) {
+		if (arg.exporting) {
 			siz = siz + 2;
 		}
-		if (getLogging()) {
+		if (arg.logging) {
 			siz = siz + 3;
 		}
 
 		if (siz > 1) {
 			FunCallback *function = (FunCallback *)malloc(siz * sizeof (FunCallback));
 
-			if (getExporting()) {
+			if (arg.exporting) {
 				(function + 0)->function = dialougeENewCombo;
-                (function + 0)->setfunction = setENewCombo;
+                (function + 0)->set = argExport.exportingNewCombo;
 
 				(function + 1)->function = dialougeEModeHit;
-                (function + 1)->setfunction = setEModeHit;
+                (function + 1)->set = argExport.exportingModeHit;
 			}
 			
 			// TODO it works but maybe one day optimize this
-			if (getLogging()) {
-				if (getExporting()) {
+			if (arg.logging) {
+				if (arg.exporting) {
 					(function + 2)->function = dialougeLEvery;
-                    (function + 2)->setfunction = setLEvery;
+                    (function + 2)->set = argLog.loggingEvery;
 
 					(function + 3)->function = dialougeLAllObjects;
-                    (function + 3)->setfunction = setLAllObjects;
+                    (function + 3)->set = argLog.loggingAllObjects;
 
 					(function + 4)->function = dialougeLDebug;
-                    (function + 4)->setfunction = setLDebug;
+                    (function + 4)->set = argLog.loggingDebug;
 				} else {
 					(function + 0)->function = dialougeLEvery;
-                    (function + 0)->setfunction = setLEvery;
+                    (function + 0)->set = argLog.loggingEvery;
 
 					(function + 1)->function = dialougeLAllObjects;
-                    (function + 1)->setfunction = setLAllObjects;
+                    (function + 1)->set = argLog.loggingAllObjects;
 
 					(function + 2)->function = dialougeLDebug;
-                    (function + 2)->setfunction = setLDebug;
+                    (function + 2)->set = argLog.loggingDebug;
 				}
 			}
 
@@ -170,7 +96,7 @@ void assignExportAndLog() {
 			free(temp);
 
 			for (int i = 0; i < siz; i++) {
-                (*(function + i)->setfunction)((function + i)->input == 'y' ? true : false);
+                (function + i)->set = (function + i)->input == 'y' ? true : false;
 			}
             free(function);
 		}
