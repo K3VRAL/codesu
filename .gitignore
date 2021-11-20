@@ -1,8 +1,4 @@
-# Ignore Directories
 bin/
-obj/
 
-# Keep Directories
-!examples/mania/
-!examples/std/
-!examples/taiko/
+# For archive
+obj/
