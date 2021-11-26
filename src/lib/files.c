@@ -1,102 +1,72 @@
 #include "files.h"
 
-FileRelated fr;
+FileRelated fr = {NULL, NULL, 0};
+
+// Thank you cboard.cprogramming.com - john.c
+void *xrealloc(void *ptr, size_t size) {
+    void *newptr = realloc(ptr, size);
+    if (!newptr) { perror("xrealloc"); exit(EXIT_FAILURE); }
+    return newptr;
+}
+
+// Thank you cboard.cprogramming.com - john.c
+void readFileToMemory(char *file) {
+    FILE *fp;
+    fp = fopen(file, "r");
+    if (!fp) { perror(file); exit(EXIT_FAILURE); }
+
+    fr.file = xrealloc(NULL, strlen(file) * sizeof (char) + 1);
+    strcpy(fr.file, file);
+    fr.lines = xrealloc(NULL, sizeof (char *));
+
+    char line[256];
+    size_t len;
+    bool more = false;
+
+    while (fgets(line, sizeof (line), fp) != NULL) {
+        len = strlen(line);
+        bool still_more = false;
+        if (line[len-1] == '\n') {
+            line[--len] = '\0';
+        } else {
+            still_more = true;
+        }
+
+        if (!more) {
+            fr.lines = xrealloc(fr.lines, (fr.numLines + 1) * sizeof (char *));
+            *(fr.lines + fr.numLines) = xrealloc(NULL, len + 1);
+            strcpy(*(fr.lines + fr.numLines), line);
+            fr.numLines++;
+        } else {
+            size_t n = fr.numLines - 1;
+            size_t oldlen = strlen(*(fr.lines + n));
+            *(fr.lines + n) = xrealloc(*(fr.lines + n), oldlen + len + 1);
+            strcpy((*(fr.lines + n) + oldlen), line);
+        }
+        more = still_more;
+    }
+    fclose(fp);
+}
+
+void freeingMemory() {
+    for (int i = 0; i < fr.numLines; i++) {
+        free(*(fr.lines + i));
+    }
+    free(fr.lines);
+    free(fr.file);
+}
 
 int indexAtLine(char *string) {
-    char ch;
-    char *stringbuild = (char *)malloc(sizeof (char));
-    int line = 0;
-    bool found = false;
-    for (int f = 0; f < fr.lineCount; f++) {
-        for (int i = 0; i < (fr.linesInMem + f)->charCount; i++) {
-            ch = *((fr.linesInMem + f)->charInMem + i);
-            if (ch != '\n') {
-                *(stringbuild + strlen(stringbuild)) = ch;
-                stringbuild = (char *)realloc(stringbuild, strlen(stringbuild));
-            } else {
-                if (strcmp(stringbuild, string) == 0) {
-                    found = true;
-                    break;
-                }
-                memset(stringbuild, 0, strlen(stringbuild));
-                stringbuild = (char *)realloc(stringbuild, 0);
-                line++;
-            }
-        }
-        if (found) {
-            break;
-        }
-    }
-    free(stringbuild);
-
-    return found ? line : -1;
+    // TODO
+    return -1;
 }
 
 int indexAtCharOfLine(int index) {
-    char ch;
-    int count = 0, amount = 0;
-    bool found = false;
-    for (int f = 0; f < fr.lineCount; f++) {
-        for (int i = 0; i < (fr.linesInMem + f)->charCount; i++) {
-            ch = *((fr.linesInMem + f)->charInMem + i);
-            if (ch == '\n') {
-                count++;
-            }
-            if (count == index) {
-                found = true;
-                amount++;
-                break;
-            }
-            amount++;
-        }
-        if (found) {
-            break;
-        }
-    }
-
-    return found ? amount : -1;
+    // TODO
+    return -1;
 }
 
 char *lineAtIndex(int index) {
-    char ch;
-    int count = 0, foundi = 0;
-    bool found = false;
-    for (int f = 0; f < fr.lineCount; f++) {
-        for (int i = 0; i < (fr.linesInMem + f)->charCount; i++) {
-            ch = *((fr.linesInMem + f)->charInMem + i);
-            if (ch == '\n') {
-                count++;
-            }
-            if (count == index) {
-                found = true;
-                foundi = i+1;
-                break;
-            }
-        }
-        if (found) {
-            break;
-        }
-    }
-
-    char *stringbuild = (char *)malloc(sizeof (char));
-    bool getout = false;
-    if (found) {
-        for (int f = 0; f < fr.lineCount; f++) {
-            for (int i = foundi; i < (fr.linesInMem + f)->charCount; i++) {
-                ch = *((fr.linesInMem + f)->charInMem + i);
-                if (ch != '\n') {
-                    *(stringbuild + strlen(stringbuild)) = ch;
-                    stringbuild = (char *)realloc(stringbuild, strlen(stringbuild));
-                } else {
-                    getout = true;
-                    break;
-                }
-            }
-            if (getout) {
-                break;
-            }
-        }
-    }
-
-    return found ? stringbuild : "";
+    // TODO
+    return NULL;
 }

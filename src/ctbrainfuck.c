@@ -1,27 +1,42 @@
 #include "ctbrainfuck.h"
+#include "lib/files.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 yLocation yloc = { 0, 64, 128, 192, 256, 320, 384 };
 allHO *aho;
 
-void runInit() {
-    // char *temp = lineAtIndex(indexAtLine("[HitObjects]"));
-    // printf("%s\n", temp);
-    // free(temp);
+void runSet() {
+    char *delim = ",";
+    for (int i = 0; i < fr.numLines; i++) {
+        char *token = strtok(*(fr.lines + i), delim);
+        if (token) {
+            // char **line = xrealloc(NULL, sizeof (char *));
+            // size_t len = 0;
+            while (token != NULL) { // TODO
+                printf("[%s] ", token);
+                // *(line + len) = xrealloc(NULL, strlen(token) + 1);
+                // strcpy(*(line + len), token);
+                token = strtok(NULL, delim);
+                // len++;
+            }
+            printf("\n");
+        }
+    }
 }
 
 void runStart() {
-    // unsigned int tick = 0;
-    // unsigned int objct = 0;
-    // short memory[USHRT_MAX];
-    // for (unsigned short i = 0; i < USHRT_MAX; i++) {
-    //     memory[i] = 0;
-    // }
-    // unsigned int memorypos = 0;
-
-    // while (objct < ) {}
 }
 
 void runCatchTheBeat() {
-    runInit();
-    runStart();
+    if (!arg.logging) {
+        runSet();
+        if (arg.all || arg.exporting || arg.logging) {
+            if (!arg.run) {
+                return;
+            }
+        }
+        runStart();
+    }
 }

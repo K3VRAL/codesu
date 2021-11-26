@@ -1,10 +1,13 @@
 #ifndef ARGS_H
 #define ARGS_H
 
+#include <ctype.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "files.h"
 
 typedef struct {
 	bool ignore;

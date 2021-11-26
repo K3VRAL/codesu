@@ -15,9 +15,7 @@ bool isOsuExtension(char *string) {
 		char *str = ".osu";
 		int j = 0;
 		for (int i = stringstart; i < strlen(string); i++) {
-			if (*(string + i) != *(str + j)) {
-				return false;
-			}
+			if (*(string + i) != *(str + j)) return false;
 			j++;
 		}
 	}
@@ -27,7 +25,7 @@ bool isOsuExtension(char *string) {
  
 void assignArgs(int argc, char **argv) {
     for (int i = 1; i < argc; i++) {
-		if (*(*(argv + i)) + 0 == '-') {
+		if (*(*(argv + i)) == '-') {
 			for (int j = 1; j < strlen(*(argv + i)); j++) {
 				switch (*(*(argv + i) + j)) {
 					case 'i':
@@ -62,32 +60,15 @@ void assignArgs(int argc, char **argv) {
 		}
 
 		if (isOsuExtension(*(argv + i))) {
-			FILE *fp;
-			fp = fopen(*(argv + i), "r");
-			if (fp == NULL) {
-				exit(1);
-			}
-			fr.file = *(argv + i);
+			readFileToMemory(*(argv + i));
 
-			char ch;
-			char *stringbuild = (char *)malloc(sizeof (char));
-			while ((ch = fgetc(fp)) != EOF) {
-				if (ch != '\n') {
-					*(stringbuild + strlen(stringbuild)) = ch;
-					stringbuild = (char *)realloc(stringbuild, strlen(stringbuild));
-				} else {
-					char temp[4];
-					strncpy(temp, stringbuild, 4);
-					if (strcmp(temp, "Mode") == 0) {
-						cinfo = *(stringbuild + 6) - '0';
-						break;
-					}
-					memset(stringbuild, 0, strlen(stringbuild));
-					stringbuild = (char *)realloc(stringbuild, 0);
-				}
+			for (int i = 0; i < fr.numLines; i++) {
+				if (*(*(fr.lines + i) + 0) == 'M'
+				 && *(*(fr.lines + i) + 1) == 'o'
+				 && *(*(fr.lines + i) + 2) == 'd'
+				 && *(*(fr.lines + i) + 3) == 'e')
+					cinfo = *(*(fr.lines + i) + 6) - '0';
 			}
-			fclose(fp);
-			free(stringbuild);
 		}
 	}
 }

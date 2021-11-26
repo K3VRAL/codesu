@@ -1,4 +1,4 @@
-TODOs
+TODO
 
 char *fileInMemory -> char **fileInMemory
 NOTE: This also means that these functions will have to be changed
@@ -11,4 +11,4 @@ In src/lib/files.c , change lineAtIndex 's return value such that we don't need 
 
 Do the documentation for Loop[ and Loop] in doc/en/ctbrainfuck.md
 
-In main.c, free all the relevant allocated resources.
+Use perror() to print relevant information when exiting and use exit(EXIT_FAILURE) instead of exit(1)

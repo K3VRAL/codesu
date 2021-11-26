@@ -41,15 +41,11 @@ void assignExportAndLog() {
     if (arg.exporting || arg.logging) {
 		int siz = 0;
 
-		if (arg.exporting) {
-			siz = siz + 2;
-		}
-		if (arg.logging) {
-			siz = siz + 3;
-		}
+		if (arg.exporting) siz = siz + 2;
+		if (arg.logging) siz = siz + 3;
 
 		if (siz > 1) {
-			FunCallback *function = (FunCallback *)malloc(siz * sizeof (FunCallback));
+			FunCallback *function = xrealloc(NULL, siz * sizeof (FunCallback));
 
 			if (arg.exporting) {
 				(function + 0)->function = dialougeENewCombo;
@@ -82,15 +78,19 @@ void assignExportAndLog() {
 				}
 			}
 
-			char *temp = (char *)malloc(sizeof (char));
+			char *temp = xrealloc(NULL, sizeof (char));
 			for (int i = 0; i < siz; i++) {
 				while (!((function + i)->input == 'y' || (function + i)->input == 'n')) {
 					(*(function + i)->function)();
 					scanf("%s", temp);
-					if (strcmp(temp, "yes") == 0 || strcmp(temp, "y") == 0
-					|| strcmp(temp, "no") == 0 || strcmp(temp, "n") == 0) {
-						(function + i)->input = *(temp);
+					for (size_t i = 0; i < strlen(temp); i++) {
+						*(temp + i) = tolower(*(temp + i));
 					}
+					if (strcmp(temp, "yes") == 0
+					 || strcmp(temp, "y") == 0
+					 || strcmp(temp, "no") == 0
+					 || strcmp(temp, "n") == 0)
+						(function + i)->input = *(temp);
 				}
 			}
 			free(temp);

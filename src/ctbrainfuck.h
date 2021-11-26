@@ -2,8 +2,10 @@
 #define CTBRAINFUCK_H
 
 #include <stdbool.h>
+#include <string.h>
 #include <limits.h>
 
+#include "lib/args.h"
 #include "lib/files.h"
 
 typedef int yLocation[];

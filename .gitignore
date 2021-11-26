@@ -1,4 +1,5 @@
 bin/
+vgcore.*
 
 # For archive
 obj/
