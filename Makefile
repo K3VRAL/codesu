@@ -9,8 +9,9 @@ all: $(TARGET)
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -o $(BINFLR)$(notdir $@) -c $<
 
-$(TARGET): main.o src/programsu.o src/ctbrainfuck.o src/lib/assignargs.o src/lib/args.o src/lib/codesuinfo.o src/lib/files.o
+$(TARGET): main.o src/programsu.o src/ctbrainfuck.o src/external.o src/lib/assignargs.o src/lib/args.o src/lib/codesuinfo.o src/lib/files.o
 	$(CC) $(CFLAGS) -o $(BINFLR)$@ $(addprefix $(BINFLR), $(notdir $^)) $(LFLAGS)
+	bin/codesu examples/ctbrainfuck/helloworld.osu
 
 clean:
 	rm $(BINFLR)*.o $(BINFLR)$(TARGET)

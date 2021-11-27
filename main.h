@@ -2,6 +2,7 @@
 #define MAIN_H
 
 #include <stdio.h>
+#include <stdbool.h>
 
 #include "src/programsu.h"
 

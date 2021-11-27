@@ -5,34 +5,37 @@
 #include <string.h>
 #include <limits.h>
 
+#include "external.h"
+
 #include "lib/args.h"
 #include "lib/files.h"
 
 typedef int yLocation[];
 
 typedef enum {
-    normal = 0,
-    slider = 1,
-    spinner = 2
-} objecttype;
-
-typedef enum {
-    inpDig = 0, inpAsc = 1,
-    loopStart = 2, loopEnd = 3,
-    left = 4, right = 5,
-    inc = 6, dec = 7,
-    mulc = 8, divc = 9,
-    outDig = 10, outAsc = 11
+    isnull = -1,
+    // Cirlce           Slider          Spinner
+    inpDig      = 0,    inpAsc  = 1,
+    loopStart   = 2,    loopEnd = 3,
+    left        = 4,    right   = 5,
+    inc         = 6,    dec     = 7,    ran = 12,
+    mulc        = 8,    divc    = 9,
+    outDig      = 10,   outAsc  = 11
 } instruction;
 
 typedef struct {
-    char *object;
+    char *line;
     int fileline;
-    objecttype otype;
-    int x, y, time;
+    int time;
     instruction command;
 } allHO;
 
-void runCatchTheBeat();
+typedef struct {
+    allHO *aho;
+    size_t numAho;
+} objects;
+
+Mode *ctbInit();
+void freeingCTB();
 
 #endif

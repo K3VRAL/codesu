@@ -33,17 +33,10 @@ typedef struct {
 typedef struct {
     void (*function)(void);
     char input;
-    bool set;
+    bool *set;
 } FunCallback;
 
 void initArgs();
-
-void dialougeENewCombo();
-void dialougeEModeHit();
-void dialougeLEvery();
-void dialougeLAllObjects();
-void dialougeLDebug();
-
 void assignExportAndLog();
 
 extern args arg;

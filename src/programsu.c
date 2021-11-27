@@ -1,28 +1,53 @@
 #include "programsu.h"
 
-void programsuComments() {
-    // TODO remove pointer if line is comment
-    for (int i = 0; i < fr.numLines; i++) {
-        if (*(*(fr.lines + i) + 0) == '/' && *(*(fr.lines + i) + 1) == '/') {
-            printf("%s\n", *(fr.lines + i));
-        }
-    }
-}
+FunCallbackMode *function;
+Mode *ctb;
 
-void programsuRun() {
-    // programsuComments();
+bool programsuRun() {
+    ctb = ctbInit();
 
+    function = xrealloc(NULL, 1 * sizeof (FunCallbackMode));
+    (function + 0)->target = ctb;
+
+    int i = -1;
     switch (cinfo) {
         case ocatch:
-            runCatchTheBeat();
+            i = 0;
             break;
         case ostandard:
         case otaiko:
         case omania:
             printf("Sorry but the mode you've inputted: \'%s\' is currently under production.\n", cinfo == ostandard ?  "Standard" : cinfo == otaiko ? "Taiko" : "Mania");
-            break;
+            return false;
         default:
             printf("Sorry but the mode you've inputted might not exist.\n");
+            return false;
+    }
+
+    (((function + i)->target + 0)->function)();   // runSet()
+    if (!arg.logging) {
+        if (arg.all || arg.exporting || arg.logging) {
+            dataExternal();
+            if (!arg.run) {
+                return true;
+            }
+        }
+    }
+    (((function + i)->target + 1)->function)();   // runStart()
+    return true;
+}
+
+void freeingProgramsu() {
+    switch (cinfo) {
+        case ocatch:
+            freeingCTB();
+            break;
+        case ostandard:
+        case otaiko:
+        case omania:
             break;
     }
+
+    free(ctb);
+    free(function);
 }

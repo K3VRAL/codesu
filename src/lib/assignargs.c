@@ -1,5 +1,4 @@
 #include "assignargs.h"
-#include "codesuinfo.h"
 
 bool isOsuExtension(char *string) {
 	bool found = false;

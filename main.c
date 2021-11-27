@@ -1,6 +1,4 @@
 #include "main.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 int main(int argc, char **argv) {
 	initArgs();
@@ -9,8 +7,11 @@ int main(int argc, char **argv) {
 	if (fr.file == NULL || cinfo == -1) { perror("main"); exit(EXIT_FAILURE); }
 	assignExportAndLog();
 
-	programsuRun();
+	bool run = programsuRun();
 
-	freeingMemory();
+	if (run) {
+		freeingProgramsu();
+		freeingMemory();
+	} else { perror("main"); exit(EXIT_FAILURE); }
 	return EXIT_SUCCESS;
 }

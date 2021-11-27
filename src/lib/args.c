@@ -22,19 +22,19 @@ void initArgs() {
 }
 
 void dialougeENewCombo() {
-    printf("Do you want all objects to have a New Combo attribute? (y/n) ");
+    printf("[Exporting]\tDo you want all objects to have a New Combo attribute? (y/n) ");
 }
 void dialougeEModeHit() {
-    printf("Do you want to include \"Mode: 2\" and \"[HitObjects]\"? (y/n) ");
+    printf("[Exporting]\tDo you want to include \"Mode: 2\" and \"[HitObjects]\"? (y/n) ");
 }
 void dialougeLEvery() {
-    printf("Do you want to log everything printed? (y/n) ");
+    printf("[Logging]\tDo you want to log everything printed? (y/n) ");
 }
 void dialougeLAllObjects() {
-    printf("Do you want to log everything debugged? (y/n) ");
+    printf("[Logging]\tDo you want to log everything debugged? (y/n) ");
 }
 void dialougeLDebug() {
-    printf("Do you want to log all objects listed? (y/n) ");
+    printf("[Logging]\tDo you want to log all objects listed? (y/n) ");
 }
 
 void assignExportAndLog() {
@@ -49,32 +49,32 @@ void assignExportAndLog() {
 
 			if (arg.exporting) {
 				(function + 0)->function = dialougeENewCombo;
-                (function + 0)->set = argExport.exportingNewCombo;
+                (function + 0)->set = &argExport.exportingNewCombo;
 
 				(function + 1)->function = dialougeEModeHit;
-                (function + 1)->set = argExport.exportingModeHit;
+                (function + 1)->set = &argExport.exportingModeHit;
 			}
 			
 			// TODO it works but maybe one day optimize this
 			if (arg.logging) {
 				if (arg.exporting) {
 					(function + 2)->function = dialougeLEvery;
-                    (function + 2)->set = argLog.loggingEvery;
+                    (function + 2)->set = &argLog.loggingEvery;
 
 					(function + 3)->function = dialougeLAllObjects;
-                    (function + 3)->set = argLog.loggingAllObjects;
+                    (function + 3)->set = &argLog.loggingAllObjects;
 
 					(function + 4)->function = dialougeLDebug;
-                    (function + 4)->set = argLog.loggingDebug;
+                    (function + 4)->set = &argLog.loggingDebug;
 				} else {
 					(function + 0)->function = dialougeLEvery;
-                    (function + 0)->set = argLog.loggingEvery;
+                    (function + 0)->set = &argLog.loggingEvery;
 
 					(function + 1)->function = dialougeLAllObjects;
-                    (function + 1)->set = argLog.loggingAllObjects;
+                    (function + 1)->set = &argLog.loggingAllObjects;
 
 					(function + 2)->function = dialougeLDebug;
-                    (function + 2)->set = argLog.loggingDebug;
+                    (function + 2)->set = &argLog.loggingDebug;
 				}
 			}
 
@@ -96,7 +96,7 @@ void assignExportAndLog() {
 			free(temp);
 
 			for (int i = 0; i < siz; i++) {
-                (function + i)->set = (function + i)->input == 'y' ? true : false;
+                *((function + i)->set) = (function + i)->input == 'y' ? true : false;
 			}
             free(function);
 		}

@@ -10,6 +10,7 @@
 typedef struct {
 	char *file;
     char **lines;
+    int *atLine;
     int numLines;
 } FileRelated;
 
