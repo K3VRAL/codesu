@@ -11,7 +11,7 @@
 #include "lib/files.h"
 
 typedef struct {
-    Mode *target;
+    Mode target;
 } FunCallbackMode;
 
 bool programsuRun();

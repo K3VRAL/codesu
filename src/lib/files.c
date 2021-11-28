@@ -67,18 +67,3 @@ void freeingMemory() {
     free(fr.lines);
     free(fr.file);
 }
-
-int indexAtLine(char *string) {
-    // TODO
-    return -1;
-}
-
-int indexAtCharOfLine(int index) {
-    // TODO
-    return -1;
-}
-
-char *lineAtIndex(int index) {
-    // TODO
-    return NULL;
-}

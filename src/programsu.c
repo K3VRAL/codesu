@@ -1,10 +1,9 @@
 #include "programsu.h"
 
-FunCallbackMode *function;
-Mode *ctb;
-
 bool programsuRun() {
-    ctb = ctbInit();
+    FunCallbackMode *function;
+
+    Mode ctb = ctbInit();
 
     function = xrealloc(NULL, 1 * sizeof (FunCallbackMode));
     (function + 0)->target = ctb;
@@ -24,16 +23,16 @@ bool programsuRun() {
             return false;
     }
 
-    (((function + i)->target + 0)->function)();   // runSet()
-    if (!arg.logging) {
-        if (arg.all || arg.exporting || arg.logging) {
-            dataExternal();
-            if (!arg.run) {
-                return true;
-            }
+    (function + i)->target.runSet();
+    if (arg.all || arg.exporting || arg.logging) {
+        dataExternal((function + i)->target);
+        if (!arg.run) {
+            return true;
         }
     }
-    (((function + i)->target + 1)->function)();   // runStart()
+    (function + i)->target.runStart();
+
+    free(function);
     return true;
 }
 
@@ -47,7 +46,4 @@ void freeingProgramsu() {
         case omania:
             break;
     }
-
-    free(ctb);
-    free(function);
 }
