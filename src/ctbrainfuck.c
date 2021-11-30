@@ -110,6 +110,7 @@ void runStart() {
     for (size_t i = 0; i < USHRT_MAX; i++) *(memory + i) = 0;
     size_t memorypos = 0;
 
+    // TODO fix this, not running properly
     while (curline < obj.numAho) {
         switch ((obj.aho + curline)->command) {
             case inpDig:

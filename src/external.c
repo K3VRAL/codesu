@@ -1,7 +1,7 @@
 #include "external.h"
+#include <stdio.h>
 #include <unistd.h>
 
-// TODO
 void dataExternal(Mode mode) {
     // INIT
     char **all;
@@ -28,34 +28,42 @@ void dataExternal(Mode mode) {
         char *file = xrealloc(NULL, (strlen(fr.file) + strlen(".export")) * sizeof (char) + 1);
         strcpy(file, fr.file);
         strcat(file, ".export");
-        if (access(file, F_OK) == 0) { remove(file); }
+        if (access(file, F_OK) == 0) remove(file);
         stdout = fopen(file, "a");
-        if (argExport.exportingModeHit) { printf("Mode: %d\n[HitObjects]\n", ocatch); }
+        if (argExport.exportingModeHit) printf("Mode: %d\n[HitObjects]\n", ocatch);
         for (int i = 0; i < mode.getobject->numAho; i++) {
             if (argExport.exportingNewCombo) {
                 char curLine[strlen((mode.getobject->aho + i)->line) + 10];
                 int numComma = 0;
-                bool ncombo = false;
-                for (int j = 0, k = 0; j < strlen((mode.getobject->aho + i)->line); j++, k++) {
-                    if (numComma != 3) curLine[j] = *((mode.getobject->aho + i)->line + k);
-                    else if (!ncombo) {
-                        switch ((mode.getobject->aho + i)->type) {
-                            case circle:
-                                curLine[++j] = '5';
-                                break;
-                            case slider:
-                                curLine[++j] = '6';
-                                break;
-                            case spinner:
-                                curLine[++j] = '1';
-                                curLine[++j] = '2';
-                                break;
+                bool ncombo = false, finish = false;
+                for (int j = 0, k = 0; j < strlen((mode.getobject->aho + i)->line); k++) {
+                    if (numComma != 3) curLine[j++] = *((mode.getobject->aho + i)->line + k);
+                    else if (!finish) {
+                        if (!ncombo) {
+                            switch ((mode.getobject->aho + i)->type) {
+                                case circle:
+                                    curLine[j++] = '5';
+                                    break;
+                                case slider:
+                                    curLine[j++] = '6';
+                                    break;
+                                case spinner:
+                                    curLine[j++] = '1';
+                                    curLine[j++] = '2';
+                                    break;
+                            }
+                            ncombo = true;
                         }
-                        ncombo = true;
+                        if (!finish && numComma == 3) {
+                            finish = true;
+                            curLine[j++] = ',';
+                        }
                     }
                     if (*((mode.getobject->aho + i)->line + k) == ',') numComma++;
                 }
                 printf("%s\n", curLine);
+            } else {
+                printf("%s\n", (mode.getobject->aho + i)->line);
             }
         }
         fclose(stdout);
@@ -75,6 +83,7 @@ void dataExternal(Mode mode) {
             stdout = terminal;
             free(file);
         }
+        // TODO
         // if (argLog.loggingDebug) {
         // }
         // if (argLog.loggingEvery) {
@@ -82,8 +91,10 @@ void dataExternal(Mode mode) {
     }
 
     // FREE
-    for (int i = 0; i < numAll; i++) free(*(all + i));
-    free(all);
+    if (arg.all || argLog.loggingAllObjects) {
+        for (int i = 0; i < numAll; i++) free(*(all + i));
+        free(all);
+    }
 }
 
 void dataPrint(char *input, ...) {

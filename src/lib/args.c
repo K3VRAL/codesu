@@ -12,10 +12,10 @@ void dialougeENewCombo() {
 }
 
 void dialougeLAllObjects() {
-    printf("[Logging]\tDo you want to log everything debugged? (y/n) ");
+    printf("[Logging]\tDo you want to log all objects listed? (y/n) ");
 }
 void dialougeLDebug() {
-    printf("[Logging]\tDo you want to log all objects listed? (y/n) ");
+    printf("[Logging]\tDo you want to log everything debugged? (y/n) ");
 }
 void dialougeLEvery() {
     printf("[Logging]\tDo you want to log everything printed? (y/n) ");
