@@ -13,10 +13,7 @@ bool isOsuExtension(char *string) {
 	if (found) {
 		char *str = ".osu";
 		int j = 0;
-		for (int i = stringstart; i < strlen(string); i++) {
-			if (*(string + i) != *(str + j)) return false;
-			j++;
-		}
+		for (int i = stringstart; i < strlen(string); i++) if (*(string + i) != *(str + j++)) return false;
 	}
 	
 	return found ? true : false;

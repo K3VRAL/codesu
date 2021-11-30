@@ -3,7 +3,7 @@
 objects obj = { NULL, 0 };
 
 void runSet() {
-    yLocation yloc = { 0, 64, 128, 192, 256, 320, 384 };
+    int yloc[] = { 0, 64, 128, 192, 256, 320, 384 };
 
     obj.aho = xrealloc(NULL, sizeof (allHO));
     char *delim = ",";
@@ -80,9 +80,7 @@ void runSet() {
                 obj.numAho++;
             }
 
-            for (size_t i = 0; i < len; i++) {
-                free(*(line + i));
-            }
+            for (size_t i = 0; i < len; i++) free(*(line + i));
             free(line);
         }
         free(copy);
@@ -106,29 +104,10 @@ void runSet() {
     if (numBracket != 0) { perror("numBracket"); exit(EXIT_FAILURE); }
 }
 
-char *enumToString(instruction ins) {
-    return  ins == inpDig   ? "inp," :
-            ins == inpAsc   ? "inp;" :
-            ins == jmpStr   ? "jmp[" :
-            ins == jmpEnd   ? "jmp]" :
-            ins == pntLft   ? "pnt<" :
-            ins == pntRgt   ? "pnt>" :
-            ins == inc      ? "inc+" :
-            ins == dec      ? "dec-" :
-            ins == ran      ? "rnd~" :
-            ins == mulc     ? "mul*" :
-            ins == divc     ? "div/" :
-            ins == outDig   ? "out." :
-            ins == outAsc   ? "out:" :
-                              "isnull";
-}
-
 void runStart() {
     int tick = 1, curline = 0;
     size_t *memory = xrealloc(NULL, USHRT_MAX * sizeof (size_t));
-    for (size_t i = 0; i < USHRT_MAX; i++) {
-        *(memory + i) = 0;
-    }
+    for (size_t i = 0; i < USHRT_MAX; i++) *(memory + i) = 0;
     size_t memorypos = 0;
 
     while (curline < obj.numAho) {
@@ -137,9 +116,7 @@ void runStart() {
                 printf("\nInput (Digit): ");
                 char inpD[256];
                 scanf("%255s", inpD);
-                for (int i = 0; i < strlen(inpD); i++) {
-                    if (!(inpD[i] >= '0' && inpD[i] <= '9')) { perror("inpDig"); exit(EXIT_FAILURE); }
-                }
+                for (int i = 0; i < strlen(inpD); i++) if (!(inpD[i] >= '0' && inpD[i] <= '9')) { perror("inpDig"); exit(EXIT_FAILURE); }
                 *(memory + memorypos) = atoi(inpD);
                 break;
 
@@ -147,55 +124,43 @@ void runStart() {
                 printf("Input (ASCII): \n");
                 char inpA[256];
                 scanf("%255s", inpA);
-                for (int i = 0; i < strlen(inpA); i++) {
-                    *(memory + memorypos) += inpA[i];
-                }
+                for (int i = 0; i < strlen(inpA); i++) *(memory + memorypos) += inpA[i];
                 break;
 
             case jmpStr:
                 for (int i = curline + 1, numBracketR = 1; i < obj.numAho; i++) {
-                    if ((obj.aho + i)->command == jmpStr) {
-                        numBracketR++;
-                    } else if ((obj.aho + i)->command == jmpEnd) {
-                        numBracketR--;
-                    }
-                    if (numBracketR == 0 && *(memory + memorypos) == 0) {
-                        curline = i - 2;
-                    }
+                    if ((obj.aho + i)->command == jmpStr) numBracketR++;
+                    else if ((obj.aho + i)->command == jmpEnd) numBracketR--;
+                    if (numBracketR == 0 && *(memory + memorypos) == 0) curline = i - 2;
                 }
                 break;
 
             case jmpEnd:
                 for (int i = curline - 1, numBracketL = 1; i >= 0; i--) {
-                    if ((obj.aho + i)->command == jmpStr) {
-                        numBracketL--;
-                    } else if ((obj.aho + i)->command == jmpEnd) {
-                        numBracketL++;
-                    }
-                    if (numBracketL == 0 && *(memory + memorypos) != 0) {
-                        curline = i + 2;
-                    }
+                    if ((obj.aho + i)->command == jmpStr) numBracketL--;
+                    else if ((obj.aho + i)->command == jmpEnd) numBracketL++;
+                    if (numBracketL == 0 && *(memory + memorypos) != 0) curline = i + 2;
                 }
                 break;
 
             case pntLft:
                 if (memorypos == 0) memorypos = USHRT_MAX - 1;
-                else                memorypos--;
+                else memorypos--;
                 break;
 
             case pntRgt:
                 if (memorypos == USHRT_MAX) memorypos = 0;
-                else                        memorypos++;
+                else memorypos++;
                 break;
 
             case inc:
                 if (*(memory + memorypos) == USHRT_MAX) *(memory + memorypos) = 0;
-                else                                    *(memory + memorypos) += 1;
+                else *(memory + memorypos) += 1;
                 break;
 
             case dec:
                 if (*(memory + memorypos) == 0) *(memory + memorypos) = USHRT_MAX;
-                else                            *(memory + memorypos) -= 1;
+                else *(memory + memorypos) -= 1;
                 break;
 
             case ran:
@@ -233,16 +198,28 @@ void runStart() {
     free(memory);
 }
 
+char *allObjects(int i) {
+    char *str = "Line: %s\tFileLine: %s\tY: %s\tType: %s\tCommand: %s";
+    
+    char *strLine = (obj.aho + i)->line;
+    char strFL[10];
+    sprintf(strFL, "%d", (obj.aho + i)->fileline);
+    char strY[10];
+    sprintf(strY, "%d", (obj.aho + i)->y);
+    char *strType = etsType((obj.aho + i)->type);
+    char *strCommand = etsCommand((obj.aho + i)->command);
+
+    char *format = xrealloc(NULL, (strlen(str) - (2 * 5) + strlen(strLine) + strlen(strFL) + strlen(strY) + strlen(strType) + strlen(strCommand)) * sizeof (char) + 1);
+    sprintf(format, str, strLine, strFL, strY, strType, strCommand);
+    return format;
+}
+
 Mode ctbInit() {
-    Mode mode;
-    mode.runSet = runSet;
-    mode.runStart = runStart;
+    Mode mode = { &obj, runSet, runStart, allObjects };
     return mode;
 }
 
 void freeingCTB() {
-    for (size_t i = 0; i < obj.numAho; i++) {
-        free((obj.aho + i)->line);
-    }
+    for (size_t i = 0; i < obj.numAho; i++) free((obj.aho + i)->line);
     free(obj.aho);
 }

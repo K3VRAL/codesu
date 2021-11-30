@@ -1,14 +1,5 @@
 TODO
 
-char *fileInMemory -> char **fileInMemory
-NOTE: This also means that these functions will have to be changed
-    - indexAtCharOfLine(int index)
-    - lineAtIndex(int index)
-
-char stringbuilder[500] -> char *stringbuilder
-
-In src/lib/files.c , change lineAtIndex 's return value such that we don't need to free the return value after it returned.
-
 Do the documentation for Loop[ and Loop] in doc/en/ctbrainfuck.md
 
-Use perror() to print relevant information when exiting and use exit(EXIT_FAILURE) instead of exit(1)
+Replace CTB's yloc with xloc; the philosophy of codesu! should be to use the game's objective and core gameplay as it's language, not some irrelevant gimmick.

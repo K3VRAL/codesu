@@ -1,5 +1,12 @@
+# Compiler Related
 bin/*
 vgcore.*
+
+# File Writing Related
+*.export
+*.all.log
+*.debug.log
+*.every.log
 
 # For archive
 obj/

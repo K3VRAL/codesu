@@ -17,4 +17,6 @@ typedef struct {
 bool programsuRun();
 void freeingProgramsu();
 
+extern FunCallbackMode *funcMode;
+
 #endif

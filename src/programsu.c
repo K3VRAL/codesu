@@ -1,12 +1,12 @@
 #include "programsu.h"
 
-bool programsuRun() {
-    FunCallbackMode *function;
+FunCallbackMode *funcMode;
 
+bool programsuRun() {
     Mode ctb = ctbInit();
 
-    function = xrealloc(NULL, 1 * sizeof (FunCallbackMode));
-    (function + 0)->target = ctb;
+    funcMode = xrealloc(NULL, 1 * sizeof (FunCallbackMode));
+    (funcMode + 0)->target = ctb;
 
     int i = -1;
     switch (cinfo) {
@@ -23,16 +23,13 @@ bool programsuRun() {
             return false;
     }
 
-    (function + i)->target.runSet();
+    (funcMode + i)->target.runSet();
     if (arg.all || arg.exporting || arg.logging) {
-        dataExternal((function + i)->target);
-        if (!arg.run) {
-            return true;
-        }
+        dataExternal((funcMode + i)->target);
+        if (!arg.run) return true;
     }
-    (function + i)->target.runStart();
+    (funcMode + i)->target.runStart();
 
-    free(function);
     return true;
 }
 
@@ -46,4 +43,5 @@ void freeingProgramsu() {
         case omania:
             break;
     }
+    free(funcMode);
 }

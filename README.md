@@ -13,5 +13,5 @@ TODO
 
 <a name='doc'></a>
 ## Documentation
-### [English](./doc/en/README.md)
-#### [codesu!ctbrainfuck](./doc/en/ctbrainfuck.md)
+### [Main](./doc/README.md)
+#### [codesu!ctbrainfuck](./doc/ctbrainfuck.md)

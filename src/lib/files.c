@@ -1,6 +1,6 @@
 #include "files.h"
 
-FileRelated fr = {NULL, NULL, NULL, 0};
+FileRelated fr = { NULL, NULL, NULL, 0 };
 
 // Thank you cboard.cprogramming.com - john.c
 void *xrealloc(void *ptr, size_t size) {
@@ -30,11 +30,8 @@ void readFileToMemory(char *file) {
         if (line[0] != '\n') {
             len = strlen(line);
             bool still_more = false;
-            if (line[len-1] == '\n') {
-                line[--len] = '\0';
-            } else {
-                still_more = true;
-            }
+            if (line[len-1] == '\n') line[--len] = '\0';
+            else still_more = true;
 
             if (!more) {
                 fr.lines = xrealloc(fr.lines, (fr.numLines + 1) * sizeof (char *));
@@ -60,9 +57,7 @@ void readFileToMemory(char *file) {
 }
 
 void freeingMemory() {
-    for (int i = 0; i < fr.numLines; i++) {
-        free(*(fr.lines + i));
-    }
+    for (int i = 0; i < fr.numLines; i++) free(*(fr.lines + i));
     free(fr.atLine);
     free(fr.lines);
     free(fr.file);

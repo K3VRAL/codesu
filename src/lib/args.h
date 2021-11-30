@@ -36,7 +36,6 @@ typedef struct {
     bool *set;
 } FunCallback;
 
-void initArgs();
 void assignExportAndLog();
 
 extern args arg;

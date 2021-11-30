@@ -1,40 +1,24 @@
 #include "args.h"
 
-args arg;
-argsExport argExport;
-argsLog argLog;
+args arg = { false, false, false, false, false, false, false };
+argsExport argExport = { false, false };
+argsLog argLog = { false, false, false };
 
-void initArgs() {
-    arg.ignore = false;
-    arg.step = false;
-    arg.run = false;
-    arg.debug = false;
-    arg.all = false;
-    arg.exporting = false;
-    arg.logging = false;
-
-    argExport.exportingNewCombo = false;
-    argExport.exportingModeHit = false;
-    
-    argLog.loggingEvery = false;
-    argLog.loggingAllObjects = false;
-    argLog.loggingDebug = false;
-}
-
-void dialougeENewCombo() {
-    printf("[Exporting]\tDo you want all objects to have a New Combo attribute? (y/n) ");
-}
 void dialougeEModeHit() {
     printf("[Exporting]\tDo you want to include \"Mode: 2\" and \"[HitObjects]\"? (y/n) ");
 }
-void dialougeLEvery() {
-    printf("[Logging]\tDo you want to log everything printed? (y/n) ");
+void dialougeENewCombo() {
+    printf("[Exporting]\tDo you want all objects to have a New Combo attribute? (y/n) ");
 }
+
 void dialougeLAllObjects() {
     printf("[Logging]\tDo you want to log everything debugged? (y/n) ");
 }
 void dialougeLDebug() {
     printf("[Logging]\tDo you want to log all objects listed? (y/n) ");
+}
+void dialougeLEvery() {
+    printf("[Logging]\tDo you want to log everything printed? (y/n) ");
 }
 
 void assignExportAndLog() {
@@ -48,33 +32,33 @@ void assignExportAndLog() {
 			FunCallback *function = xrealloc(NULL, siz * sizeof (FunCallback));
 
 			if (arg.exporting) {
-				(function + 0)->function = dialougeENewCombo;
-                (function + 0)->set = &argExport.exportingNewCombo;
+				(function + 0)->function = dialougeEModeHit;
+                (function + 0)->set = &argExport.exportingModeHit;
 
-				(function + 1)->function = dialougeEModeHit;
-                (function + 1)->set = &argExport.exportingModeHit;
+				(function + 1)->function = dialougeENewCombo;
+                (function + 1)->set = &argExport.exportingNewCombo;
 			}
 			
 			// TODO it works but maybe one day optimize this
 			if (arg.logging) {
 				if (arg.exporting) {
+					(function + 2)->function = dialougeLAllObjects;
+                    (function + 2)->set = &argLog.loggingAllObjects;
+
+					(function + 3)->function = dialougeLDebug;
+                    (function + 3)->set = &argLog.loggingDebug;
+
+					(function + 4)->function = dialougeLEvery;
+                    (function + 4)->set = &argLog.loggingEvery;
+				} else {
+					(function + 0)->function = dialougeLAllObjects;
+                    (function + 0)->set = &argLog.loggingAllObjects;
+
+					(function + 1)->function = dialougeLDebug;
+                    (function + 1)->set = &argLog.loggingDebug;
+
 					(function + 2)->function = dialougeLEvery;
                     (function + 2)->set = &argLog.loggingEvery;
-
-					(function + 3)->function = dialougeLAllObjects;
-                    (function + 3)->set = &argLog.loggingAllObjects;
-
-					(function + 4)->function = dialougeLDebug;
-                    (function + 4)->set = &argLog.loggingDebug;
-				} else {
-					(function + 0)->function = dialougeLEvery;
-                    (function + 0)->set = &argLog.loggingEvery;
-
-					(function + 1)->function = dialougeLAllObjects;
-                    (function + 1)->set = &argLog.loggingAllObjects;
-
-					(function + 2)->function = dialougeLDebug;
-                    (function + 2)->set = &argLog.loggingDebug;
 				}
 			}
 
@@ -83,21 +67,16 @@ void assignExportAndLog() {
 				while (!((function + i)->input == 'y' || (function + i)->input == 'n')) {
 					(*(function + i)->function)();
 					scanf("%s", temp);
-					for (size_t i = 0; i < strlen(temp); i++) {
-						*(temp + i) = tolower(*(temp + i));
-					}
+					for (size_t i = 0; i < strlen(temp); i++) *(temp + i) = tolower(*(temp + i));
 					if (strcmp(temp, "yes") == 0
 					 || strcmp(temp, "y") == 0
 					 || strcmp(temp, "no") == 0
-					 || strcmp(temp, "n") == 0)
-						(function + i)->input = *(temp);
+					 || strcmp(temp, "n") == 0) (function + i)->input = *(temp);
 				}
 			}
 			free(temp);
 
-			for (int i = 0; i < siz; i++) {
-                *((function + i)->set) = (function + i)->input == 'y' ? true : false;
-			}
+			for (int i = 0; i < siz; i++) *((function + i)->set) = (function + i)->input == 'y' ? true : false;
             free(function);
 		}
 	}
