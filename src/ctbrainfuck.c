@@ -1,5 +1,4 @@
 #include "ctbrainfuck.h"
-#include "lib/args.h"
 
 objects obj = { NULL, 0 };
 
@@ -184,7 +183,7 @@ void runStart() {
 
             case outDig:
                 dataDebug("out. [");
-                printf("%lu", (size_t)*(memory + memorypos));
+                printf("%zu", (size_t)*(memory + memorypos));
                 dataDebug("]\n");
                 dataStep(!arg.debug);
                 break;

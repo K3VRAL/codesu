@@ -12,7 +12,7 @@ Include relevant slider variables in mode.h:37
 
 Include error handling on parts of code prone to errors.
 
-Make Linux/Windows binaries and release them to github.
+Make Linux/Windows binaries and release them to github (may be difficult since Windows doesn't have <termios.h>).
 
 Make a guide on how to install from source in README.md:12
 

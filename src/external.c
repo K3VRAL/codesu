@@ -1,6 +1,4 @@
 #include "external.h"
-#include "lib/args.h"
-#include "lib/files.h"
 
 void dataExternal(Mode mode) {
     // INIT
