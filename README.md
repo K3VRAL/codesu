@@ -1,5 +1,5 @@
-# codesu
-codesu is an interpreter that uses osu maps (specifically .osu files) in order to interpret and execute commands line by line. Since there are 4 different gamemodes, there are (will be) multiple programmings languages inspired and supported so each mode is unique and different from one another. The best IDE in order to program in codesu is the osu!editor in osu!.
+# codesu!
+codesu! is an interpreter that uses osu maps (specifically .osu files) in order to interpret and execute commands line by line. Since there are 4 different gamemodes, there are (will be) multiple programmings languages inspired and supported so each mode is unique and different from one another. The best IDE in order to program in codesu! is the osu!editor in osu!.
 
 ## Table of Contents
 
@@ -13,5 +13,5 @@ TODO
 
 <a name='doc'></a>
 ## Documentation
-### [Main](./doc/codesu.md)
+### [codesu!](./doc/codesu.md)
 #### [codesu!ctbrainfuck](./doc/ctbrainfuck.md)

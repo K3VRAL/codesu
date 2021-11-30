@@ -62,19 +62,18 @@ void assignExportAndLog() {
 				}
 			}
 
-			char *temp = xrealloc(NULL, sizeof (char));
+			char temp[256];
 			for (int i = 0; i < siz; i++) {
 				while (!((function + i)->input == 'y' || (function + i)->input == 'n')) {
 					(*(function + i)->function)();
-					scanf("%s", temp);
-					for (size_t i = 0; i < strlen(temp); i++) *(temp + i) = tolower(*(temp + i));
+					scanf("%255s", temp);
+					for (size_t i = 0; i < strlen(temp); i++) temp[i] = tolower(temp[i]);
 					if (strcmp(temp, "yes") == 0
 					 || strcmp(temp, "y") == 0
 					 || strcmp(temp, "no") == 0
-					 || strcmp(temp, "n") == 0) (function + i)->input = *(temp);
+					 || strcmp(temp, "n") == 0) (function + i)->input = temp[0];
 				}
 			}
-			free(temp);
 
 			for (int i = 0; i < siz; i++) *((function + i)->set) = (function + i)->input == 'y' ? true : false;
             free(function);

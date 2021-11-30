@@ -114,7 +114,7 @@ void runStart() {
     while (curline < obj.numAho) {
         switch ((obj.aho + curline)->command) {
             case inpDig:
-                printf("\nInput (Digit): ");
+                printf("Input (Digit): ");
                 char inpD[256];
                 scanf("%255s", inpD);
                 for (int i = 0; i < strlen(inpD); i++) if (!(inpD[i] >= '0' && inpD[i] <= '9')) { perror("inpDig"); exit(EXIT_FAILURE); }
@@ -122,7 +122,7 @@ void runStart() {
                 break;
 
             case inpAsc:
-                printf("Input (ASCII): \n");
+                printf("Input (ASCII): ");
                 char inpA[256];
                 scanf("%255s", inpA);
                 for (int i = 0; i < strlen(inpA); i++) *(memory + memorypos) += inpA[i];
@@ -132,7 +132,10 @@ void runStart() {
                 for (int i = curline + 1, numBracketR = 1; i < obj.numAho; i++) {
                     if ((obj.aho + i)->command == jmpStr) numBracketR++;
                     else if ((obj.aho + i)->command == jmpEnd) numBracketR--;
-                    if (numBracketR == 0 && *(memory + memorypos) == 0) curline = i - 2;
+                    if (numBracketR == 0) {
+                        if (*(memory + memorypos) == 0) curline = i;
+                        break;
+                    }
                 }
                 break;
 
@@ -140,7 +143,10 @@ void runStart() {
                 for (int i = curline - 1, numBracketL = 1; i >= 0; i--) {
                     if ((obj.aho + i)->command == jmpStr) numBracketL--;
                     else if ((obj.aho + i)->command == jmpEnd) numBracketL++;
-                    if (numBracketL == 0 && *(memory + memorypos) != 0) curline = i + 2;
+                    if (numBracketL == 0) {
+                        if (*(memory + memorypos) != 0) curline = i;
+                        break;
+                    }
                 }
                 break;
 
@@ -177,11 +183,15 @@ void runStart() {
                 break;
 
             case outDig:
+                dataPrint("out. [");
                 printf("%lu", (size_t)*(memory + memorypos));
+                dataPrint("]\n");
                 break;
 
             case outAsc:
+                dataPrint("out: [");
                 printf("%c", (char)*(memory + memorypos));
+                dataPrint("]\n");
                 break;
                 
             case isnull:
@@ -189,12 +199,11 @@ void runStart() {
                 perror("curline"); exit(EXIT_FAILURE);
                 break;
         }
+        dataPrint("Tick: %d\tFileLine: %d\tLine: %s\tMemPos: %d\tMemCell: %d\tCommand: %s\n", tick, (obj.aho + curline)->fileline, (obj.aho + curline)->line, memorypos, *(memory + memorypos), etsCommand((obj.aho + curline)->command));
+        dataStep();
+
         curline++;
         tick++;
-
-        if (tick == 1000) { 
-            return;
-        }
     }
     free(memory);
 }

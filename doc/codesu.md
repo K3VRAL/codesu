@@ -1,11 +1,11 @@
 # Name
-codesu - An programming interpreter for osu maps.
+codesu! - An programming interpreter for osu maps.
 
 # Synopsis
 codesu [\<args>] \<path> [\<args>] [-d] [-i] [-s] [-a] [-e] [-l] [-r]
 
 # Description
-codesu is an interpreter that uses osu maps (specifically .osu files) as a programming language in order to interpret and execute commands line by line. Since there are 4 different gamemodes, there are multiple programmings languages inspired and supported so each mode is unique and different from one another. The best IDE, in order to program in codesu, is the osu!editor in osu!.
+codesu! is an interpreter that uses osu maps (specifically .osu files) as a programming language in order to interpret and execute commands line by line. Since there are 4 different gamemodes, there are multiple programmings languages inspired and supported so each mode is unique and different from one another. The best IDE, in order to program in codesu!, is the osu!editor in osu!.
 
 # Options
 **-d**

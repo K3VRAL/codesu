@@ -1,5 +1,8 @@
 #include "external.h"
+#include "lib/args.h"
+#include <signal.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 void dataExternal(Mode mode) {
@@ -95,6 +98,9 @@ void dataExternal(Mode mode) {
         for (int i = 0; i < numAll; i++) free(*(all + i));
         free(all);
     }
+
+    argExport.exportingModeHit = false, argExport.exportingNewCombo = false;
+    argLog.loggingAllObjects = false, argLog.loggingDebug = false, argLog.loggingEvery = false;
 }
 
 void dataPrint(char *input, ...) {
@@ -103,13 +109,17 @@ void dataPrint(char *input, ...) {
         va_start(vl, input);
         vprintf(input, vl);
         va_end(vl);
-        dataStep();
     }
 }
 
 void dataStep() {
     if (arg.step) {
-        int ch;
-        while ((ch = getchar()) != 10) { }
+        struct termios oldt, newt;
+        tcgetattr(STDIN_FILENO, &oldt);
+        newt = oldt;
+        newt.c_lflag &= ~(ICANON | ECHO);
+        tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+        getchar();
+        tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
     }
 }

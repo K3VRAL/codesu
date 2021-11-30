@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <limits.h>
+#include <termios.h>
 #include <unistd.h>
 
 #include "mode.h"
