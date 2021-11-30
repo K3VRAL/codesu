@@ -19,9 +19,9 @@ Requires an input from the user where any input is allowed. It will then convert
 
 ## 64 - 127
 ### Circle | Loop[
-TODO
+Requires at least an equal amount of open bracket loops and closed bracket loops for the program to run. Will go forward in the code to find the ending bracket for that said bracket. Once it has found it, it will make a check to see if the current memorycell is at a value of 0 which, if it is, will place the current program to that line.
 ### Slider | Loop]
-TODO
+Requires at least an equal amount of open bracket loops and closed bracket loops for the program to run. Will go backwards in the code to find the beginning bracket for that said bracket. Once it has found it, it will make a check to see if the current memorycell is not at a value of 0 which, if it is, will place the current program to that line.
 
 ## 128 - 191
 ### Circle | Left<

@@ -1,9 +1,6 @@
 #include "external.h"
 #include "lib/args.h"
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include "lib/files.h"
 
 void dataExternal(Mode mode) {
     // INIT
@@ -103,7 +100,7 @@ void dataExternal(Mode mode) {
     argLog.loggingAllObjects = false, argLog.loggingDebug = false, argLog.loggingEvery = false;
 }
 
-void dataPrint(char *input, ...) {
+void dataDebug(char *input, ...) {
     if (arg.debug) {
         va_list vl;
         va_start(vl, input);
@@ -112,8 +109,8 @@ void dataPrint(char *input, ...) {
     }
 }
 
-void dataStep() {
-    if (arg.step) {
+void dataStep(bool should) {
+    if (arg.step && should && !(argLog.loggingDebug || argLog.loggingEvery)) {
         struct termios oldt, newt;
         tcgetattr(STDIN_FILENO, &oldt);
         newt = oldt;

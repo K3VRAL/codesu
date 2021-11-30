@@ -1,5 +1,19 @@
 TODO
 
-Do the documentation for Loop[ and Loop] in doc/en/ctbrainfuck.md
+Optimize code in args.c:42
 
-Replace CTB's yloc with xloc; the philosophy of codesu! should be to use the game's objective and core gameplay as it's language, not some irrelevant gimmick.
+Optimize code in ctbrainfuck.c:31
+
+Do argLog.loggingDebug in external.c:86
+
+Do argLog.loggingEvery in external.c:89
+
+Include relevant slider variables in mode.h:37
+
+Include error handling on parts of code prone to errors.
+
+Make Linux/Windows binaries and release them to github.
+
+Make a guide on how to install from source in README.md:12
+
+(Optional) Conceptualize and implement esotaric coding languages for the other modes.

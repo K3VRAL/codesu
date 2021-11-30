@@ -1,9 +1,10 @@
 #include "ctbrainfuck.h"
+#include "lib/args.h"
 
 objects obj = { NULL, 0 };
 
 void runSet() {
-    int yloc[] = { 0, 64, 128, 192, 256, 320, 384 };
+    int xloc[] = { 0, 85, 171, 256, 341, 427, 512 };
 
     obj.aho = xrealloc(NULL, sizeof (allHO));
     char *delim = ",";
@@ -39,12 +40,12 @@ void runSet() {
                     && (rangeX >= 0 || rangeX <= 512)
                     && (rangeY >= 0 || rangeY <= 384)) {
                     (obj.aho + obj.numAho)->command = 
-                        rangeY >= yloc[0] && rangeY < yloc[1] ? inpDig :
-                        rangeY >= yloc[1] && rangeY < yloc[2] ? jmpStr :
-                        rangeY >= yloc[2] && rangeY < yloc[3] ? pntLft :
-                        rangeY >= yloc[3] && rangeY < yloc[4] ? inc :
-                        rangeY >= yloc[4] && rangeY < yloc[5] ? mulc :
-                        rangeY >= yloc[5] && rangeY <= yloc[6] ? outDig :
+                        rangeY >= xloc[0] && rangeY < xloc[1] ? inpDig :
+                        rangeY >= xloc[1] && rangeY < xloc[2] ? jmpStr :
+                        rangeY >= xloc[2] && rangeY < xloc[3] ? pntLft :
+                        rangeY >= xloc[3] && rangeY < xloc[4] ? inc :
+                        rangeY >= xloc[4] && rangeY < xloc[5] ? mulc :
+                        rangeY >= xloc[5] && rangeY <= xloc[6] ? outDig :
                         isnull;
                     (obj.aho + obj.numAho)->y = rangeY;
                     (obj.aho + obj.numAho)->type = circle;
@@ -53,12 +54,12 @@ void runSet() {
                     && (rangeX >= 0 || rangeX <= 512)
                     && (rangeY >= 0 || rangeY <= 384)) {
                     (obj.aho + obj.numAho)->command = 
-                        rangeY >= yloc[0] && rangeY < yloc[1] ? inpAsc :
-                        rangeY >= yloc[1] && rangeY < yloc[2] ? jmpEnd :
-                        rangeY >= yloc[2] && rangeY < yloc[3] ? pntRgt :
-                        rangeY >= yloc[3] && rangeY < yloc[4] ? dec :
-                        rangeY >= yloc[4] && rangeY < yloc[5] ? divc :
-                        rangeY >= yloc[5] && rangeY <= yloc[6] ? outAsc :
+                        rangeY >= xloc[0] && rangeY < xloc[1] ? inpAsc :
+                        rangeY >= xloc[1] && rangeY < xloc[2] ? jmpEnd :
+                        rangeY >= xloc[2] && rangeY < xloc[3] ? pntRgt :
+                        rangeY >= xloc[3] && rangeY < xloc[4] ? dec :
+                        rangeY >= xloc[4] && rangeY < xloc[5] ? divc :
+                        rangeY >= xloc[5] && rangeY <= xloc[6] ? outAsc :
                         isnull;
                     (obj.aho + obj.numAho)->y = rangeY;
                     (obj.aho + obj.numAho)->type = slider;
@@ -66,7 +67,7 @@ void runSet() {
                     && (ncombo == 8 || ncombo == 12)
                     && rangeX == 256 && rangeY == 192) {
                     (obj.aho + obj.numAho)->command =
-                        rangeY == yloc[3] ? ran :
+                        rangeY == xloc[3] ? ran :
                         isnull;
                     (obj.aho + obj.numAho)->y = rangeY;
                     (obj.aho + obj.numAho)->type = spinner;
@@ -88,7 +89,7 @@ void runSet() {
 
     int numBracket = 0;
     for (int i = 0; i < obj.numAho; i++) {
-        if ((obj.aho + i)->y >= yloc[1] && (obj.aho + i)->y < yloc[2]) {
+        if ((obj.aho + i)->y >= xloc[1] && (obj.aho + i)->y < xloc[2]) {
             switch ((obj.aho + i)->type) {
                 case circle:
                     numBracket++;
@@ -110,7 +111,6 @@ void runStart() {
     for (size_t i = 0; i < USHRT_MAX; i++) *(memory + i) = 0;
     size_t memorypos = 0;
 
-    // TODO fix this, not running properly
     while (curline < obj.numAho) {
         switch ((obj.aho + curline)->command) {
             case inpDig:
@@ -183,15 +183,17 @@ void runStart() {
                 break;
 
             case outDig:
-                dataPrint("out. [");
+                dataDebug("out. [");
                 printf("%lu", (size_t)*(memory + memorypos));
-                dataPrint("]\n");
+                dataDebug("]\n");
+                dataStep(!arg.debug);
                 break;
 
             case outAsc:
-                dataPrint("out: [");
+                dataDebug("out: [");
                 printf("%c", (char)*(memory + memorypos));
-                dataPrint("]\n");
+                dataDebug("]\n");
+                dataStep(!arg.debug);
                 break;
                 
             case isnull:
@@ -199,8 +201,8 @@ void runStart() {
                 perror("curline"); exit(EXIT_FAILURE);
                 break;
         }
-        dataPrint("Tick: %d\tFileLine: %d\tLine: %s\tMemPos: %d\tMemCell: %d\tCommand: %s\n", tick, (obj.aho + curline)->fileline, (obj.aho + curline)->line, memorypos, *(memory + memorypos), etsCommand((obj.aho + curline)->command));
-        dataStep();
+        dataDebug("Tick: %d\tFileLine: %d\tLine: %s\tMemPos: %d\tMemCell: %d\tCommand: %s\n", tick, (obj.aho + curline)->fileline, (obj.aho + curline)->line, memorypos, *(memory + memorypos), etsCommand((obj.aho + curline)->command));
+        dataStep(arg.debug);
 
         curline++;
         tick++;

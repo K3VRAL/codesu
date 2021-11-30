@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <limits.h>
 #include <termios.h>
 #include <unistd.h>
@@ -14,7 +15,7 @@
 #include "lib/files.h"
 
 void dataExternal(Mode mode);
-void dataPrint(char *input, ...);
-void dataStep();
+void dataDebug(char *input, ...);
+void dataStep(bool should);
 
 #endif
