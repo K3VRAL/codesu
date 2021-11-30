@@ -11,25 +11,25 @@ Here are some great feedback for this language; "Fuck my brain, I can't read thi
 # Resources
 All values given below will be based off of the Y-Value of the osu!editor or the osu! file format method for the .osu extension.
 
-## 0 - 63
+## 0 - 84
 ### Circle | InpDig,
 Requires an input from the user that be only an integer. Any other input that is not an integer will give and error and exit the program. The input will be stored onto the current memory cell that the memory pointer is pointing to.
 ### Slider | InpASC;
 Requires an input from the user where any input is allowed. It will then convert that raw ASCII input to an integer value. The input will be stored onto the current memory cell that the memory pointer is pointing to.
 
-## 64 - 127
+## 85 - 170
 ### Circle | Loop[
 Requires at least an equal amount of open bracket loops and closed bracket loops for the program to run. Will go forward in the code to find the ending bracket for that said bracket. Once it has found it, it will make a check to see if the current memorycell is at a value of 0 which, if it is, will place the current program to that line.
 ### Slider | Loop]
 Requires at least an equal amount of open bracket loops and closed bracket loops for the program to run. Will go backwards in the code to find the beginning bracket for that said bracket. Once it has found it, it will make a check to see if the current memorycell is not at a value of 0 which, if it is, will place the current program to that line.
 
-## 128 - 191
+## 171 - 255
 ### Circle | Left<
 Moves the memory pointer from the memory one memory cell to the left.
 ### Slider | Right>
 Moves the memory pointer from the memory one memory cell to the right. 
 
-## 192 - 255
+## 256 - 340
 ### Circle | Inecrement+
 Adds one more to the current memory cell that the memory pointer is pointing to.
 ### Slider | Decrement-
@@ -37,13 +37,13 @@ Subtract one less to the current memory cell that the memory pointer is pointing
 ### Spinner | Random~
 Replaces the memory cell that the memory pointer is pointer to by a random number between numbers 0 to 65535.
 
-## 256 - 319
+## 341 - 426
 ### Circle | Mulcrement*
 Multiplies to the current memory cell that the memory pointer is pointing to by two.
 ### Slider | Divcrement/
 Divides to the current memory cell that the memory pointer is pointing to by two.
 
-## 320 - 384
+## 427 - 512
 ### Circle | OutDig.
 This will output the values inside the current memory cell that the memory pointer is pointing to in integers.
 ### Slider | OutASC:
