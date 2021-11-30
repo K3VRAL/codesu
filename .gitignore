@@ -1,7 +1,7 @@
 # Compiler Related
 bin/
 vgcore.*
-.vscode
+.vscode/
 
 # File Writing Related
 *.export
