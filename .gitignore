@@ -1,13 +1,3 @@
-# Compiler Related
 bin/
-vgcore.*
-.vscode/
-
-# File Writing Related
-*.export
-*.all.log
-*.debug.log
-*.every.log
-
-# For archive
 obj/
+ref/
