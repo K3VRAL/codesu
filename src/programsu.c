@@ -1,5 +1,4 @@
 #include "programsu.h"
-#include <stdio.h>
 
 void programsuRun() {
     if (!arg.ignore) {
