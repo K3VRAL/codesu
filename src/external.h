@@ -15,6 +15,7 @@
 #include "lib/files.h"
 
 void dataExternal(Mode mode);
+void dataPrint(char *input, ...);
 void dataDebug(char *input, ...);
 void dataStep(bool should);
 

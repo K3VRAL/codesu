@@ -1,8 +1,22 @@
 #include "programsu.h"
+#include <stdio.h>
 
-FunCallbackMode *funcMode;
+void programsuRun() {
+    if (!arg.ignore) {
+        bool found = false;
+        for (int i = 0; i < fr.numLines; i++) {
+            if (strlen(*(fr.lines + i)) == 0 || (*(*(fr.lines + i) + 0) == '/' && *(*(fr.lines + i) + 1) == '/')) {
+                printf("Found illegal line at %d:\t%s\n", *(fr.atLine + i), *(fr.lines + i));
+                found = true;
+            }
+        }
+        if (found) {
+            printf("Make sure you remove these later on or you can export it using the `-e` flag\n");
+        }
+    }
 
-bool programsuRun() {
+    FunCallbackMode *funcMode;
+
     Mode ctb = ctbInit();
 
     funcMode = xrealloc(NULL, 1 * sizeof (FunCallbackMode));
@@ -17,31 +31,21 @@ bool programsuRun() {
         case otaiko:
         case omania:
             printf("Sorry but the mode you've inputted: \'%s\' is currently under production.\n", cinfo == ostandard ?  "Standard" : cinfo == otaiko ? "Taiko" : "Mania");
-            return false;
+            return;
         default:
             printf("Sorry but the mode you've inputted might not exist.\n");
-            return false;
+            return;
     }
 
     (funcMode + i)->target.runSet();
     if (arg.all || arg.exporting || arg.logging) {
         dataExternal((funcMode + i)->target);
-        if (!arg.run) return true;
+        if (!arg.run) return;
     }
     (funcMode + i)->target.runStart();
 
-    return true;
-}
-
-void freeingProgramsu() {
-    switch (cinfo) {
-        case ocatch:
-            freeingCTB();
-            break;
-        case ostandard:
-        case otaiko:
-        case omania:
-            break;
-    }
+    (funcMode + i)->target.freeMode();
     free(funcMode);
+
+    return;
 }

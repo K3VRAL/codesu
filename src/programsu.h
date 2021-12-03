@@ -14,9 +14,6 @@ typedef struct {
     Mode target;
 } FunCallbackMode;
 
-bool programsuRun();
-void freeingProgramsu();
-
-extern FunCallbackMode *funcMode;
+void programsuRun();
 
 #endif

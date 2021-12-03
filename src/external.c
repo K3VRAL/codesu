@@ -1,13 +1,16 @@
 #include "external.h"
 
+FILE *restore;
 void dataExternal(Mode mode) {
     // INIT
+    restore = stdout;
+
     char **all;
     int numAll = 0;
     if (arg.all || argLog.loggingAllObjects) {
         all = xrealloc(NULL, mode.getobject->numAho * sizeof (char *));
         for (int i = 0; i < mode.getobject->numAho; i++) {
-            char *temp = mode.returnAll(i);
+            char *temp = mode.allMode(i);
             *(all + i) = xrealloc(NULL, strlen(temp) * sizeof (char) + 1);
             strcpy(*(all + i), temp);
             numAll++;
@@ -22,7 +25,6 @@ void dataExternal(Mode mode) {
     }
 
     if (arg.exporting) {
-        FILE *terminal = stdout;
         char *file = xrealloc(NULL, (strlen(fr.file) + strlen(".export")) * sizeof (char) + 1);
         strcpy(file, fr.file);
         strcat(file, ".export");
@@ -65,27 +67,44 @@ void dataExternal(Mode mode) {
             }
         }
         fclose(stdout);
-        stdout = terminal;
+        stdout = restore;
         free(file);
     }
 
     if (arg.logging) {
         if (argLog.loggingAllObjects) {
-            FILE *terminal = stdout;
             char *file = xrealloc(NULL, (strlen(fr.file) + strlen(".all.log")) * sizeof (char) + 1);
             strcpy(file, fr.file);
             strcat(file, ".all.log");
             stdout = fopen(file, "a");
             for (int i = 0; i < numAll; i++) printf("%s\n", *(all + i));
             fclose(stdout);
-            stdout = terminal;
+            stdout = restore;
             free(file);
         }
-        // TODO
-        // if (argLog.loggingDebug) {
-        // }
-        // if (argLog.loggingEvery) {
-        // }
+        if (argLog.loggingDebug) {
+            char *file = xrealloc(NULL, (strlen(fr.file) + strlen(".debug.log")) * sizeof (char) + 1);
+            strcpy(file, fr.file);
+            strcat(file, ".debug.log");
+            stdout = fopen(file, "a");
+            bool b4debug = arg.debug;
+            arg.debug = true;
+            mode.runStart();
+            arg.debug = b4debug;
+            fclose(stdout);
+            stdout = restore;
+            free(file);
+        }
+        if (argLog.loggingEvery) {
+            char *file = xrealloc(NULL, (strlen(fr.file) + strlen(".every.log")) * sizeof (char) + 1);
+            strcpy(file, fr.file);
+            strcat(file, ".every.log");
+            stdout = fopen(file, "a");
+            mode.runStart();
+            fclose(stdout);
+            stdout = restore;
+            free(file);
+        }
     }
 
     // FREE
@@ -96,6 +115,21 @@ void dataExternal(Mode mode) {
 
     argExport.exportingModeHit = false, argExport.exportingNewCombo = false;
     argLog.loggingAllObjects = false, argLog.loggingDebug = false, argLog.loggingEvery = false;
+}
+
+void dataPrint(char *input, ...) {
+    va_list vl;
+    va_start(vl, input);
+    if (argLog.loggingDebug || argLog.loggingEvery) {
+        vprintf(input, vl);
+        FILE *curr = stdout;
+        stdout = restore;
+        vprintf(input, vl);
+        stdout = curr;
+    } else {
+        vprintf(input, vl);
+    }
+    va_end(vl);
 }
 
 void dataDebug(char *input, ...) {

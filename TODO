@@ -4,16 +4,8 @@ Optimize code in args.c:42
 
 Optimize code in ctbrainfuck.c:31
 
-Do argLog.loggingDebug in external.c:86
-
-Do argLog.loggingEvery in external.c:89
-
 Include relevant slider variables in mode.h:37
 
 Include error handling on parts of code prone to errors.
-
-Make the Windows program mimick the Linux program in the Windows branch.
-
-Make Linux/Windows binaries and release them to github (may be difficult since Windows doesn't have <termios.h>).
 
 (Optional) Conceptualize and implement esotaric coding languages for the other modes.

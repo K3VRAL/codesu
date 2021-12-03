@@ -51,7 +51,8 @@ typedef struct {
     objects *getobject;
     void (*runSet)(void);
     void (*runStart)(void);
-    char *(*returnAll)(int i);
+    char *(*allMode)(int i);
+    void (*freeMode)(void);
 } Mode;
 
 char *etsCommand(instruction com);

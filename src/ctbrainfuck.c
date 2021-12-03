@@ -113,7 +113,7 @@ void runStart() {
     while (curline < obj.numAho) {
         switch ((obj.aho + curline)->command) {
             case inpDig:
-                printf("Input (Digit): ");
+                dataPrint("Input (Digit): ");
                 char inpD[256];
                 scanf("%255s", inpD);
                 for (int i = 0; i < strlen(inpD); i++) if (!(inpD[i] >= '0' && inpD[i] <= '9')) { perror("inpDig"); exit(EXIT_FAILURE); }
@@ -121,7 +121,7 @@ void runStart() {
                 break;
 
             case inpAsc:
-                printf("Input (ASCII): ");
+                dataPrint("Input (ASCII): ");
                 char inpA[256];
                 scanf("%255s", inpA);
                 for (int i = 0; i < strlen(inpA); i++) *(memory + memorypos) += inpA[i];
@@ -183,14 +183,14 @@ void runStart() {
 
             case outDig:
                 dataDebug("out. [");
-                printf("%zu", (size_t)*(memory + memorypos));
+                dataPrint("%zu", (size_t)*(memory + memorypos));
                 dataDebug("]\n");
                 dataStep(!arg.debug);
                 break;
 
             case outAsc:
                 dataDebug("out: [");
-                printf("%c", (char)*(memory + memorypos));
+                dataPrint("%c", (char)*(memory + memorypos));
                 dataDebug("]\n");
                 dataStep(!arg.debug);
                 break;
@@ -209,7 +209,7 @@ void runStart() {
     free(memory);
 }
 
-char *allObjects(int i) {
+char *allMode(int i) {
     char *str = "Line: %s\tFileLine: %s\tY: %s\tType: %s\tCommand: %s";
     
     char *strLine = (obj.aho + i)->line;
@@ -225,12 +225,12 @@ char *allObjects(int i) {
     return format;
 }
 
-Mode ctbInit() {
-    Mode mode = { &obj, runSet, runStart, allObjects };
-    return mode;
-}
-
-void freeingCTB() {
+void freeingMode() {
     for (size_t i = 0; i < obj.numAho; i++) free((obj.aho + i)->line);
     free(obj.aho);
+}
+
+Mode ctbInit() {
+    Mode mode = { &obj, runSet, runStart, allMode, freeingMode };
+    return mode;
 }
