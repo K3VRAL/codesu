@@ -200,7 +200,7 @@ void runStart() {
                 perror("curline"); exit(EXIT_FAILURE);
                 break;
         }
-        dataDebug("Tick: %d\tFileLine: %d\tLine: %s\tMemPos: %d\tMemCell: %d\tCommand: %s\n", tick, (obj.aho + curline)->fileline, (obj.aho + curline)->line, memorypos, *(memory + memorypos), etsCommand((obj.aho + curline)->command));
+        dataDebug("Tick: %d\tCommand: %s\tMemPos: %d\tMemCell: %d\tFileLine: %d\tLine: %s\n", tick, etsCommand((obj.aho + curline)->command), memorypos, *(memory + memorypos), (obj.aho + curline)->fileline, (obj.aho + curline)->line);
         dataStep(arg.debug);
 
         curline++;
@@ -210,18 +210,18 @@ void runStart() {
 }
 
 char *allMode(int i) {
-    char *str = "Line: %s\tFileLine: %s\tY: %s\tType: %s\tCommand: %s";
+    char *str = "Command: %s\tY: %s\tType: %s\tFileLine: %s\tLine: %s";
     
-    char *strLine = (obj.aho + i)->line;
-    char strFL[10];
-    sprintf(strFL, "%d", (obj.aho + i)->fileline);
+    char *strCommand = etsCommand((obj.aho + i)->command);
     char strY[10];
     sprintf(strY, "%d", (obj.aho + i)->y);
     char *strType = etsType((obj.aho + i)->type);
-    char *strCommand = etsCommand((obj.aho + i)->command);
+    char strFL[10];
+    sprintf(strFL, "%d", (obj.aho + i)->fileline);
+    char *strLine = (obj.aho + i)->line;
 
-    char *format = xrealloc(NULL, (strlen(str) - (2 * 5) + strlen(strLine) + strlen(strFL) + strlen(strY) + strlen(strType) + strlen(strCommand)) * sizeof (char) + 1);
-    sprintf(format, str, strLine, strFL, strY, strType, strCommand);
+    char *format = xrealloc(NULL, (strlen(str) - (2 * 5) + strlen(strFL) + strlen(strY) + strlen(strType) + strlen(strCommand) + strlen(strLine)) * sizeof (char) + 1);
+    sprintf(format, str, strCommand, strY, strType, strFL, strLine);
     return format;
 }
 

@@ -20,11 +20,13 @@ void dataExternal(Mode mode) {
 
     // EXECUTE
     if (arg.all) {
-        printf("[ALL]\n");
+        printf("[ALL] - \n");
         for (int i = 0; i < numAll; i++) printf("%s\n", *(all + i));
+        printf("[DONE]\n");
     }
 
     if (arg.exporting) {
+        printf("[EXPORTING] - ");
         char *file = xrealloc(NULL, (strlen(fr.file) + strlen(".export")) * sizeof (char) + 1);
         strcpy(file, fr.file);
         strcat(file, ".export");
@@ -69,41 +71,60 @@ void dataExternal(Mode mode) {
         fclose(stdout);
         stdout = restore;
         free(file);
+        printf("[DONE]\n");
     }
 
     if (arg.logging) {
         if (argLog.loggingAllObjects) {
+            printf("[LOGGING] | [ALLOBJECTS] - ");
             char *file = xrealloc(NULL, (strlen(fr.file) + strlen(".all.log")) * sizeof (char) + 1);
             strcpy(file, fr.file);
             strcat(file, ".all.log");
+            if (access(file, F_OK) == 0) remove(file);
             stdout = fopen(file, "a");
             for (int i = 0; i < numAll; i++) printf("%s\n", *(all + i));
             fclose(stdout);
             stdout = restore;
             free(file);
+            printf("[DONE]\n");
         }
         if (argLog.loggingDebug) {
+            printf("[LOGGING] | [DEBUG] - ");
             char *file = xrealloc(NULL, (strlen(fr.file) + strlen(".debug.log")) * sizeof (char) + 1);
             strcpy(file, fr.file);
             strcat(file, ".debug.log");
+            if (access(file, F_OK) == 0) remove(file);
             stdout = fopen(file, "a");
             bool b4debug = arg.debug;
+            bool b4step = arg.step;
             arg.debug = true;
+            arg.step = false;
             mode.runStart();
             arg.debug = b4debug;
+            arg.step = b4step;
             fclose(stdout);
             stdout = restore;
             free(file);
+            printf("[DONE]\n");
         }
         if (argLog.loggingEvery) {
+            printf("[LOGGING] | [EVERY] - ");
             char *file = xrealloc(NULL, (strlen(fr.file) + strlen(".every.log")) * sizeof (char) + 1);
             strcpy(file, fr.file);
             strcat(file, ".every.log");
+            if (access(file, F_OK) == 0) remove(file);
             stdout = fopen(file, "a");
+            bool b4debug = arg.debug;
+            bool b4step = arg.step;
+            arg.debug = false;
+            arg.step = false;
             mode.runStart();
+            arg.debug = b4debug;
+            arg.step = b4step;
             fclose(stdout);
             stdout = restore;
             free(file);
+            printf("[DONE]\n");
         }
     }
 
