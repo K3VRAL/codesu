@@ -1,4 +1,5 @@
 #include "assignargs.h"
+#include <stdio.h>
 
 bool isOsuExtension(char *string) {
 	bool found = false;
@@ -51,8 +52,26 @@ void assignArgs(int argc, char **argv) {
 					case 'l':
 						arg.logging = true;
 						break;
+
+					case 'h':
+						arg.help = true;
+						break;
 				}
 			}
+		}
+
+		if (arg.help) {
+			fprintf(stdout, "Help Menu:\n"
+				"\tRequires an input of an .osu file with relevant objects; circle, slider, spinner\n"
+				"\t-i\t\tIgnores all warnings\n"
+				"\t-s\t\tTakes a step for each execution printed to the console\n"
+				"\t-r\t\tRuns regardless of arguments used: -e -a -l\n"
+				"\t-d\t\tShows debugging information while executing\n"
+				"\t-a\t\tShows all objects and their information; stop program immediately\n"
+				"\t-e\t\tExports targetted file by removing unnecessary data without having to modify the original\n"
+				"\t-l\t\tLogs information after executing the file\n"
+				"\t-h\t\tShows the help menu\n"
+			);
 		}
 
 		if (isOsuExtension(*(argv + i))) readFileToMemory(*(argv + i));

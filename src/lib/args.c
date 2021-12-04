@@ -1,6 +1,6 @@
 #include "args.h"
 
-args arg = { false, false, false, false, false, false, false };
+args arg = { false, false, false, false, false, false, false, false };
 argsExport argExport = { false, false };
 argsLog argLog = { false, false, false };
 

@@ -17,6 +17,7 @@ typedef struct {
 	bool all;
 	bool exporting;
 	bool logging;
+	bool help;
 } args;
 
 typedef struct {
