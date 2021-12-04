@@ -3,8 +3,6 @@
 FILE *restore;
 void dataExternal(Mode mode) {
     // INIT
-    restore = stdout;
-
     char **all;
     int numAll = 0;
     if (arg.all || argLog.loggingAllObjects) {
@@ -20,19 +18,21 @@ void dataExternal(Mode mode) {
 
     // EXECUTE
     if (arg.all) {
-        printf("[ALL] - \n");
-        for (int i = 0; i < numAll; i++) printf("%s\n", *(all + i));
-        printf("[DONE]\n");
+        restore = stdout;
+        fprintf(restore, "[ALL] - \n");
+        for (int i = 0; i < numAll; i++) fprintf(restore, "%s\n", *(all + i));
+        fprintf(restore, "[DONE]\n");
     }
 
     if (arg.exporting) {
-        printf("[EXPORTING] - ");
+        restore = stdout;
+        fprintf(restore, "[EXPORTING] - ");
         char *file = xrealloc(NULL, (strlen(fr.file) + strlen(".export")) * sizeof (char) + 1);
         strcpy(file, fr.file);
         strcat(file, ".export");
         if (access(file, F_OK) == 0) remove(file);
-        stdout = fopen(file, "a");
-        if (argExport.exportingModeHit) printf("Mode: %d\n[HitObjects]\n", ocatch);
+        restore = fopen(file, "a");
+        if (argExport.exportingModeHit) fprintf(restore, "Mode: %d\n[HitObjects]\n", ocatch);
         for (int i = 0; i < mode.getobject->numAho; i++) {
             if (argExport.exportingNewCombo) {
                 char curLine[strlen((mode.getobject->aho + i)->line) + 10];
@@ -63,38 +63,40 @@ void dataExternal(Mode mode) {
                     }
                     if (*((mode.getobject->aho + i)->line + k) == ',') numComma++;
                 }
-                printf("%s\n", curLine);
+                fprintf(restore, "%s\n", curLine);
             } else {
-                printf("%s\n", (mode.getobject->aho + i)->line);
+                fprintf(restore, "%s\n", (mode.getobject->aho + i)->line);
             }
         }
-        fclose(stdout);
-        stdout = restore;
+        fclose(restore);
         free(file);
-        printf("[DONE]\n");
+        restore = stdout;
+        fprintf(restore, "[DONE]\n");
     }
 
     if (arg.logging) {
         if (argLog.loggingAllObjects) {
-            printf("[LOGGING] | [ALLOBJECTS] - ");
+            restore = stdout;
+            fprintf(restore, "[LOGGING] | [ALLOBJECTS] - ");
             char *file = xrealloc(NULL, (strlen(fr.file) + strlen(".all.log")) * sizeof (char) + 1);
             strcpy(file, fr.file);
             strcat(file, ".all.log");
             if (access(file, F_OK) == 0) remove(file);
-            stdout = fopen(file, "a");
-            for (int i = 0; i < numAll; i++) printf("%s\n", *(all + i));
-            fclose(stdout);
-            stdout = restore;
+            restore = fopen(file, "a");
+            for (int i = 0; i < numAll; i++) fprintf(restore, "%s\n", *(all + i));
+            fclose(restore);
             free(file);
-            printf("[DONE]\n");
+            restore = stdout;
+            fprintf(restore, "[DONE]\n");
         }
         if (argLog.loggingDebug) {
-            printf("[LOGGING] | [DEBUG] - ");
+            restore = stdout;
+            fprintf(restore, "[LOGGING] | [DEBUG] - ");
             char *file = xrealloc(NULL, (strlen(fr.file) + strlen(".debug.log")) * sizeof (char) + 1);
             strcpy(file, fr.file);
             strcat(file, ".debug.log");
             if (access(file, F_OK) == 0) remove(file);
-            stdout = fopen(file, "a");
+            restore = fopen(file, "a");
             bool b4debug = arg.debug;
             bool b4step = arg.step;
             arg.debug = true;
@@ -102,18 +104,18 @@ void dataExternal(Mode mode) {
             mode.runStart();
             arg.debug = b4debug;
             arg.step = b4step;
-            fclose(stdout);
-            stdout = restore;
+            fclose(restore);
             free(file);
-            printf("[DONE]\n");
+            restore = stdout;
+            fprintf(restore, "[DONE]\n");
         }
         if (argLog.loggingEvery) {
-            printf("[LOGGING] | [EVERY] - ");
+            fprintf(restore, "[LOGGING] | [EVERY] - ");
             char *file = xrealloc(NULL, (strlen(fr.file) + strlen(".every.log")) * sizeof (char) + 1);
             strcpy(file, fr.file);
             strcat(file, ".every.log");
             if (access(file, F_OK) == 0) remove(file);
-            stdout = fopen(file, "a");
+            restore = fopen(file, "a");
             bool b4debug = arg.debug;
             bool b4step = arg.step;
             arg.debug = false;
@@ -121,10 +123,10 @@ void dataExternal(Mode mode) {
             mode.runStart();
             arg.debug = b4debug;
             arg.step = b4step;
-            fclose(stdout);
-            stdout = restore;
+            fclose(restore);
             free(file);
-            printf("[DONE]\n");
+            restore = stdout;
+            fprintf(restore, "[DONE]\n");
         }
     }
 
@@ -141,15 +143,9 @@ void dataExternal(Mode mode) {
 void dataPrint(char *input, ...) {
     va_list vl;
     va_start(vl, input);
-    if (argLog.loggingDebug || argLog.loggingEvery) {
-        vprintf(input, vl);
-        FILE *curr = stdout;
-        stdout = restore;
-        vprintf(input, vl);
-        stdout = curr;
-    } else {
-        vprintf(input, vl);
-    }
+    char format[256];
+    vsprintf(format, input, vl);
+    fprintf(restore, "%s", format);
     va_end(vl);
 }
 
@@ -157,13 +153,16 @@ void dataDebug(char *input, ...) {
     if (arg.debug) {
         va_list vl;
         va_start(vl, input);
-        vprintf(input, vl);
+        char format[256];
+        vsprintf(format, input, vl);
+        fprintf(restore, "%s", format);
         va_end(vl);
     }
 }
 
 void dataStep(bool should) {
     if (arg.step && should && !(argLog.loggingDebug || argLog.loggingEvery)) {
+#ifdef __linux__
         struct termios oldt, newt;
         tcgetattr(STDIN_FILENO, &oldt);
         newt = oldt;
@@ -171,5 +170,8 @@ void dataStep(bool should) {
         tcsetattr(STDIN_FILENO, TCSANOW, &newt);
         getchar();
         tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+#elif _WIN32
+        getchar();
+#endif
     }
 }

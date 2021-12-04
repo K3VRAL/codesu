@@ -6,6 +6,7 @@ int main(int argc, char **argv) {
 	if (fr.file == NULL || cinfo == -1) { perror("main"); exit(EXIT_FAILURE); }
 	assignExportAndLog();
 
+	restore = stdout;
 	programsuRun();
 
 	freeingMemory();

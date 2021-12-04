@@ -55,16 +55,6 @@ void assignArgs(int argc, char **argv) {
 			}
 		}
 
-		if (isOsuExtension(*(argv + i))) {
-			readFileToMemory(*(argv + i));
-
-			for (int i = 0; i < fr.numLines; i++) {
-				if (*(*(fr.lines + i) + 0) == 'M'
-				 && *(*(fr.lines + i) + 1) == 'o'
-				 && *(*(fr.lines + i) + 2) == 'd'
-				 && *(*(fr.lines + i) + 3) == 'e')
-					cinfo = *(*(fr.lines + i) + 6) - '0';
-			}
-		}
+		if (isOsuExtension(*(argv + i))) readFileToMemory(*(argv + i));
 	}
 }

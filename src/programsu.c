@@ -5,12 +5,12 @@ void programsuRun() {
         bool found = false;
         for (int i = 0; i < fr.numLines; i++) {
             if (strlen(*(fr.lines + i)) == 0 || (*(*(fr.lines + i) + 0) == '/' && *(*(fr.lines + i) + 1) == '/')) {
-                printf("Found illegal line at %d:\t%s\n", *(fr.atLine + i), *(fr.lines + i));
+                fprintf(stdout, "Found illegal line at %d:\t%s\n", *(fr.atLine + i) + 1, *(fr.lines + i));
                 found = true;
             }
         }
         if (found) {
-            printf("Make sure you remove these later on or you can export it using the `-e` flag\n");
+            fprintf(stdout, "Make sure you remove these later on or you can export it using the `-e` flag\n");
         }
     }
 
@@ -29,10 +29,10 @@ void programsuRun() {
         case ostandard:
         case otaiko:
         case omania:
-            printf("Sorry but the mode you've inputted: \'%s\' is currently under production.\n", cinfo == ostandard ?  "Standard" : cinfo == otaiko ? "Taiko" : "Mania");
+            fprintf(stdout, "Sorry but the mode you've inputted: \'%s\' is currently under production.\n", cinfo == ostandard ?  "Standard" : cinfo == otaiko ? "Taiko" : "Mania");
             return;
         default:
-            printf("Sorry but the mode you've inputted might not exist.\n");
+            fprintf(stdout, "Sorry but the mode you've inputted might not exist.\n");
             return;
     }
 

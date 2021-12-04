@@ -5,20 +5,20 @@ argsExport argExport = { false, false };
 argsLog argLog = { false, false, false };
 
 void dialougeEModeHit() {
-    printf("[Exporting]\tDo you want to include \"Mode: 2\" and \"[HitObjects]\"? (y/n) ");
+    fprintf(stdout, "[Exporting]\tDo you want to include \"Mode: 2\" and \"[HitObjects]\"? (y/n) ");
 }
 void dialougeENewCombo() {
-    printf("[Exporting]\tDo you want all objects to have a New Combo attribute? (y/n) ");
+    fprintf(stdout, "[Exporting]\tDo you want all objects to have a New Combo attribute? (y/n) ");
 }
 
 void dialougeLAllObjects() {
-    printf("[Logging]\tDo you want to log all objects listed? (y/n) ");
+    fprintf(stdout, "[Logging]\tDo you want to log all objects listed? (y/n) ");
 }
 void dialougeLDebug() {
-    printf("[Logging]\tDo you want to log everything debugged? (y/n) ");
+    fprintf(stdout, "[Logging]\tDo you want to log everything debugged? (y/n) ");
 }
 void dialougeLEvery() {
-    printf("[Logging]\tDo you want to log everything printed? (y/n) ");
+    fprintf(stdout, "[Logging]\tDo you want to log everything printed? (y/n) ");
 }
 
 void assignExportAndLog() {

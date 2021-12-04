@@ -1,9 +1,6 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include <stdio.h>
-#include <stdbool.h>
-
 #include "src/programsu.h"
 
 #include "src/lib/args.h"

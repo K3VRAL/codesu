@@ -26,8 +26,18 @@ void readFileToMemory(char *file) {
     size_t len;
     bool more = false;
 
+    bool afterMode = false;
+    bool afterHO = false;
     while (fgets(line, sizeof (line), fp) != NULL) {
-        if (line[0] != '\n') {
+        if (!afterMode && strstr(line, "Mode: ") == 0) {
+            cinfo = line[6] - '0';
+            afterMode = true;
+        }
+        if (!afterHO && strcmp(line, "[HitObjects]\n") == 0) {
+            afterHO = true;
+            continue;
+        }
+        if (line[0] != '\n' && afterHO) {
             len = strlen(line);
             bool still_more = false;
             if (line[len-1] == '\n') line[--len] = '\0';

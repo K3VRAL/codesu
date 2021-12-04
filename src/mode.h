@@ -32,7 +32,7 @@ typedef struct {
     types type;
     
     // Slider
-    int sliders;
+    int slides;
     double length;
     // TODO curveType|curvePoints, edgeSounds, edgeSets
 

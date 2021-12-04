@@ -210,7 +210,7 @@ void runStart() {
 }
 
 char *allMode(int i) {
-    char *str = "Command: %s\tY: %s\tType: %s\tFileLine: %s\tLine: %s";
+    char *str = "Command: %s\tX: %s\tType: %s\tFileLine: %s\tLine: %s";
     
     char *strCommand = etsCommand((obj.aho + i)->command);
     char strY[10];

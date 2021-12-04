@@ -7,6 +7,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "codesuinfo.h"
+
 typedef struct {
 	char *file;
     char **lines;

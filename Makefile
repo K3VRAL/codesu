@@ -15,6 +15,16 @@ Linux32: CFLAGS += -m32 -O3
 Linux32: $(TARGET)
 Linux32: cleano
 
+Windows64: CC = x86_64-w64-mingw32-gcc
+Windows64: CFLAGS += -O3
+Windows64: $(TARGET)
+Windows64: cleano
+
+Windows32: CC = i686-w64-mingw32-gcc
+Windows32: CFLAGS += -O3
+Windows32: $(TARGET)
+Windows32: cleano
+
 %.o: %.c %.h | $(BINFLR)
 	$(CC) $(CFLAGS) -o $(BINFLR)$(notdir $@) -c $<
 
