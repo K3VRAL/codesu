@@ -4,6 +4,8 @@ Optimize code in args.c:42
 
 Optimize code in ctbrainfuck.c:31
 
+Fix stepping doesn't work on windows
+
 Include relevant slider variables in mode.h:37
 
 Include error handling on parts of code prone to errors.

@@ -19,7 +19,7 @@ To compile from Source on Windows, you will need mingw-w64. Once you have mingw-
 
 <a name='run'></a>
 ## Running Application
-To be able to run/interpret any .osu file after installing, you will need to go to your Terminal (for Linux) or Command Prompt (for Windows). You then execute the program by typing `./codesu` for Linux or `.\codesu.exe` for Windows, and then with the map and any arguments you wish to use for further inspection or easy of use.
+To be able to run/interpret any .osu file after installing, you will need to go to your Terminal (for Linux) or Command Prompt (for Windows). You then execute the program by typing `./codesu` for Linux or `./codesu.exe` for Windows, and then with the map and any arguments you wish to use for further inspection or easy of use.
 
 <a name='doc'></a>
 ## Documentation
