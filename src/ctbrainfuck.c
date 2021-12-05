@@ -21,7 +21,7 @@ void runSet() {
                 token = strtok(NULL, delim);
                 len++;
             }
-            if (len == 6 || len == 8 || len == 7) {
+            if (len == 6 || len == 8 || len == 11 || len == 7) {
                 obj.aho = xrealloc(obj.aho, (obj.numAho + 1) * sizeof (allHO));
 
                 int rangeX = atoi(*line);
