@@ -38,4 +38,4 @@ cleano:
 	rm $(BINFLR)*.o
 
 clean:
-	rm $(BINFLR)*.o $(BINFLR)$(TARGET)
+	rm $(BINFLR)*.o $(BINFLR)$(TARGET) $(BINFLR)$(TARGET).exe
