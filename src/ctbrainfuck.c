@@ -34,7 +34,7 @@ void runSet() {
                 // {
                 //     (obj.aho + obj.numAho)->command = !(len == 7 && (ncombo == 8 || ncombo == 12) && rangeX == 256 && rangeY == 192) ? (rangeY /* do mathematics on this */) % 2 : ran;
                 // } else { perror(*(fr.lines + i)); exit(EXIT_FAILURE); }
-                if (len == 6            // Circle
+                if (len == 6                        // Circle
                     && (ncombo == 1 || ncombo == 5)
                     && (rangeX >= 0 || rangeX <= 512)
                     && (rangeY >= 0 || rangeY <= 384)) {
@@ -48,7 +48,7 @@ void runSet() {
                         isnull;
                     (obj.aho + obj.numAho)->y = rangeY;
                     (obj.aho + obj.numAho)->type = circle;
-                } else if (len == 8     // Slider
+                } else if ((len == 8 || len == 11)  // Slider
                     && (ncombo == 2 || ncombo == 6)
                     && (rangeX >= 0 || rangeX <= 512)
                     && (rangeY >= 0 || rangeY <= 384)) {
@@ -62,7 +62,7 @@ void runSet() {
                         isnull;
                     (obj.aho + obj.numAho)->y = rangeY;
                     (obj.aho + obj.numAho)->type = slider;
-                } else if (len == 7     // Spinner
+                } else if (len == 7                 // Spinner
                     && (ncombo == 8 || ncombo == 12)
                     && rangeX == 256 && rangeY == 192) {
                     (obj.aho + obj.numAho)->command =
