@@ -1,25 +1,18 @@
-#include "files.h"
+#include "../include/files.h"
 
 FileRelated fr = { NULL, NULL, NULL, 0 };
 
 // Thank you cboard.cprogramming.com - john.c
-void *xrealloc(void *ptr, size_t size) {
-    void *newptr = realloc(ptr, size);
-    if (!newptr) { perror("xrealloc"); exit(EXIT_FAILURE); }
-    return newptr;
-}
-
-// Thank you cboard.cprogramming.com - john.c
+// Reads file and stores it in memory to be processed
 void readFileToMemory(char *file) {
     FILE *fp;
     fp = fopen(file, "r");
     if (!fp) { perror(file); exit(EXIT_FAILURE); }
 
-    fr.file = xrealloc(NULL, strlen(file) * sizeof (char) + 1);
-    strcpy(fr.file, file);
-    fr.lines = xrealloc(NULL, sizeof (char *));
+    fr.file = strdup(file);
+    fr.lines = malloc(sizeof (char *));
 
-    fr.atLine = xrealloc(NULL, sizeof (int));
+    fr.atLine = malloc(sizeof (int));
     int curLine = 0;
 
     char line[256];
@@ -29,11 +22,11 @@ void readFileToMemory(char *file) {
     bool afterMode = false;
     bool afterHO = false;
     while (fgets(line, sizeof (line), fp) != NULL) {
-        if (!afterMode && strstr(line, "Mode: ") == 0) {
+        if (!afterMode && !strstr(line, "Mode: ")) {
             cinfo = line[6] - '0';
             afterMode = true;
         }
-        if (!afterHO && strcmp(line, "[HitObjects]\n") == 0) {
+        if (!afterHO && !strcmp(line, "[HitObjects]\n")) {
             afterHO = true;
             continue;
         }
@@ -44,19 +37,18 @@ void readFileToMemory(char *file) {
             else still_more = true;
 
             if (!more) {
-                fr.lines = xrealloc(fr.lines, (fr.numLines + 1) * sizeof (char *));
-                *(fr.lines + fr.numLines) = xrealloc(NULL, len + 1);
-                strcpy(*(fr.lines + fr.numLines), line);
+                fr.lines = realloc(fr.lines, (fr.numLines + 1) * sizeof (char *));
+                *(fr.lines + fr.numLines) = strdup(line);
 
-                fr.atLine = xrealloc(fr.atLine, (fr.numLines + 1) * sizeof (int));
+                fr.atLine = realloc(fr.atLine, (fr.numLines + 1) * sizeof (int));
                 *(fr.atLine + fr.numLines) = curLine + 1;
 
                 fr.numLines++;
             } else {
                 size_t n = fr.numLines - 1;
                 size_t oldlen = strlen(*(fr.lines + n));
-                *(fr.lines + n) = xrealloc(*(fr.lines + n), oldlen + len + 1);
-                strcpy((*(fr.lines + n) + oldlen), line);
+                *(fr.lines + n) = realloc(*(fr.lines + n), oldlen + len + 1);
+                strcat(*(fr.lines + n), line);
             }
             more = still_more;
         }
@@ -66,6 +58,7 @@ void readFileToMemory(char *file) {
     fclose(fp);
 }
 
+// Frees all data stored in memory
 void freeingMemory() {
     for (int i = 0; i < fr.numLines; i++) free(*(fr.lines + i));
     free(fr.atLine);

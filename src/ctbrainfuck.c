@@ -1,39 +1,31 @@
-#include "ctbrainfuck.h"
+#include "../include/ctbrainfuck.h"
 
 objects obj = { NULL, 0 };
 
+// Setting the code up
 void runSet() {
     int xloc[] = { 0, 85, 171, 256, 341, 427, 512 };
 
-    obj.aho = xrealloc(NULL, sizeof (allHO));
+    obj.aho = malloc(sizeof (allHO));
     char *delim = ",";
     for (int i = 0; i < fr.numLines; i++) {
-        char *copy = xrealloc(NULL, strlen(*(fr.lines + i)) + 1);
         size_t len = 0;
-        strcpy(copy, *(fr.lines + i));
+        char *copy = strdup(*(fr.lines + i));
         char *token = strtok(copy, delim);
         if (token) {
-            char **line = xrealloc(NULL, sizeof (char *));
+            char **line = malloc(sizeof (char *));
             while (token != NULL) {
-                line = xrealloc(line, (len + 1) * sizeof (char *));
-                *(line + len) = xrealloc(NULL, strlen(token) + 1);
-                strcpy(*(line + len), token);
+                line = realloc(line, (len + 1) * sizeof (char *));
+                *(line + len) = strdup(token);
                 token = strtok(NULL, delim);
                 len++;
             }
             if (len == 6 || len == 8 || len == 11 || len == 7) {
-                obj.aho = xrealloc(obj.aho, (obj.numAho + 1) * sizeof (allHO));
+                obj.aho = realloc(obj.aho, (obj.numAho + 1) * sizeof (allHO));
 
-                int rangeX = atoi(*line);
+                int rangeX = atoi(*(line + 0));
                 int rangeY = atoi(*(line + 1));
                 int ncombo = atoi(*(line + 3));
-                // TODO fix then use this as it is more optimized and readable
-                // if ((len == 6 && (ncombo == 1 || ncombo == 5) && (rangeX >= 0 || rangeX <= 512) && (rangeY >= 0 || rangeY <= 384))  // Circle
-                // ||  (len == 8 && (ncombo == 2 || ncombo == 6) && (rangeX >= 0 || rangeX <= 512) && (rangeY >= 0 || rangeY <= 384))  // Slider
-                // ||  (len == 7 && (ncombo == 8 || ncombo == 12) && rangeX == 256 && rangeY == 192))                                  // Spinner
-                // {
-                //     (obj.aho + obj.numAho)->command = !(len == 7 && (ncombo == 8 || ncombo == 12) && rangeX == 256 && rangeY == 192) ? (rangeY /* do mathematics on this */) % 2 : ran;
-                // } else { perror(*(fr.lines + i)); exit(EXIT_FAILURE); }
                 if (len == 6                        // Circle
                     && (ncombo == 1 || ncombo == 5)
                     && (rangeX >= 0 || rangeX <= 512)
@@ -73,8 +65,7 @@ void runSet() {
                 } else { perror(*(fr.lines + i)); exit(EXIT_FAILURE); }
                 if ((obj.aho + obj.numAho)->command == isnull) { perror(*(fr.lines + i)); exit(EXIT_FAILURE); }
 
-                (obj.aho + obj.numAho)->line = xrealloc(NULL, strlen(*(fr.lines + i)) + 1);
-                strcpy((obj.aho + obj.numAho)->line, *(fr.lines + i));
+                (obj.aho + obj.numAho)->line = strdup(*(fr.lines + i));
                 (obj.aho + obj.numAho)->fileline = *(fr.atLine + i);
 
                 obj.numAho++;
@@ -104,9 +95,10 @@ void runSet() {
     if (numBracket != 0) { perror("numBracket"); exit(EXIT_FAILURE); }
 }
 
+// Running the code
 void runStart() {
     int tick = 1, curline = 0;
-    size_t *memory = xrealloc(NULL, USHRT_MAX * sizeof (size_t));
+    size_t *memory = malloc(USHRT_MAX * sizeof (size_t));
     for (size_t i = 0; i < USHRT_MAX; i++) *(memory + i) = 0;
     size_t memorypos = 0;
 
@@ -209,6 +201,7 @@ void runStart() {
     free(memory);
 }
 
+// If the user uses the `-a` flag or logging all
 char *allMode(int i) {
     char *str = "Command: %s\tX: %s\tType: %s\tFileLine: %s\tLine: %s";
     
@@ -220,16 +213,18 @@ char *allMode(int i) {
     sprintf(strFL, "%d", (obj.aho + i)->fileline);
     char *strLine = (obj.aho + i)->line;
 
-    char *format = xrealloc(NULL, (strlen(str) - (2 * 5) + strlen(strFL) + strlen(strY) + strlen(strType) + strlen(strCommand) + strlen(strLine)) * sizeof (char) + 1);
+    char *format = malloc((strlen(str) - (2 * 5) + strlen(strFL) + strlen(strY) + strlen(strType) + strlen(strCommand) + strlen(strLine)) * sizeof (char) + 1);
     sprintf(format, str, strCommand, strY, strType, strFL, strLine);
     return format;
 }
 
+// Freeing all the data
 void freeingMode() {
     for (size_t i = 0; i < obj.numAho; i++) free((obj.aho + i)->line);
     free(obj.aho);
 }
 
+// Initialising data
 Mode ctbInit() {
     Mode mode = { &obj, runSet, runStart, allMode, freeingMode };
     return mode;

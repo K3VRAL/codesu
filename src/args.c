@@ -1,26 +1,30 @@
-#include "args.h"
+#include "../include/args.h"
 
+// Options that the user inputs
 args arg = { false, false, false, false, false, false, false, false };
 argsExport argExport = { false, false };
 argsLog argLog = { false, false, false };
 
+// All dialouge functions that user will see when using the `-e` flag
 void dialougeEModeHit() {
-    fprintf(stdout, "[Exporting]\tDo you want to include \"Mode: 2\" and \"[HitObjects]\"? (y/n) ");
+    fprintf(restore, "[Exporting]\tDo you want to include \"Mode: 2\" and \"[HitObjects]\"? (y/n) ");
 }
 void dialougeENewCombo() {
-    fprintf(stdout, "[Exporting]\tDo you want all objects to have a New Combo attribute? (y/n) ");
+    fprintf(restore, "[Exporting]\tDo you want all objects to have a New Combo attribute? (y/n) ");
 }
 
+// All dialouge functions that user will see when using the `-l` flag
 void dialougeLAllObjects() {
-    fprintf(stdout, "[Logging]\tDo you want to log all objects listed? (y/n) ");
+    fprintf(restore, "[Logging]\tDo you want to log all objects listed? (y/n) ");
 }
 void dialougeLDebug() {
-    fprintf(stdout, "[Logging]\tDo you want to log everything debugged? (y/n) ");
+    fprintf(restore, "[Logging]\tDo you want to log everything debugged? (y/n) ");
 }
 void dialougeLEvery() {
-    fprintf(stdout, "[Logging]\tDo you want to log everything printed? (y/n) ");
+    fprintf(restore, "[Logging]\tDo you want to log everything printed? (y/n) ");
 }
 
+// Assigning, executing and recording dialouge functions
 void assignExportAndLog() {
     if (arg.exporting || arg.logging) {
 		int siz = 0;
@@ -29,7 +33,7 @@ void assignExportAndLog() {
 		if (arg.logging) siz = siz + 3;
 
 		if (siz > 1) {
-			FunCallback *function = xrealloc(NULL, siz * sizeof (FunCallback));
+			FunCallback *function = malloc(siz * sizeof (FunCallback));
 
 			if (arg.exporting) {
 				(function + 0)->function = dialougeEModeHit;
@@ -39,7 +43,6 @@ void assignExportAndLog() {
                 (function + 1)->set = &argExport.exportingNewCombo;
 			}
 			
-			// TODO it works but maybe one day optimize this
 			if (arg.logging) {
 				if (arg.exporting) {
 					(function + 2)->function = dialougeLAllObjects;

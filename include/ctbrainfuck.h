@@ -6,9 +6,8 @@
 #include <limits.h>
 
 #include "external.h"
-
-#include "lib/args.h"
-#include "lib/files.h"
+#include "args.h"
+#include "files.h"
 
 Mode ctbInit();
 void freeingCTB();

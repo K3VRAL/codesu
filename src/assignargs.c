@@ -1,26 +1,8 @@
-#include "assignargs.h"
-#include <stdio.h>
+#include "../include/assignargs.h"
 
-bool isOsuExtension(char *string) {
-	bool found = false;
-	int stringstart = 0;
-	for (int i = strlen(string); i >= 0; i--) {
-		if (*(string + i) == '.') {
-			found = true;
-			stringstart = i;
-		}
-	}
-
-	if (found) {
-		char *str = ".osu";
-		int j = 0;
-		for (int i = stringstart; i < strlen(string); i++) if (*(string + i) != *(str + j++)) return false;
-	}
-	
-	return found ? true : false;
-}
- 
+// User inputs data to be processed
 void assignArgs(int argc, char **argv) {
+	bool found = false;
     for (int i = 1; i < argc; i++) {
 		if (*(*(argv + i)) == '-') {
 			for (int j = 1; j < strlen(*(argv + i)); j++) {
@@ -74,6 +56,17 @@ void assignArgs(int argc, char **argv) {
 			);
 		}
 
-		if (isOsuExtension(*(argv + i))) readFileToMemory(*(argv + i));
+		char *str = strrchr(*(argv + i), '.');
+		if (str != NULL && !strcmp(str, ".osu")) {
+			if (!found) {
+				found = true;
+				readFileToMemory(*(argv + i));
+			} else {
+				fprintf(stdout, "Already made an input. Not going to interpret `%s`\n", *(argv + i));
+			}
+		}
+	}
+	if (!found) {
+		fprintf(stdout, "No input file found!\n");
 	}
 }

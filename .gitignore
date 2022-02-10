@@ -1,7 +1,10 @@
 # Compiler Related
 bin/
+binrel/
 vgcore.*
 .vscode/
+*.o
+*.exe
 
 # File Writing Related
 *.export

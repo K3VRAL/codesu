@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "args.h"
 #include "files.h"

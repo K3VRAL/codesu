@@ -11,10 +11,9 @@
 #include <unistd.h>
 
 #include "mode.h"
-
-#include "lib/args.h"
-#include "lib/codesuinfo.h"
-#include "lib/files.h"
+#include "args.h"
+#include "codesuinfo.h"
+#include "files.h"
 
 void dataExternal(Mode mode);
 void dataPrint(char *input, ...);

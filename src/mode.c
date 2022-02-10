@@ -1,25 +1,50 @@
-#include "mode.h"
+#include "../include/mode.h"
+
+// Prints enum to string
 
 char *etsCommand(instruction com) {
-    return  com == inpDig   ?   "inp,"  :
-            com == inpAsc   ?   "inp;"  :
-            com == jmpStr   ?   "jmp["  :
-            com == jmpEnd   ?   "jmp]"  :
-            com == pntLft   ?   "pnt<"  :
-            com == pntRgt   ?   "pnt>"  :
-            com == inc      ?   "inc+"  :
-            com == dec      ?   "dec-"  :
-            com == ran      ?   "rnd~"  :
-            com == mulc     ?   "mul*"  :
-            com == divc     ?   "div/"  :
-            com == outDig   ?   "out."  :
-            com == outAsc   ?   "out:"  :
-                                "isnull";
+    switch (com) {
+        case inpDig:
+            return "inp,";
+        case inpAsc:
+            return "inp;";
+        case jmpStr:
+            return "jmp[";
+        case jmpEnd:
+            return "jmp]";
+        case pntLft:
+            return "pnt<";
+        case pntRgt:
+            return "pnt>";
+        case inc:
+            return "inc+";
+        case dec:
+            return "dec-";
+        case ran:
+            return "rnd~";
+        case mulc:
+            return "mul*";
+        case divc:
+            return "div/";
+        case outDig:
+            return "out.";
+        case outAsc:
+            return "out:";
+        case isnull:
+        default:
+            return "isnull";
+    }
 }
 
-char *etsType(types typ) {
-    return  typ == circle   ?   "cirle"   :
-            typ == slider   ?   "slider"  :
-            typ == spinner  ?   "spinner" :
-                                "isnull";
+char *etsType(types type) {
+    switch (type) {
+        case circle:
+            return "circle";
+        case slider:
+            return "slider";
+        case spinner:
+            return "spinner";
+        default:
+            return "isnull";
+    }
 }

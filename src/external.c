@@ -1,22 +1,25 @@
-#include "external.h"
+#include "../include/external.h"
 
+// Switching from stdout to files and vise-verca
 FILE *restore;
+
+// If uses `-a`, `-l` and/or `-e`
 void dataExternal(Mode mode) {
     // INIT
-    char **all;
+    char **all = NULL;
     int numAll = 0;
     if (arg.all || argLog.loggingAllObjects) {
-        all = xrealloc(NULL, mode.getobject->numAho * sizeof (char *));
+        all = malloc(mode.getobject->numAho * sizeof (char *));
         for (int i = 0; i < mode.getobject->numAho; i++) {
             char *temp = mode.allMode(i);
-            *(all + i) = xrealloc(NULL, strlen(temp) * sizeof (char) + 1);
-            strcpy(*(all + i), temp);
+            *(all + i) = strdup(temp);
             numAll++;
             free(temp);
         }
     }
 
     // EXECUTE
+    // `-a`
     if (arg.all) {
         restore = stdout;
         fprintf(restore, "[ALL] - \n");
@@ -24,10 +27,11 @@ void dataExternal(Mode mode) {
         fprintf(restore, "[DONE]\n");
     }
 
+    // `-e`
     if (arg.exporting) {
         restore = stdout;
         fprintf(restore, "[EXPORTING] - ");
-        char *file = xrealloc(NULL, (strlen(fr.file) + strlen(".export")) * sizeof (char) + 1);
+        char *file = malloc((strlen(fr.file) + strlen(".export")) * sizeof (char) + 1);
         strcpy(file, fr.file);
         strcat(file, ".export");
         if (access(file, F_OK) == 0) remove(file);
@@ -74,11 +78,12 @@ void dataExternal(Mode mode) {
         fprintf(restore, "[DONE]\n");
     }
 
+    // `-l`
     if (arg.logging) {
         if (argLog.loggingAllObjects) {
             restore = stdout;
             fprintf(restore, "[LOGGING] | [ALLOBJECTS] - ");
-            char *file = xrealloc(NULL, (strlen(fr.file) + strlen(".all.log")) * sizeof (char) + 1);
+            char *file = malloc((strlen(fr.file) + strlen(".all.log")) * sizeof (char) + 1);
             strcpy(file, fr.file);
             strcat(file, ".all.log");
             if (access(file, F_OK) == 0) remove(file);
@@ -92,7 +97,7 @@ void dataExternal(Mode mode) {
         if (argLog.loggingDebug) {
             restore = stdout;
             fprintf(restore, "[LOGGING] | [DEBUG] - ");
-            char *file = xrealloc(NULL, (strlen(fr.file) + strlen(".debug.log")) * sizeof (char) + 1);
+            char *file = malloc((strlen(fr.file) + strlen(".debug.log")) * sizeof (char) + 1);
             strcpy(file, fr.file);
             strcat(file, ".debug.log");
             if (access(file, F_OK) == 0) remove(file);
@@ -111,7 +116,7 @@ void dataExternal(Mode mode) {
         }
         if (argLog.loggingEvery) {
             fprintf(restore, "[LOGGING] | [EVERY] - ");
-            char *file = xrealloc(NULL, (strlen(fr.file) + strlen(".every.log")) * sizeof (char) + 1);
+            char *file = malloc((strlen(fr.file) + strlen(".every.log")) * sizeof (char) + 1);
             strcpy(file, fr.file);
             strcat(file, ".every.log");
             if (access(file, F_OK) == 0) remove(file);
@@ -131,7 +136,7 @@ void dataExternal(Mode mode) {
     }
 
     // FREE
-    if (arg.all || argLog.loggingAllObjects) {
+    if ((arg.all || argLog.loggingAllObjects) && all) {
         for (int i = 0; i < numAll; i++) free(*(all + i));
         free(all);
     }
@@ -140,6 +145,7 @@ void dataExternal(Mode mode) {
     argLog.loggingAllObjects = false, argLog.loggingDebug = false, argLog.loggingEvery = false;
 }
 
+// Prints data
 void dataPrint(char *input, ...) {
     va_list vl;
     va_start(vl, input);
@@ -149,6 +155,7 @@ void dataPrint(char *input, ...) {
     va_end(vl);
 }
 
+// Prints for debugging purposes
 void dataDebug(char *input, ...) {
     if (arg.debug) {
         va_list vl;
@@ -160,6 +167,7 @@ void dataDebug(char *input, ...) {
     }
 }
 
+// Prints then waits for step
 void dataStep(bool should) {
     if (arg.step && should && !(argLog.loggingDebug || argLog.loggingEvery)) {
 #ifdef __linux__

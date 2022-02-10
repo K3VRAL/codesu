@@ -6,13 +6,8 @@
 
 #include "ctbrainfuck.h"
 #include "external.h"
-
-#include "lib/codesuinfo.h"
-#include "lib/files.h"
-
-typedef struct {
-    Mode target;
-} FunCallbackMode;
+#include "codesuinfo.h"
+#include "files.h"
 
 void programsuRun();
 
