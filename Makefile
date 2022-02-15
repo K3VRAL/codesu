@@ -27,16 +27,26 @@ Linux32:	EXEC =
 Linux32:	$(TARGET)
 Linux32:	rel
 
+ifeq ($(OS), Windows_NT)
+Windows64:	CC = gcc
+Windows64:	CFLAGS += -O3 -static
+else
 Windows64:	CC = x86_64-w64-mingw32-gcc
 Windows64:	CFLAGS += -O3
+endif
 Windows64:	ENV = windows
 Windows64:	VER = 64
 Windows64:	EXEC = .exe
 Windows64:	$(TARGET)
 Windows64:	rel
 
+ifeq ($(OS), Windows_NT)
+Windows32:	CC = gcc
+Windows32:	CFLAGS += -O3 -static
+else
 Windows32:	CC = i686-w64-mingw32-gcc
 Windows32:	CFLAGS += -O3
+endif
 Windows32:	ENV = windows
 Windows32:	VER = 32
 Windows32:	EXEC = .exe
