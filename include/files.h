@@ -19,7 +19,7 @@ typedef struct {
 void *xrealloc(void *ptr, size_t size);
 
 void readFileToMemory(char *file);
-void freeingMemory();
+void freeingMemory(void);
 
 // int indexAtLine(char *string);
 // int indexAtCharOfLine(int index);

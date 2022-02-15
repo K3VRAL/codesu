@@ -56,6 +56,6 @@ typedef struct {
 } Mode;
 
 char *etsCommand(instruction com);
-char *etsType(types typ);
+char *etsType(types type);
 
 #endif

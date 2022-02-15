@@ -38,7 +38,7 @@ typedef struct {
     bool *set;
 } FunCallback;
 
-void assignExportAndLog();
+void assignExportAndLog(void);
 
 extern args arg;
 extern argsExport argExport;

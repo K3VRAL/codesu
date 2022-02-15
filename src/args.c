@@ -6,26 +6,26 @@ argsExport argExport = { false, false };
 argsLog argLog = { false, false, false };
 
 // All dialouge functions that user will see when using the `-e` flag
-void dialougeEModeHit() {
+void dialougeEModeHit(void) {
     fprintf(restore, "[Exporting]\tDo you want to include \"Mode: 2\" and \"[HitObjects]\"? (y/n) ");
 }
-void dialougeENewCombo() {
+void dialougeENewCombo(void) {
     fprintf(restore, "[Exporting]\tDo you want all objects to have a New Combo attribute? (y/n) ");
 }
 
 // All dialouge functions that user will see when using the `-l` flag
-void dialougeLAllObjects() {
+void dialougeLAllObjects(void) {
     fprintf(restore, "[Logging]\tDo you want to log all objects listed? (y/n) ");
 }
-void dialougeLDebug() {
+void dialougeLDebug(void) {
     fprintf(restore, "[Logging]\tDo you want to log everything debugged? (y/n) ");
 }
-void dialougeLEvery() {
+void dialougeLEvery(void) {
     fprintf(restore, "[Logging]\tDo you want to log everything printed? (y/n) ");
 }
 
 // Assigning, executing and recording dialouge functions
-void assignExportAndLog() {
+void assignExportAndLog(void) {
     if (arg.exporting || arg.logging) {
 		int siz = 0;
 

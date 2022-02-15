@@ -3,7 +3,7 @@
 objects obj = { NULL, 0 };
 
 // Setting the code up
-void runSet() {
+void runSet(void) {
     int xloc[] = { 0, 85, 171, 256, 341, 427, 512 };
 
     obj.aho = malloc(sizeof (allHO));
@@ -96,7 +96,7 @@ void runSet() {
 }
 
 // Running the code
-void runStart() {
+void runStart(void) {
     int tick = 1, curline = 0;
     size_t *memory = malloc(USHRT_MAX * sizeof (size_t));
     for (size_t i = 0; i < USHRT_MAX; i++) *(memory + i) = 0;
@@ -219,13 +219,13 @@ char *allMode(int i) {
 }
 
 // Freeing all the data
-void freeingMode() {
+void freeingMode(void) {
     for (size_t i = 0; i < obj.numAho; i++) free((obj.aho + i)->line);
     free(obj.aho);
 }
 
 // Initialising data
-Mode ctbInit() {
+Mode ctbInit(void) {
     Mode mode = { &obj, runSet, runStart, allMode, freeingMode };
     return mode;
 }

@@ -1,7 +1,7 @@
 #include "../include/programsu.h"
 
 // Finds illegal data and prints it if `-i` flag is active
-void findIllegal() {
+void findIllegal(void) {
     if (!arg.ignore) {
         bool found = false;
         for (int i = 0; i < fr.numLines; i++) {
@@ -17,7 +17,7 @@ void findIllegal() {
 }
 
 // Runs program
-void programsuRun() {
+void programsuRun(void) {
     findIllegal();
 
     Mode funcMode;

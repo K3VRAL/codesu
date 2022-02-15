@@ -59,7 +59,7 @@ void readFileToMemory(char *file) {
 }
 
 // Frees all data stored in memory
-void freeingMemory() {
+void freeingMemory(void) {
     for (int i = 0; i < fr.numLines; i++) free(*(fr.lines + i));
     free(fr.atLine);
     free(fr.lines);

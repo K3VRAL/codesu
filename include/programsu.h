@@ -9,6 +9,6 @@
 #include "codesuinfo.h"
 #include "files.h"
 
-void programsuRun();
+void programsuRun(void);
 
 #endif

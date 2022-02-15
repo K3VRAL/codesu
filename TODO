@@ -1,9 +1,9 @@
 TODO
 
-Fix stepping doesn't work on windows
+Fix stepping as it doesn't work on windows
 
 Include relevant slider variables in mode.h:37
 
 Include error handling on parts of code prone to errors.
 
-(Optional) Conceptualize and implement esotaric coding languages for the other modes.
+(Optional) Conceptualize and implement other esotaric coding languages for the other modes.

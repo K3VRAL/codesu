@@ -9,7 +9,7 @@
 #include "args.h"
 #include "files.h"
 
-Mode ctbInit();
-void freeingCTB();
+Mode ctbInit(void);
+void freeingCTB(void);
 
 #endif
