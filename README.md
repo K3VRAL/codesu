@@ -32,6 +32,8 @@ If you wish to compile from Linux to Windows, you will need mingw-w64-gcc. Once 
 
 ### Windows
 
+**I give up trying to get this to work on Windows; try to see if this works but it mostly likely won't. Just use WSL to use this application.**
+
 To compile from Source on Windows, you will need mingw-w64-gcc (but you can just use 'regular GCC' since sometimes thats defaulted to mingw-w64-gcc). Once you have mingw-w64-gcc, go to your command prompt and type down `git clone https://github.com/K3VRAL/codesu.git`. Once done, go into the folder you cloned and now compile with `make Windows64` for 64-bit users, or `make Windows32` for 32-bit users.
 
 If you wish to compile from Windows to Linux, you will need mingw-w64-gcc. Once you have mingw-w64-gcc, go to your command prompt and compile with `make Linux64` for 64-bit linux users, or `make Linux32` for 32-bit linux users.
@@ -40,7 +42,7 @@ If you wish to compile from Windows to Linux, you will need mingw-w64-gcc. Once 
 
 ## Running Application
 
-To be able to run/interpret any .osu file after installing, you will need to go to your Terminal (for Linux) or Command Prompt (for Windows). You then execute the program by typing `./codesu` for Linux or `./codesu.exe` for Windows, and then with the map and any arguments you wish to use for further inspection or easy of use.
+To be able to run/interpret any .osu file after installing, you will need to go to your Terminal (for Linux) or Command Prompt (for Windows). You then execute the program by typing `./codesu` for Linux or `./codesu.exe` for Windows **(probably doesn't work)**, and then with the map and any arguments you wish to use for further inspection or easy of use.
 
 <a name='doc'></a>
 

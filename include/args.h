@@ -8,7 +8,6 @@
 #include <string.h>
 
 #include "files.h"
-#include "external.h"
 
 typedef struct {
 	bool ignore;

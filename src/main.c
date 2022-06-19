@@ -1,12 +1,12 @@
 #include "../include/main.h"
 
 int main(int argc, char **argv) {
+	restore = stdout;
 	assignArgs(argc, argv);
 
-	if (fr.file == NULL || cinfo == -1) { perror("main"); exit(EXIT_FAILURE); }
+	if (fr.file == NULL || cinfo == -1) outputError("No file was inputted.", "");
 	assignExportAndLog();
 
-	restore = stdout;
 	programsuRun();
 
 	freeingMemory();

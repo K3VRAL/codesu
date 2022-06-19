@@ -3,7 +3,7 @@
 // User inputs data to be processed
 void assignArgs(int argc, char **argv) {
 	bool found = false;
-    for (int i = 1; i < argc; i++) {
+	for (int i = 1; i < argc; i++) {
 		if (*(*(argv + i)) == '-') {
 			for (int j = 1; j < strlen(*(argv + i)); j++) {
 				switch (*(*(argv + i) + j)) {

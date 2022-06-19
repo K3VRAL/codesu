@@ -57,13 +57,13 @@ Windows32:	rel
 	$(CC) $(CFLAGS) -o $(BINFLR)$(notdir $@) -c $<
 
 $(TARGET): $(addsuffix .o, $(basename $(notdir $(wildcard src/*.c))))
-	$(CC) $(CFLAGS) -o $(BINFLR)$@ $(addprefix $(BINFLR), $(notdir $^)) $(LFLAGS)
+	$(CC) -o $(BINFLR)$@ $(addprefix $(BINFLR), $(notdir $^)) $(LFLAGS)
 
 $(BINFLR):
 	[ -d $(BINFLR) ] || mkdir -p $(BINFLR)
 
 clean:
-	rm $(BINFLR)$(TARGET)* $(BINFLR)*.o
+	rm $(BINFLR)$(TARGET) $(BINFLR)*.o
 
 rel:
 	[ -d $(RELFLR) ] || mkdir -p $(RELFLR)
